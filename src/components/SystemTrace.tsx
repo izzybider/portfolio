@@ -17,10 +17,12 @@ export default function SystemTrace({
         <span className="trace__title">{title}</span>
         {id ? <span className="trace__id">{id}</span> : null}
       </div>
-      {rows.map((row) => (
+      {/* Steps repeat within one trace (two tool calls, two tool results),
+          so the index is part of the key. */}
+      {rows.map((row, index) => (
         <div
           className={`trace__row${row.decision ? ' trace__row--decision' : ''}`}
-          key={row.step}
+          key={`${index}-${row.step}`}
         >
           <span className="trace__step">{row.step}</span>
           <span className="trace__value">{row.value}</span>

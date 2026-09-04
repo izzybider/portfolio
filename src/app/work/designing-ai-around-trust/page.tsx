@@ -2,12 +2,14 @@ import type { Metadata } from 'next';
 import {
   PageShell,
   CaseStudyHero,
+  CaseGlance,
   CaseStudyNav,
   CaseStudyFooter,
   Section,
   MetricStrip,
   InfoPanel,
   ArtifactCard,
+  DeeperDetail,
   DecisionCallout,
   InsightCallout,
   ProcessFlow,
@@ -40,10 +42,8 @@ const NAV = [
   { id: 'hypothesis', label: 'Hypothesis' },
   { id: 'discovery', label: 'Discovery' },
   { id: 'segmentation', label: 'Segmentation' },
-  { id: 'workflow', label: 'Workflow' },
   { id: 'autonomy', label: 'Autonomy' },
   { id: 'priorities', label: 'Priorities' },
-  { id: 'positioning', label: 'Positioning' },
   { id: 'recommendation', label: 'Recommendation' },
   { id: 'next', label: 'What’s next' },
 ];
@@ -65,9 +65,6 @@ export default function DesigningAIAroundTrustPage() {
           'Use-case prioritization',
           'GTM thinking',
         ]}
-        paragraphs={[
-          'I owned the research strategy end to end: outreach, recruiting, interviews, competitive and ecosystem analysis, synthesis, and the product recommendation that came out of it.',
-        ]}
       >
         <MetricStrip
           variant="band"
@@ -81,6 +78,39 @@ export default function DesigningAIAroundTrustPage() {
           ]}
         />
       </CaseStudyHero>
+
+      <CaseGlance
+        status="proposed"
+        problem={
+          <>
+            AZcare assumed Deaf and hard-of-hearing identity would predict who
+            valued AI phone delegation. Nobody had tested whether that was the
+            variable that mattered.
+          </>
+        }
+        role={
+          <>
+            I ran the research end to end: recruiting, 20+ discovery
+            conversations, expert interviews, competitive and ecosystem
+            analysis, synthesis, and the product recommendation.
+          </>
+        }
+        decision={
+          <>
+            Re-segment on{' '}
+            <strong>current workflow × task × desired autonomy</strong> rather
+            than diagnosis, and build adjustable autonomy for bounded,
+            high-friction tasks.
+          </>
+        }
+        outcome={
+          <>
+            The target user and the product thesis both changed. The thesis is
+            research-backed, not yet behaviorally validated — section 09 is the
+            plan that would test it.
+          </>
+        }
+      />
 
       {/* ---------------- HYPOTHESIS ---------------- */}
       <Section
@@ -107,8 +137,7 @@ export default function DesigningAIAroundTrustPage() {
           ]}
         />
         <p className="body-text">
-          These were assumptions to test, not conclusions. Each one had a way of
-          being wrong, and three of the four were.
+          Assumptions to test, not conclusions. Three of the four were wrong.
         </p>
       </Section>
 
@@ -125,7 +154,7 @@ export default function DesigningAIAroundTrustPage() {
               items={[
                 {
                   term: '20+ discovery conversations',
-                  desc: 'Recruited and scheduled independently, across different phone workflows rather than a single community channel.',
+                  desc: 'Recruited independently, across different phone workflows rather than one community channel.',
                 },
                 {
                   term: '8+ stakeholder / expert interviews',
@@ -164,12 +193,12 @@ export default function DesigningAIAroundTrustPage() {
         id="segmentation"
         label="03 · Evidence changed the thesis"
         title="Hearing loss itself was not enough to predict product value."
-        intro="Users with the same diagnosis had completely different phone lives. Some were already well served; others avoided calls entirely. The variable that predicted value was the workflow they already used."
+        intro="Users with the same diagnosis had completely different phone lives — some already well served, others avoiding calls entirely. What predicted value was the workflow they already used."
       >
         <ArtifactCard
           title="Workflow segmentation"
           meta="Replaced the diagnosis-based segment"
-          caption="Segments are defined by the workflow someone already uses, the task at hand, and how much control they want to keep — not by audiological profile."
+          caption="Segments defined by the workflow someone already uses, the task, and how much control they want to keep — not by audiological profile."
         >
           <DataTable
             columns={[
@@ -216,7 +245,7 @@ export default function DesigningAIAroundTrustPage() {
 
         <DecisionCallout
           label="Reframe"
-          note="This changed who the product is for. Two of the four segments were already well served for most calls; targeting by diagnosis would have spent the roadmap on users who did not need it."
+          note="This changed who the product is for. Two of the four segments were already well served; targeting by diagnosis would have spent the roadmap on users who did not need it."
         >
           Value is predicted by current workflow × task × desired autonomy — not
           by hearing loss.
@@ -228,7 +257,7 @@ export default function DesigningAIAroundTrustPage() {
         id="workflow"
         label="04 · Workflow map"
         title="The opportunity sits inside the call, not before it."
-        intro="Mapping the end-to-end task showed the friction was concentrated in a few specific moments — most of them before the actual conversation starts."
+        intro="Friction concentrated in a few moments, most of them before the conversation even starts."
       >
         <ArtifactCard title="Phone-dependent task, end to end">
           <ProcessFlow
@@ -246,9 +275,7 @@ export default function DesigningAIAroundTrustPage() {
             highlight={[3, 4, 6]}
           />
           <p className="meta" style={{ marginTop: 'var(--s3)' }}>
-            Highlighted: IVR navigation, hold, and confirming what was said —
-            bounded, verifiable, and where delegation creates value without
-            removing the person from the conversation that matters.
+            Highlighted: IVR navigation, hold, and confirming what was said.
           </p>
         </ArtifactCard>
       </Section>
@@ -258,12 +285,12 @@ export default function DesigningAIAroundTrustPage() {
         id="autonomy"
         label="05 · Participation ↔ delegation"
         title="The real product question is how much of the task you hand over."
-        intro="Existing accessibility tools answer “help me participate in the call.” AI phone agents answer “complete the task for me.” Users wanted different answers for different tasks — sometimes on the same day."
+        intro="Accessibility tools answer “help me participate.” AI phone agents answer “complete the task for me.” Users wanted different answers for different tasks — sometimes on the same day."
       >
         <ArtifactCard
           title="Autonomy continuum"
           meta="Where each task belongs"
-          caption="A single automation level cannot serve this. Autonomy has to be a product control, not a product decision made once."
+          caption="One automation level cannot serve this. Autonomy has to be a product control, not a decision made once."
         >
           <Continuum
             ends={['User stays in the call', 'AI completes the task']}
@@ -359,45 +386,47 @@ export default function DesigningAIAroundTrustPage() {
           </InfoPanel>
         </div>
 
-        <ArtifactCard title="Design constraints the research produced">
-          <DefinitionGrid
-            columns={2}
-            items={[
-              {
-                term: 'Agency over automation',
-                desc: 'Reduce friction without removing the user from the interaction.',
-              },
-              {
-                term: 'Adjustable autonomy',
-                desc: 'Different tasks warrant different levels of delegation.',
-              },
-              {
-                term: 'Transparent behavior',
-                desc: 'The user should know what the AI said and what it is doing.',
-              },
-              {
-                term: 'Accessible fallback',
-                desc: 'If the AI fails, recovery cannot depend on a traditional voice call.',
-              },
-              {
-                term: 'Human takeover',
-                desc: 'The user can step in at any point.',
-              },
-              {
-                term: 'Surface uncertainty',
-                desc: 'Clarify or escalate rather than bluff.',
-              },
-              {
-                term: 'Disclosure control',
-                desc: 'The AI identifies itself; disability disclosure stays the user’s choice.',
-              },
-              {
-                term: 'Design with the community',
-                desc: 'Continued development includes Deaf and hard-of-hearing users.',
-              },
-            ]}
-          />
-        </ArtifactCard>
+        <DeeperDetail summary="The eight design constraints the research produced" hint="detail">
+  <ArtifactCard title="Design constraints the research produced">
+            <DefinitionGrid
+              columns={2}
+              items={[
+                {
+                  term: 'Agency over automation',
+                  desc: 'Reduce friction without removing the user from the interaction.',
+                },
+                {
+                  term: 'Adjustable autonomy',
+                  desc: 'Different tasks warrant different levels of delegation.',
+                },
+                {
+                  term: 'Transparent behavior',
+                  desc: 'The user knows what the AI said and what it is doing.',
+                },
+                {
+                  term: 'Accessible fallback',
+                  desc: 'Recovery cannot depend on a traditional voice call.',
+                },
+                {
+                  term: 'Human takeover',
+                  desc: 'The user can step in at any point.',
+                },
+                {
+                  term: 'Surface uncertainty',
+                  desc: 'Clarify or escalate rather than bluff.',
+                },
+                {
+                  term: 'Disclosure control',
+                  desc: 'The AI identifies itself; disclosure stays the user’s choice.',
+                },
+                {
+                  term: 'Design with the community',
+                  desc: 'Development continues with Deaf and hard-of-hearing users.',
+                },
+              ]}
+            />
+          </ArtifactCard>
+        </DeeperDetail>
       </Section>
 
       {/* ---------------- RECOMMENDATION ---------------- */}
@@ -414,42 +443,44 @@ export default function DesigningAIAroundTrustPage() {
           the autonomy level a user-facing control.
         </DecisionCallout>
 
-        <ArtifactCard title="Product definition" meta="Extract from the PRD I wrote">
-          <KeyValueRows
-            rows={[
-              {
-                key: 'Target user',
-                value:
-                  'Relay users, call avoiders, and human delegators — segments where the current workflow already imposes friction or dependency.',
-              },
-              {
-                key: 'Initial tasks',
-                value:
-                  'Low-risk, bounded, transactional, with objectively verifiable outcomes.',
-              },
-              {
-                key: 'Core behavior',
-                value:
-                  'AI handles IVR and hold · user-selectable autonomy · live transcript and call state · user can instruct mid-call · approval before consequential actions · human takeover · outcome summary · accessible fallback.',
-              },
-              {
-                key: 'Primary success metric',
-                value:
-                  'Successful task completion with low intervention burden and high user confidence.',
-              },
-              {
-                key: 'Non-goals',
-                value:
-                  'Emergency calls · high-stakes medical decisions · legal advice · complex financial disputes · emotionally consequential conversations.',
-              },
-              {
-                key: 'Early GTM',
-                value:
-                  'Trusted community organizations, referrals, and accessibility partnerships. For accessibility technology, distribution is largely a trust problem — paid acquisition scales reach but not credibility.',
-              },
-            ]}
-          />
-        </ArtifactCard>
+        <DeeperDetail summary="Read the product definition from the PRD" hint="PRD extract">
+  <ArtifactCard title="Product definition" meta="Extract from the PRD I wrote">
+            <KeyValueRows
+              rows={[
+                {
+                  key: 'Target user',
+                  value:
+                    'Relay users, call avoiders and human delegators — where the current workflow already imposes friction or dependency.',
+                },
+                {
+                  key: 'Initial tasks',
+                  value:
+                    'Low-risk, bounded, transactional, with objectively verifiable outcomes.',
+                },
+                {
+                  key: 'Core behavior',
+                  value:
+                    'AI handles IVR and hold · selectable autonomy · live transcript · mid-call instruction · approval before consequential actions · human takeover · accessible fallback.',
+                },
+                {
+                  key: 'Primary success metric',
+                  value:
+                    'Task completion with low intervention burden and high user confidence.',
+                },
+                {
+                  key: 'Non-goals',
+                  value:
+                    'Emergency calls · high-stakes medical decisions · legal advice · financial disputes · emotionally consequential conversations.',
+                },
+                {
+                  key: 'Early GTM',
+                  value:
+                    'Community organizations, referrals and accessibility partnerships — distribution here is a trust problem, and paid acquisition scales reach but not credibility.',
+                },
+              ]}
+            />
+          </ArtifactCard>
+        </DeeperDetail>
       </Section>
 
       {/* ---------------- NEXT ---------------- */}
@@ -457,39 +488,41 @@ export default function DesigningAIAroundTrustPage() {
         id="next"
         label="09 · Proposed validation plan"
         title="The thesis is research-backed. It is not yet behaviorally proven."
-        intro="Stated willingness does not predict delegation behavior. This is what I would run next, in order, and what each step would have to show."
+        intro="Stated willingness does not predict delegation behavior. This is what I would run next, and what each step would have to show."
       >
-        <ArtifactCard title="Validation sequence" meta="Not yet run">
-          <KeyValueRows
-            rows={[
-              {
-                key: '1 · Concept test',
-                value:
-                  'Compare the current flow against adjustable autonomy on completion, understanding, control and trust.',
-              },
-              {
-                key: '2 · Bounded-task pilot',
-                value:
-                  'Real tasks with target-segment users; instrument activation, completion, intervention rate and repeat use.',
-              },
-              {
-                key: '3 · Behavioral read',
-                value:
-                  'Does repeat use follow stated interest? Repeat-task rate is the honest signal.',
-              },
-              {
-                key: '4 · Willingness to pay',
-                value:
-                  'Consumer and organizational buyer interviews once usage exists — not before.',
-              },
-              {
-                key: '5 · Market sizing',
-                value:
-                  'Size the reachable wedge from validated segment definitions rather than from diagnosis prevalence.',
-              },
-            ]}
-          />
-        </ArtifactCard>
+        <DeeperDetail summary="The five-step validation sequence, in order" hint="not yet run">
+  <ArtifactCard title="Validation sequence" meta="Not yet run">
+            <KeyValueRows
+              rows={[
+                {
+                  key: '1 · Concept test',
+                  value:
+                    'Current flow against adjustable autonomy on completion, understanding, control and trust.',
+                },
+                {
+                  key: '2 · Bounded-task pilot',
+                  value:
+                    'Real tasks with target-segment users; instrument activation, completion, intervention and repeat use.',
+                },
+                {
+                  key: '3 · Behavioral read',
+                  value:
+                    'Does repeat use follow stated interest? Repeat-task rate is the honest signal.',
+                },
+                {
+                  key: '4 · Willingness to pay',
+                  value:
+                    'Buyer interviews once usage exists — not before.',
+                },
+                {
+                  key: '5 · Market sizing',
+                  value:
+                    'Size the reachable wedge from validated segments, not diagnosis prevalence.',
+                },
+              ]}
+            />
+          </ArtifactCard>
+        </DeeperDetail>
 
         <InfoPanel tone="white" label="Known constraint from the research">
           <p>

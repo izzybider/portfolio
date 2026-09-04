@@ -39,9 +39,7 @@ export function MockField({
       <span className={`mock-field__input${muted ? ' mock-field__input--muted' : ''}`}>
         {value}
         {select ? (
-          <span className="mock-field__caret" aria-hidden="true">
-            ▼
-          </span>
+          <span className="mock-field__caret" aria-hidden="true" />
         ) : null}
       </span>
     </div>
@@ -76,7 +74,9 @@ export function MockStat({
       <span
         className={`mock-stat__value${direction ? ` mock-stat__value--${direction}` : ''}`}
       >
-        {direction === 'up' ? '↑ ' : direction === 'down' ? '↓ ' : ''}
+        {direction ? (
+          <span className="mock-stat__trend" aria-hidden="true" />
+        ) : null}
         {value}
       </span>
     </div>

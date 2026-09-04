@@ -2,12 +2,14 @@ import type { Metadata } from 'next';
 import {
   PageShell,
   CaseStudyHero,
+  CaseGlance,
   CaseStudyNav,
   CaseStudyFooter,
   Section,
   MetricStrip,
   InfoPanel,
   ArtifactCard,
+  DeeperDetail,
   DecisionCallout,
   InsightCallout,
   ProcessFlow,
@@ -53,9 +55,9 @@ export default function EnterpriseAIPage() {
       nav={<CaseStudyNav title="Enterprise AI Product Systems" items={NAV} />}
     >
       <CaseStudyHero
-        eyebrow="02 · Enterprise case study · Accenture Applied Intelligence"
+        eyebrow="02 · Internship case study · Accenture Applied Intelligence"
         title="Enterprise AI Product Systems"
-        statement="Product ownership inside a production AI platform serving more than 10,000 users — where a single customer complaint could originate in retrieval, in the data pipeline, or in the workflow itself."
+        statement="Technical product ownership during an Applied Intelligence internship, inside a production AI platform serving more than 10,000 users — where a single customer complaint could originate in retrieval, in the data pipeline, or in the workflow itself."
         roles={[
           'Technology Summer Analyst',
           'AI Product Management / Product Owner',
@@ -65,20 +67,16 @@ export default function EnterpriseAIPage() {
           'Prioritization',
           'UAT / release support',
         ]}
-        paragraphs={[
-          'I owned requirements and enhancement prioritization, built a repeatable AI evaluation harness to replace ad hoc chatbot testing, investigated production data issues to their root cause, and turned fragmented operational reporting into a reusable decision system.',
-        ]}
       >
         <MetricStrip
           variant="band"
           columns={3}
           items={[
-            { value: '10,000+', label: 'users on the platform' },
-            { value: '1M+', label: 'production records analyzed' },
+            { value: '10,000+', label: 'platform users' },
+            { value: '1M+', label: 'records analyzed' },
             { value: '~50', label: 'question golden evaluation suite' },
-            { value: '45+', label: 'enhancement opportunities triaged' },
+            { value: '45+', label: 'enhancements triaged' },
             { value: '4', label: 'proposals adopted for Phase 2' },
-            { value: '6', label: 'system layers a defect could originate in' },
           ]}
         />
         <ProvenanceNote>
@@ -87,17 +85,48 @@ export default function EnterpriseAIPage() {
         </ProvenanceNote>
       </CaseStudyHero>
 
+      <CaseGlance
+        status="internal"
+        problem={
+          <>
+            One customer-facing AI symptom could originate in any of six system
+            layers, and every report arrived already phrased as a feature
+            request.
+          </>
+        }
+        role={
+          <>
+            I owned requirements and enhancement prioritization, supported
+            release and UAT, investigated production data issues, and built the
+            AI evaluation and reporting that had been ad hoc.
+          </>
+        }
+        decision={
+          <>
+            <strong>Diagnose the layer before scheduling the fix.</strong> The
+            validation failures traced upstream, so the intervention went there
+            rather than into the screen where the complaint appeared.
+          </>
+        }
+        outcome={
+          <>
+            10,000+ users · 1M+ records analyzed · ~50-question golden evaluation
+            suite · 45+ enhancements triaged, 4 adopted for Phase 2.
+          </>
+        }
+      />
+
       {/* ---------------- SYSTEM ---------------- */}
       <Section
         id="system"
         label="01 · System complexity"
         title="“The AI gave a wrong answer” was never a single bug."
-        intro="The same customer-facing symptom could originate in six different layers. Most of the product work was deciding which layer was actually responsible before anything got scheduled."
+        intro="The same symptom could originate in six layers. Most of the work was deciding which one was responsible before anything got scheduled."
       >
         <ArtifactCard
           title="Platform map"
           meta="Where a reported defect can actually live"
-          caption="Reconstructed system map. Product decisions moved vertically through these layers rather than treating every report as a feature request."
+          caption="Reconstructed system map. Decisions moved vertically through these layers rather than treating every report as a feature request."
         >
           <ArchitectureDiagram
             rows={[
@@ -149,7 +178,7 @@ export default function EnterpriseAIPage() {
         id="evaluation"
         label="02 · AI evaluation harness"
         title="From “ask it some questions” to repeatable AI regression testing."
-        intro="Before: release testing meant manually asking the assistant questions and judging the answers. Releases could not be compared, failures could not be reproduced, and no one could say which layer had regressed."
+        intro="Release testing meant asking the assistant questions by hand. Releases could not be compared, failures could not be reproduced, and no one could say which layer had regressed."
       >
         <ArtifactCard title="Evaluation pipeline" meta="Run on every release candidate">
           <ProcessFlow
@@ -166,32 +195,34 @@ export default function EnterpriseAIPage() {
           />
         </ArtifactCard>
 
-        <div className="grid grid--2">
-          <ArtifactCard title="One golden scenario" meta="~50 in the suite">
-            <KeyValueRows
-              rows={[
-                { key: 'Question', value: 'Which workloads drove this week’s cost increase?' },
-                { key: 'Expected answer', value: 'Named workloads with contribution to the increase' },
-                { key: 'Expected source', value: 'Cost + usage tables for the current period' },
-                { key: 'Expected behavior', value: 'Cite the source; do not answer if the period is incomplete' },
-                { key: 'Scoring criteria', value: 'Correctness · groundedness · completeness · usefulness' },
-              ]}
-            />
-          </ArtifactCard>
-          <ArtifactCard title="Scored dimensions" meta="Every scenario, every release">
-            <DefinitionGrid
-              columns={2}
-              items={[
-                { term: 'Correctness', desc: 'Is the answer right?' },
-                { term: 'Completeness', desc: 'Does it cover what was asked?' },
-                { term: 'Groundedness', desc: 'Is it supported by retrieved data?' },
-                { term: 'Hallucination', desc: 'Did it assert what it could not know?' },
-                { term: 'Usefulness', desc: 'Does it advance the operational task?' },
-                { term: 'Latency', desc: 'Is it fast enough to be used?' },
-              ]}
-            />
-          </ArtifactCard>
-        </div>
+        <DeeperDetail summary="See a golden scenario and how it was scored" hint="evaluation detail">
+  <div className="grid grid--2">
+            <ArtifactCard title="One golden scenario" meta="~50 in the suite">
+              <KeyValueRows
+                rows={[
+                  { key: 'Question', value: 'Which workloads drove this week’s cost increase?' },
+                  { key: 'Expected answer', value: 'Named workloads with contribution to the increase' },
+                  { key: 'Expected source', value: 'Cost + usage tables for the current period' },
+                  { key: 'Expected behavior', value: 'Cite the source; do not answer if the period is incomplete' },
+                  { key: 'Scoring criteria', value: 'Correctness · groundedness · completeness · usefulness' },
+                ]}
+              />
+            </ArtifactCard>
+            <ArtifactCard title="Scored dimensions" meta="Every scenario, every release">
+              <DefinitionGrid
+                columns={2}
+                items={[
+                  { term: 'Correctness', desc: 'Is the answer right?' },
+                  { term: 'Completeness', desc: 'Does it cover what was asked?' },
+                  { term: 'Groundedness', desc: 'Is it supported by retrieved data?' },
+                  { term: 'Hallucination', desc: 'Did it assert what it could not know?' },
+                  { term: 'Usefulness', desc: 'Does it advance the operational task?' },
+                  { term: 'Latency', desc: 'Is it fast enough to be used?' },
+                ]}
+              />
+            </ArtifactCard>
+          </div>
+        </DeeperDetail>
 
         <ArtifactCard
           title="Failure taxonomy → owner"
@@ -238,7 +269,7 @@ export default function EnterpriseAIPage() {
 
         <DecisionCallout
           label="What this changed"
-          note="Release comparison became a scored diff rather than an argument. Quality improved measurably across correctness, groundedness and retrieval success between the releases I evaluated, at a small latency cost — and, more importantly, each regression arrived with an owner attached."
+          note="Release comparison became a scored diff rather than an argument. Quality improved across correctness, groundedness and retrieval success between the releases I evaluated, at a small latency cost — and every regression arrived with an owner attached."
         >
           Make AI quality a release gate with named failure classes, not a
           subjective impression.
@@ -250,7 +281,7 @@ export default function EnterpriseAIPage() {
         id="analytics"
         label="03 · Operational analytics"
         title="Teams were rebuilding the same weekly analysis by hand."
-        intro="Compute cost, usage, validation health and production issues lived in separate systems. Every week, someone reassembled them manually before anyone could make a decision."
+        intro="Cost, usage, validation health and production issues lived in separate systems, reassembled by hand every week before anyone could decide anything."
       >
         <div className="grid grid--2">
           <ArtifactCard title="Before" tone="plain">
@@ -282,38 +313,40 @@ export default function EnterpriseAIPage() {
           </ArtifactCard>
         </div>
 
-        <ArtifactCard
-          title="Operational view"
-          meta="Synthetic reconstruction"
-          caption="Illustrative figures. The point of the artifact is the shape of the decision: cost movement, workload concentration and validation health in one place, queryable in natural language."
-        >
-          <MetricStrip
-            variant="plain"
-            columns={3}
-            size="sm"
-            caps
-            items={[
-              { value: '$184K', label: 'Weekly compute spend' },
-              { value: '+7.3%', label: 'Week over week' },
-              { value: '428', label: 'Active workloads' },
-              { value: '96.4%', label: 'Validation success' },
-              { value: '14', label: 'Open anomalies' },
-              { value: '9', label: 'High-cost workloads' },
-            ]}
-          />
-          <div style={{ marginTop: 'var(--s3)' }}>
-            <InfoPanel tone="blue" label="Asked in natural language">
-              <p>
-                <strong>“Which workloads contributed most to this week’s cost
-                increase?”</strong>
-              </p>
-              <p>
-                Three workloads accounted for the majority of the increase, driven
-                by higher execution frequency and longer runtime.
-              </p>
-            </InfoPanel>
-          </div>
-        </ArtifactCard>
+        <DeeperDetail summary="See the consolidated operational view" hint="synthetic figures">
+  <ArtifactCard
+            title="Operational view"
+            meta="Synthetic reconstruction"
+            caption="Illustrative figures. The artifact is the shape of the decision: cost, workload concentration and validation health in one place, queryable in natural language."
+          >
+            <MetricStrip
+              variant="plain"
+              columns={3}
+              size="sm"
+              caps
+              items={[
+                { value: '$184K', label: 'Weekly compute spend' },
+                { value: '+7.3%', label: 'Week over week' },
+                { value: '428', label: 'Active workloads' },
+                { value: '96.4%', label: 'Validation success' },
+                { value: '14', label: 'Open anomalies' },
+                { value: '9', label: 'High-cost workloads' },
+              ]}
+            />
+            <div style={{ marginTop: 'var(--s3)' }}>
+              <InfoPanel tone="blue" label="Asked in natural language">
+                <p>
+                  <strong>“Which workloads contributed most to this week’s cost
+                  increase?”</strong>
+                </p>
+                <p>
+                  Three workloads accounted for the majority of the increase, driven
+                  by higher execution frequency and longer runtime.
+                </p>
+              </InfoPanel>
+            </div>
+          </ArtifactCard>
+        </DeeperDetail>
 
         <DecisionCallout
           label="What this changed"
@@ -329,7 +362,7 @@ export default function EnterpriseAIPage() {
         id="prioritization"
         label="04 · Prioritization"
         title="45+ requests, finite engineering capacity, four things that shipped."
-        intro="Workshops, demos, UAT and production feedback produced more than 45 candidate enhancements. The job was not to maintain the backlog — it was to argue for the few with real leverage."
+        intro="Workshops, demos, UAT and production feedback produced 45+ candidate enhancements. The job was not maintaining the backlog — it was arguing for the few with real leverage."
       >
         <ArtifactCard
           title="Prioritization matrix"
@@ -363,55 +396,57 @@ export default function EnterpriseAIPage() {
           />
         </ArtifactCard>
 
-        <ArtifactCard title="How three candidates scored" meta="1–5, my scoring framework">
-          <DataTable
-            columns={[
-              'Enhancement',
-              'Impact',
-              'Reach',
-              'Urgency',
-              'Workaround',
-              'Leverage',
-              'Effort',
-              'Call',
-            ]}
-            rows={[
-              [
-                'Automated dependency visibility',
-                '5',
-                '5',
-                '4',
-                '1',
-                '5',
-                '3',
-                <Tag key="a">Phase 2</Tag>,
-              ],
-              [
-                'Saved operational views',
-                '4',
-                '4',
-                '3',
-                '3',
-                '4',
-                '2',
-                <Tag key="b">Phase 2</Tag>,
-              ],
-              [
-                'Additional dashboard filter',
-                '3',
-                '2',
-                '2',
-                '4',
-                '2',
-                '3',
-                <Tag key="c" tone="gray">
-                  Defer
-                </Tag>,
-              ],
-            ]}
-            caption="A low workaround score is what moved dependency visibility to the top: it was the only pain with no manual escape hatch."
-          />
-        </ArtifactCard>
+        <DeeperDetail summary="See how three candidates actually scored" hint="scoring table">
+  <ArtifactCard title="How three candidates scored" meta="1–5, my scoring framework">
+            <DataTable
+              columns={[
+                'Enhancement',
+                'Impact',
+                'Reach',
+                'Urgency',
+                'Workaround',
+                'Leverage',
+                'Effort',
+                'Call',
+              ]}
+              rows={[
+                [
+                  'Automated dependency visibility',
+                  '5',
+                  '5',
+                  '4',
+                  '1',
+                  '5',
+                  '3',
+                  <Tag key="a">Phase 2</Tag>,
+                ],
+                [
+                  'Saved operational views',
+                  '4',
+                  '4',
+                  '3',
+                  '3',
+                  '4',
+                  '2',
+                  <Tag key="b">Phase 2</Tag>,
+                ],
+                [
+                  'Additional dashboard filter',
+                  '3',
+                  '2',
+                  '2',
+                  '4',
+                  '2',
+                  '3',
+                  <Tag key="c" tone="gray">
+                    Defer
+                  </Tag>,
+                ],
+              ]}
+              caption="A low workaround score moved dependency visibility to the top: it was the only pain with no manual escape hatch."
+            />
+          </ArtifactCard>
+        </DeeperDetail>
       </Section>
 
       {/* ---------------- DIAGNOSIS ---------------- */}
@@ -421,33 +456,35 @@ export default function EnterpriseAIPage() {
         title="Trace the symptom before proposing the intervention."
         intro="Validation failures rose sharply across the platform. The request that arrived was for a dashboard filter; the actual problem was upstream."
       >
-        <ArtifactCard
-          title="Diagnostic trace"
-          meta="Synthetic reconstruction"
-          caption="Figures are illustrative. The sequence is the real method: segment before hypothesizing, test against records, and only then propose an intervention."
-        >
-          <SystemTrace
-            title="Validation failure investigation"
-            id="incident · reconstructed"
-            rows={[
-              { step: 'Symptom', value: 'Validation failures increased from 2.4% to 8.9%' },
-              { step: 'Segment', value: 'Concentrated in 3 source pipelines, not platform-wide' },
-              { step: 'Dependency', value: 'Shared upstream schema change detected in the same window' },
-              {
-                step: 'Hypothesis',
-                value: 'An unexpected field-type change is failing downstream validation',
-              },
-              { step: 'Test', value: 'Compare pre-change and post-change records for affected fields' },
-              {
-                step: 'Root cause',
-                value: '87% of new failures traced to the affected fields',
-                decision: true,
-              },
-              { step: 'Fix', value: 'Schema handling updated; upstream validation added' },
-              { step: 'Validation', value: 'Post-fix validation failure rate 2.7%' },
-            ]}
-          />
-        </ArtifactCard>
+        <DeeperDetail summary="Follow the full diagnostic trace" hint="step by step">
+  <ArtifactCard
+            title="Diagnostic trace"
+            meta="Synthetic reconstruction"
+            caption="Figures are illustrative; the sequence is the real method — segment, hypothesize, test against records, then propose an intervention."
+          >
+            <SystemTrace
+              title="Validation failure investigation"
+              id="incident · reconstructed"
+              rows={[
+                { step: 'Symptom', value: 'Validation failures increased from 2.4% to 8.9%' },
+                { step: 'Segment', value: 'Concentrated in 3 source pipelines, not platform-wide' },
+                { step: 'Dependency', value: 'Shared upstream schema change detected in the same window' },
+                {
+                  step: 'Hypothesis',
+                  value: 'An unexpected field-type change is failing downstream validation',
+                },
+                { step: 'Test', value: 'Compare pre-change and post-change records for affected fields' },
+                {
+                  step: 'Root cause',
+                  value: '87% of new failures traced to the affected fields',
+                  decision: true,
+                },
+                { step: 'Fix', value: 'Schema handling updated; upstream validation added' },
+                { step: 'Validation', value: 'Post-fix validation failure rate 2.7%' },
+              ]}
+            />
+          </ArtifactCard>
+        </DeeperDetail>
 
         <DecisionCallout label="What this changed">
           The fix belonged upstream, not in the product surface where the
@@ -460,7 +497,7 @@ export default function EnterpriseAIPage() {
         id="stakeholders"
         label="06 · Customer + product leadership"
         title="What a stakeholder asked for was rarely what the workflow needed."
-        intro="I led and co-led customer workshops, design sessions, and executive demos, then translated requests into a workflow problem, a technical dependency, and a decision."
+        intro="I led and co-led customer workshops, design sessions and demos, then translated each request into a workflow problem, a dependency, and a decision."
       >
         <ProcessFlow
           tone="blue"

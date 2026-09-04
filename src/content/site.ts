@@ -5,14 +5,11 @@
    ============================================================ */
 
 /* Absolute base for canonical URLs, Open Graph images, the sitemap and the
-   JSON-LD profile. Vercel supplies the production hostname automatically, so
-   this is correct on deploy without hardcoding a domain. Set
-   NEXT_PUBLIC_SITE_URL once a custom domain is attached and it wins. */
+   JSON-LD profile. This is the live production domain. Set
+   NEXT_PUBLIC_SITE_URL in Vercel to override it if a custom domain is
+   attached later. */
 export const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : 'http://localhost:3000');
+  process.env.NEXT_PUBLIC_SITE_URL ?? 'https://portfolio-izzy-bider.vercel.app';
 
 export const site = {
   name: 'Isabella “Izzy” Bider',
@@ -35,7 +32,7 @@ export const navLinks = [
    Every figure here is a verified headline number. */
 export const evidence = [
   { value: '75+', label: 'pilot users' },
-  { value: '10,000+', label: 'users on enterprise AI platform' },
+  { value: '10,000+', label: 'enterprise platform users' },
   { value: '1M+', label: 'production records analyzed' },
   { value: '20+', label: 'discovery conversations' },
   { value: '60+', label: 'product iterations' },
@@ -82,9 +79,9 @@ export const projects: Project[] = [
     title: 'Enterprise AI Product Systems',
     tag: 'Enterprise · Product ownership',
     statement:
-      'Owned product problems inside a 10,000-user enterprise AI platform, where a symptom could originate in retrieval, data, infrastructure, or the workflow itself.',
+      'Owned product problems inside a 10,000-user enterprise AI platform, where the same symptom could originate in retrieval, data, infrastructure, or the workflow itself.',
     owned:
-      'Owned: requirements, AI evaluation harness, production-data investigation, enhancement prioritization.',
+      'Requirements, AI evaluation, production-data investigation, enhancement prioritization.',
     proof: [
       '10,000+ users · 1M+ records analyzed',
       '~50-question golden evaluation suite',
@@ -100,7 +97,7 @@ export const projects: Project[] = [
     statement:
       'Research changed the target user and the product thesis: hearing loss did not predict product value — workflow, task and desired autonomy did.',
     owned:
-      'Owned: research strategy, participant recruiting, synthesis, segmentation, product recommendation.',
+      'Research strategy, recruiting, synthesis, segmentation, product recommendation.',
     proof: [
       '20+ discovery conversations',
       '8+ stakeholder / expert interviews',
@@ -117,12 +114,12 @@ export const projects: Project[] = [
     statement:
       'An AI product thesis: the system should decide whether to answer, ask, verify or escalate before it generates anything.',
     owned:
-      'Owned end to end: product thesis, decision-policy design, the working Next.js app, the 53-scenario benchmark and the evaluation harness.',
+      'Product thesis, decision-policy design, implementation, benchmark and evaluation design.',
     proof: [
       'ANSWER / ASK / VERIFY / ESCALATE decision policy',
-      'Built and benchmarked: 53 scenarios, 3 systems',
-      'Unsupported action 75% → 0% on the synthetic set',
-      'Costs 58 points of autonomous completion — stated, not hidden',
+      'Three-system experiment design',
+      '53 synthetic scenarios · failure taxonomy',
+      'Evaluation framework for appropriate autonomy',
     ],
     motif: 'behaviors',
     href: '/work/trustlayer',

@@ -49,8 +49,9 @@ Do **not** run `npm run build` while `npm run dev` is running — they share the
 Layout: `PageShell`, `Header`, `Footer`, `Section`, `CaseStudyHero`,
 `CaseStudyNav`, `CaseStudyFooter`.
 
-Evidence and framing: `MetricStrip`, `EvidenceStrip`, `ArtifactCard`,
-`DecisionCallout`, `InsightCallout`, `Statement`, `ProvenanceNote`, `InfoPanel`.
+Evidence and framing: `CaseGlance`, `MetricStrip`, `EvidenceStrip`,
+`ArtifactCard`, `DecisionCallout`, `InsightCallout`, `Statement`,
+`ProvenanceNote`, `InfoPanel`, `DeeperDetail`, `Arrow`.
 
 Diagrams and charts (CSS/SVG, no chart library): `ArchitectureDiagram`,
 `ProcessFlow`, `Continuum`, `Funnel`, `HorizontalBarChart`, `RetentionCurve`,
@@ -63,6 +64,34 @@ Product mockups: `ProductMockup` with `MockField`, `MockRows`, `MockStat`,
 `MockBlock`, `MockButton`, `MockStatus`, `MockSpark`, `MockNote`.
 
 Homepage: `ProjectCard` (with per-project motif), `SupportCard`.
+
+## Reading at three speeds
+
+The site is built for three depths of attention, and the two components that
+carry that are worth knowing about before editing a case study:
+
+- **`CaseGlance`** sits directly under every flagship hero. Four fixed cells —
+  problem, my role, key decision, outcome — identical across the four cases so
+  they can be compared rather than re-learned. Its `status` prop
+  (`measured` / `benchmark` / `proposed` / `internal`) prints the evidence type
+  next to the outcome, so a pilot result and a validation plan never look alike.
+  A recruiter should be able to read the hero plus this and stop.
+- **`DeeperDetail`** wraps material an interviewer wants and a recruiter does
+  not need first: scoring tables, the diagnostic trace, the PRD extract, the
+  policy rules. Native `<details>`, so it stays keyboard-operable and present in
+  the HTML for indexing — deferred, never deleted.
+
+Section navigation lists only major sections, not every heading on the page.
+
+## A note on arrows
+
+The webfonts load the `latin` subset, whose `unicode-range` excludes U+2192 and
+the other arrows. A literal `→` therefore falls back to a system face — wrong
+weight everywhere, an empty box on machines with no arrow-bearing font.
+Interface arrows are drawn as SVG (`Arrow`), `withArrows()` swaps them into
+display strings like `68% → 91%`, and the CSS font stacks end in symbol
+families so any remaining prose arrow still resolves. Prefer `<Arrow />` over
+typing an arrow.
 
 ## Content integrity
 

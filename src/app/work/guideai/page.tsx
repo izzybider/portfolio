@@ -2,12 +2,14 @@ import type { Metadata } from 'next';
 import {
   PageShell,
   CaseStudyHero,
+  CaseGlance,
   CaseStudyNav,
   CaseStudyFooter,
   Section,
   MetricStrip,
   InfoPanel,
   ArtifactCard,
+  DeeperDetail,
   DecisionCallout,
   InsightCallout,
   ProcessFlow,
@@ -46,11 +48,9 @@ export const metadata: Metadata = {
 
 const NAV = [
   { id: 'problem', label: 'Problem' },
-  { id: 'discovery', label: 'Discovery' },
   { id: 'product', label: 'Product' },
   { id: 'analytics', label: 'Analytics' },
   { id: 'evaluation', label: 'AI evaluation' },
-  { id: 'experiment', label: 'Experiment' },
   { id: 'results', label: 'Results' },
 ];
 
@@ -69,9 +69,6 @@ export default function GuideAIPage() {
           'AI evaluation',
           'Pilot design',
         ]}
-        paragraphs={[
-          'GuideAI helps raisers turn weeks of individual observations into patterns, a prepared trainer conversation, and a clear escalation signal — while keeping trainer judgment central to the workflow.',
-        ]}
       >
         <MetricStrip
           variant="band"
@@ -86,6 +83,37 @@ export default function GuideAIPage() {
           ]}
         />
       </CaseStudyHero>
+
+      <CaseGlance
+        status="measured"
+        problem={
+          <>
+            Raisers already recorded behavioral observations, but had no way to
+            synthesize weeks of them before a trainer conversation — so decisions
+            ran on the last few days rather than the pattern.
+          </>
+        }
+        role={
+          <>
+            No one assigned this. I found the gap, ran discovery, built the
+            product, recruited the pilot, instrumented usage and designed the AI
+            evaluation.
+          </>
+        }
+        decision={
+          <>
+            Support trainer judgment rather than replace it — and treat{' '}
+            <strong>agreement with expert trainers</strong>, not fluency, as the
+            quality bar.
+          </>
+        }
+        outcome={
+          <>
+            75+ pilot users · 87% weekly retention · 4.8/5 satisfaction ·
+            68% → 91% expert agreement · 45% less trainer-prep time.
+          </>
+        }
+      />
 
       {/* ---------------- PROBLEM ---------------- */}
       <Section
@@ -414,24 +442,26 @@ export default function GuideAIPage() {
           </ArtifactCard>
         </div>
 
-        <ArtifactCard title="System comparison" meta="Same evaluation set, three designs">
-          <ExperimentComparison
-            metricLabel="Measure"
-            columns={[
-              { name: 'Direct LLM', sub: 'No retrieval' },
-              { name: 'Basic RAG', sub: 'Generic retrieval' },
-              { name: 'Context-aware RAG', sub: 'Selected', win: true },
-            ]}
-            rows={[
-              { metric: 'Correctness', values: ['76%', '84%', '90%'] },
-              { metric: 'Groundedness', values: ['64%', '88%', '94%'] },
-              { metric: 'Trainer agreement', values: ['72%', '82%', '91%'] },
-              { metric: 'Unsupported recommendation', values: ['14%', '8%', '4%'] },
-              { metric: 'Latency', values: ['1.5 sec', '2.1 sec', '2.8 sec'] },
-              { metric: 'Cost / recommendation', values: ['$0.012', '$0.019', '$0.027'] },
-            ]}
-          />
-        </ArtifactCard>
+        <DeeperDetail summary="Compare the three system designs on the same evaluation set" hint="methodology">
+  <ArtifactCard title="System comparison" meta="Same evaluation set, three designs">
+            <ExperimentComparison
+              metricLabel="Measure"
+              columns={[
+                { name: 'Direct LLM', sub: 'No retrieval' },
+                { name: 'Basic RAG', sub: 'Generic retrieval' },
+                { name: 'Context-aware RAG', sub: 'Selected', win: true },
+              ]}
+              rows={[
+                { metric: 'Correctness', values: ['76%', '84%', '90%'] },
+                { metric: 'Groundedness', values: ['64%', '88%', '94%'] },
+                { metric: 'Trainer agreement', values: ['72%', '82%', '91%'] },
+                { metric: 'Unsupported recommendation', values: ['14%', '8%', '4%'] },
+                { metric: 'Latency', values: ['1.5 sec', '2.1 sec', '2.8 sec'] },
+                { metric: 'Cost / recommendation', values: ['$0.012', '$0.019', '$0.027'] },
+              ]}
+            />
+          </ArtifactCard>
+        </DeeperDetail>
 
         <DecisionCallout note="A 1.3-second latency cost and roughly double the per-recommendation spend were acceptable for a product used a few times a week, where a wrong recommendation costs a trainer's trust.">
           Ship context-aware RAG despite higher latency and cost.

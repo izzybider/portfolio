@@ -1,3 +1,4 @@
+import Arrow from './Arrow';
 /** ProcessFlow — a sequence of labelled steps joined by arrows. */
 export default function ProcessFlow({
   steps,
@@ -10,14 +11,13 @@ export default function ProcessFlow({
   steps: string[];
   direction?: 'horizontal' | 'vertical';
   tone?: 'white' | 'blue';
+  /** override the drawn connector with a literal string (e.g. "+") */
   arrow?: string;
   /** indexes rendered in the accent colour */
   highlight?: number[];
   /** keep every step on one desktop row, stacking on mobile */
   row?: boolean;
 }) {
-  const mark = arrow ?? (direction === 'vertical' ? '↓' : '→');
-
   return (
     <div
       className={`flow${direction === 'vertical' ? ' flow--vertical' : ''}${
@@ -42,7 +42,9 @@ export default function ProcessFlow({
           </span>
           {index < steps.length - 1 ? (
             <span className="flow__arrow" aria-hidden="true">
-              {mark}
+              {arrow ?? (
+                <Arrow direction={direction === 'vertical' ? 'down' : 'right'} />
+              )}
             </span>
           ) : null}
         </div>

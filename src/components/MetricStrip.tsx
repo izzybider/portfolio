@@ -1,3 +1,5 @@
+import { withArrows } from './Arrow';
+
 export type Metric = { value: string; label?: string };
 
 /**
@@ -25,7 +27,7 @@ export default function MetricStrip({
       {items.map((item) => (
         <div key={item.value + (item.label ?? '')}>
           <dd className={`metric__value${size === 'sm' ? ' metric__value--sm' : ''}`}>
-            {item.value}
+            {withArrows(item.value)}
           </dd>
           {item.label ? (
             <dt className={`metric__label${caps ? ' metric__label--caps' : ''}`}>

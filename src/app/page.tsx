@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import {
+  Arrow,
   PageShell,
   ProjectCard,
   SupportCard,
@@ -20,17 +21,17 @@ export default function HomePage() {
           <p className="eyebrow">AI Product · Technical Systems · Human Judgment</p>
           <h1 className="homehero__title">
             I build AI products around complex systems, human judgment, and
-            real‑world workflows.
+            real-world workflows.
           </h1>
           <p className="lede homehero__intro">
             Northwestern Biomedical Engineering + HCI. I work where understanding
-            the user, diagnosing what the system is actually doing, and deciding
-            what to change all matter at once — across 0→1 products, production AI
-            platforms, and evaluation.
+            the user, diagnosing the system, and deciding what to change all
+            matter at once — across 0→1 products, production AI platforms, and
+            evaluation.
           </p>
           <div className="homehero__actions">
             <Link href="#work" className="button button--primary">
-              View selected work <span aria-hidden="true">→</span>
+              View selected work <Arrow />
             </Link>
             <a className="button button--quiet" href={site.links.resume}>
               Resume

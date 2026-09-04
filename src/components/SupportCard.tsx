@@ -1,3 +1,4 @@
+import Arrow from './Arrow';
 /** SupportCard — secondary work on the homepage. Deliberately compact. */
 export default function SupportCard({
   label,
@@ -22,7 +23,7 @@ export default function SupportCard({
       {proof ? <p className="support__proof">{proof}</p> : null}
       {cta ? (
         <p className="support__cta">
-          {cta} <span aria-hidden="true">→</span>
+          {cta} <Arrow />
         </p>
       ) : null}
     </>

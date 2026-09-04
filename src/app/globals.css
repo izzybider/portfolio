@@ -60,13 +60,17 @@
   --fs-h1: 44px;
   --fs-display: 50px;
 
-  /* The var(--font-*) names are supplied by next/font in layout.tsx. */
+  /* The var(--font-*) names are supplied by next/font in layout.tsx.
+     The trailing symbol families are deliberate: the latin subset does not
+     cover arrows and maths signs (→ ↔ ≠ ×), so those characters fall through
+     to whichever family here has them rather than rendering as an empty box.
+     Interface arrows are drawn as SVG instead — see components/Arrow.tsx. */
   --font-display: var(--font-space-grotesk), "Space Grotesk", "Helvetica Neue",
-    Arial, sans-serif;
+    Arial, "Apple Symbols", "Segoe UI Symbol", sans-serif;
   --font-body: var(--font-plex-sans), "IBM Plex Sans", "Helvetica Neue", Arial,
-    sans-serif;
+    "Apple Symbols", "Segoe UI Symbol", sans-serif;
   --font-mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace,
-    SFMono-Regular, Menlo, monospace;
+    SFMono-Regular, Menlo, "Segoe UI Symbol", monospace;
 }
 
 *,
@@ -1597,9 +1601,14 @@ a.support__card:hover {
   align-items: center;
 }
 
+/* Drawn, not typed: the caret and the trend marks used to be ▼ / ↑ / ↓,
+   which sit outside the webfont subset and fell back to a system face. */
 .mock-field__caret {
-  color: var(--ink-muted);
-  font-size: 10px;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid var(--ink-muted);
 }
 
 .mock-field__input--muted {
@@ -1650,12 +1659,27 @@ a.support__card:hover {
   font-family: var(--font-display);
 }
 
-.mock-stat__value--down {
-  color: var(--accent);
-}
-
+.mock-stat__value--down,
 .mock-stat__value--up {
   color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mock-stat__trend {
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+}
+
+.mock-stat__value--up .mock-stat__trend {
+  border-bottom: 6px solid currentColor;
+}
+
+.mock-stat__value--down .mock-stat__trend {
+  border-top: 6px solid currentColor;
 }
 
 .mock-btn {
@@ -2538,4 +2562,188 @@ a.support__card:hover {
   font-size: var(--fs-h4);
   font-weight: 600;
   color: var(--ink);
+}
+
+
+/* Drawn arrows sit on the text baseline rather than the em box. */
+.arrow {
+  display: inline-block;
+  vertical-align: -0.115em;
+  flex: none;
+}
+
+/* ============================================================
+   CASE AT A GLANCE
+   The 20-second read that sits between the hero and the deep sections.
+   ============================================================ */
+
+.glance {
+  padding: 0 0 var(--s6);
+}
+
+.glance .container {
+  border-top: 2px solid var(--ink);
+  padding-top: var(--s3);
+}
+
+.glance__label {
+  color: var(--ink-muted);
+  margin: 0 0 var(--s3);
+}
+
+.glance__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--s3);
+  margin: 0;
+}
+
+.glance__cell {
+  border-left: 2px solid var(--border-strong);
+  padding-left: var(--s2);
+}
+
+.glance__cell:nth-child(3) {
+  border-left-color: var(--accent);
+}
+
+.glance__term {
+  font-family: var(--font-display);
+  font-size: var(--fs-micro);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.glance__tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--ink-muted);
+}
+
+.glance__body {
+  margin: 0;
+  font-size: var(--fs-meta);
+  line-height: 1.5;
+  color: var(--ink-body);
+}
+
+.glance__body strong {
+  color: var(--ink);
+}
+
+@media (max-width: 900px) {
+  .glance__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s3) var(--s2);
+  }
+}
+
+@media (max-width: 560px) {
+  .glance__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ============================================================
+   DEEPER DETAIL — optional Level 3 material
+   ============================================================ */
+
+.deeper {
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  margin: var(--s3) 0;
+}
+
+.deeper + .deeper {
+  border-top: 0;
+  margin-top: calc(var(--s3) * -1);
+}
+
+.deeper__summary {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s2);
+  padding: 14px 0;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-display);
+  font-size: var(--fs-meta);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.deeper__summary::-webkit-details-marker {
+  display: none;
+}
+
+.deeper__summary:hover .deeper__text {
+  color: var(--accent);
+}
+
+.deeper__summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* A drawn plus/minus — no font glyph, so it cannot fall back. */
+.deeper__mark {
+  position: relative;
+  width: 11px;
+  height: 11px;
+  flex: none;
+  align-self: center;
+}
+
+.deeper__mark::before,
+.deeper__mark::after {
+  content: '';
+  position: absolute;
+  background: var(--accent);
+  inset: 50% 0 auto 0;
+  height: 1.5px;
+  margin-top: -0.75px;
+}
+
+.deeper__mark::after {
+  inset: 0 50% auto auto;
+  width: 1.5px;
+  height: 100%;
+  margin: 0 -0.75px 0 0;
+  transition: opacity 0.12s ease;
+}
+
+.deeper[open] .deeper__mark::after {
+  opacity: 0;
+}
+
+.deeper__hint {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  font-weight: 400;
+  color: var(--ink-muted);
+}
+
+.deeper__body {
+  padding-bottom: var(--s3);
+}
+
+.deeper__body > * + * {
+  margin-top: var(--s3);
+}
+
+@media (max-width: 560px) {
+  .deeper__hint {
+    display: none;
+  }
 }

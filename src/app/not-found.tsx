@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { PageShell, Section } from '@/components';
+import { Arrow, PageShell, Section } from '@/components';
 import { caseStudies, site } from '@/content/site';
 
 export const metadata = { title: 'Page not found — Isabella “Izzy” Bider' };
@@ -25,7 +25,7 @@ export default function NotFound() {
         </ul>
         <p>
           <Link href="/" className="button button--primary">
-            Back to the homepage <span aria-hidden="true">→</span>
+            Back to the homepage <Arrow />
           </Link>{' '}
           <a className="button button--quiet" href={site.links.resume}>
             Resume

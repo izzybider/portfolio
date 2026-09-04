@@ -1,12 +1,15 @@
 import type { Metadata } from 'next';
 import {
+  Arrow,
   PageShell,
   CaseStudyHero,
+  CaseGlance,
   CaseStudyNav,
   CaseStudyFooter,
   Section,
   InfoPanel,
   ArtifactCard,
+  DeeperDetail,
   DecisionCallout,
   InsightCallout,
   Statement,
@@ -55,15 +58,10 @@ const LIVE_DEMO_URL: string | null = null;
 
 const NAV = [
   { id: 'thesis', label: 'Thesis' },
-  { id: 'behaviors', label: 'Behaviors' },
-  { id: 'design', label: 'Experiment design' },
+  { id: 'behaviors', label: 'Policy' },
   { id: 'architecture', label: 'Architecture' },
-  { id: 'policy', label: 'Policy engine' },
-  { id: 'benchmark', label: 'Benchmark' },
   { id: 'evaluation', label: 'Evaluation' },
   { id: 'tradeoff', label: 'Results' },
-  { id: 'trace', label: 'Trace viewer' },
-  { id: 'plan', label: 'Plan' },
 ];
 
 export default function TrustLayerPage() {
@@ -94,7 +92,7 @@ export default function TrustLayerPage() {
               target="_blank"
               rel="noreferrer"
             >
-              Try TrustLayer <span aria-hidden="true">→</span>
+              Try TrustLayer <Arrow />
             </a>
           </p>
         ) : null}
@@ -108,6 +106,39 @@ export default function TrustLayerPage() {
           deployed in any real workflow.
         </ProvenanceNote>
       </CaseStudyHero>
+
+      <CaseGlance
+        status="benchmark"
+        problem={
+          <>
+            AI assistants optimize for producing a plausible response, even when
+            the evidence, the authorization or the human judgment a task needs is
+            missing.
+          </>
+        }
+        role={
+          <>
+            Independent project. I wrote the thesis, designed the decision
+            policy, built the application, and designed the benchmark and
+            evaluation that test it.
+          </>
+        }
+        decision={
+          <>
+            Select the <strong>behavior before generation</strong> — answer, ask,
+            verify or escalate — and treat the friction that adds as a cost to be
+            measured, not avoided.
+          </>
+        }
+        outcome={
+          <>
+            Unsupported behavior fell to zero on a 53-scenario synthetic set
+            without unnecessary escalation replacing it, at a real cost in
+            autonomy. Synthetic scenarios and simulated tools — not production
+            performance, and no human study yet.
+          </>
+        }
+      />
 
       {/* ---------------- THESIS ---------------- */}
       <Section
@@ -372,24 +403,26 @@ export default function TrustLayerPage() {
               ]}
             />
           </ArtifactCard>
-          <ArtifactCard
-            title="Simulated tools"
-            meta="Six functions · local JSON fixtures"
-            tone="plain"
-          >
-            <DataTable
-              columns={['Tool', 'What it exists to demonstrate']}
-              rows={[
-                ['lookupTransaction', 'Duplicate-charge confirmation'],
-                ['lookupAccount', 'Pending ownership transfer, account status'],
-                ['lookupReservation', 'Ambiguous match → the system asks instead'],
-                ['getProductMetrics', 'Metric series, segment split, release annotation'],
-                ['checkAuthorization', 'Role limits, missing grants, owner approval'],
-                ['lookupPatientRecord', 'Operational fields only; clinical detail withheld'],
-              ]}
-              caption="Each tool validates its own arguments, reports its own latency, and returns failures as results rather than throwing — so a tool failure is a product state the policy can read, not an exception."
-            />
-          </ArtifactCard>
+          <DeeperDetail summary="The six simulated tools and what each one exists to prove" hint="fixtures">
+  <ArtifactCard
+              title="Simulated tools"
+              meta="Six functions · local JSON fixtures"
+              tone="plain"
+            >
+              <DataTable
+                columns={['Tool', 'What it exists to demonstrate']}
+                rows={[
+                  ['lookupTransaction', 'Duplicate-charge confirmation'],
+                  ['lookupAccount', 'Pending ownership transfer, account status'],
+                  ['lookupReservation', 'Ambiguous match → the system asks instead'],
+                  ['getProductMetrics', 'Metric series, segment split, release annotation'],
+                  ['checkAuthorization', 'Role limits, missing grants, owner approval'],
+                  ['lookupPatientRecord', 'Operational fields only; clinical detail withheld'],
+                ]}
+                caption="Each tool validates its own arguments, reports its own latency, and returns failures as results rather than throwing — so a tool failure is a product state the policy can read, not an exception."
+              />
+            </ArtifactCard>
+        </DeeperDetail>
         </div>
       </Section>
 
@@ -400,25 +433,27 @@ export default function TrustLayerPage() {
         title="The judgment is a readable set of rules, not a prompt."
         intro="If the policy is the product, it has to be inspectable and attributable. Eleven ordered rules, first match wins, and the id of the rule that fired travels with the decision — so the same state always produces the same behavior and any decision can be traced to the line that caused it."
       >
-        <ArtifactCard title="Decision rules" meta="Evaluated in order · first match wins">
-          <DataTable
-            columns={['Rule', 'Fires when', 'Behavior']}
-            rows={[
-              ['R1 · Professional judgment', 'A licensed human owns the decision', <Tag key="1" tone="gray">Escalate</Tag>],
-              ['R2 · Irreversible, high risk', 'Cannot be undone, at high risk', <Tag key="2" tone="gray">Escalate</Tag>],
-              ['R3 · Consequential ambiguity', 'Neither the user nor a tool can settle it', <Tag key="3" tone="gray">Escalate</Tag>],
-              ['R4 · User can close the gap', 'One clarification resolves the request', <Tag key="4">Ask</Tag>],
-              ['R5 · Authorization unobtainable', 'Permission required, no way to establish it', <Tag key="5" tone="gray">Escalate</Tag>],
-              ['R6 · Evidence retrievable', 'A system of record holds what is missing', <Tag key="6">Verify</Tag>],
-              ['R7 · Authorization unconfirmed', 'Permission-sensitive action, permission unchecked', <Tag key="7">Verify</Tag>],
-              ['R8 · Risky side-effecting action', 'At or above the verify threshold', <Tag key="8">Verify</Tag>],
-              ['R9 · Low confidence', 'Classification below the autonomy threshold', <Tag key="9">Ask / Escalate</Tag>],
-              ['R10 · Supported answer', 'Evidence sufficient, authorization satisfied, risk in band', <Tag key="10">Answer</Tag>],
-              ['R11 · Fallback', 'Nothing matched — take the safest behavior available', <Tag key="11">Safest</Tag>],
-            ]}
-            caption="Ordering is itself a product decision: professional judgment and irreversibility are checked before any path that could produce an action."
-          />
-        </ArtifactCard>
+        <DeeperDetail summary="All eleven rules, in the order they fire" hint="policy detail">
+  <ArtifactCard title="Decision rules" meta="Evaluated in order · first match wins">
+            <DataTable
+              columns={['Rule', 'Fires when', 'Behavior']}
+              rows={[
+                ['R1 · Professional judgment', 'A licensed human owns the decision', <Tag key="1" tone="gray">Escalate</Tag>],
+                ['R2 · Irreversible, high risk', 'Cannot be undone, at high risk', <Tag key="2" tone="gray">Escalate</Tag>],
+                ['R3 · Consequential ambiguity', 'Neither the user nor a tool can settle it', <Tag key="3" tone="gray">Escalate</Tag>],
+                ['R4 · User can close the gap', 'One clarification resolves the request', <Tag key="4">Ask</Tag>],
+                ['R5 · Authorization unobtainable', 'Permission required, no way to establish it', <Tag key="5" tone="gray">Escalate</Tag>],
+                ['R6 · Evidence retrievable', 'A system of record holds what is missing', <Tag key="6">Verify</Tag>],
+                ['R7 · Authorization unconfirmed', 'Permission-sensitive action, permission unchecked', <Tag key="7">Verify</Tag>],
+                ['R8 · Risky side-effecting action', 'At or above the verify threshold', <Tag key="8">Verify</Tag>],
+                ['R9 · Low confidence', 'Classification below the autonomy threshold', <Tag key="9">Ask / Escalate</Tag>],
+                ['R10 · Supported answer', 'Evidence sufficient, authorization satisfied, risk in band', <Tag key="10">Answer</Tag>],
+                ['R11 · Fallback', 'Nothing matched — take the safest behavior available', <Tag key="11">Safest</Tag>],
+              ]}
+              caption="Ordering is itself a product decision: professional judgment and irreversibility are checked before any path that could produce an action."
+            />
+          </ArtifactCard>
+        </DeeperDetail>
 
         <ArtifactCard
           title="The policy is a dial, and the dial is a product decision"
@@ -698,99 +733,92 @@ export default function TrustLayerPage() {
         title="Observable decision factors, not hidden reasoning."
         intro="If the policy is the product, the trace is the interface a team debugs it through. Every request produces one, and the evaluation harness scores exactly this record."
       >
-        <ArtifactCard
-          title="Refund duplicate charge"
-          meta="Actual trace · scenario ev_001 · Balanced policy · deterministic mode"
-          caption="Copied from a run of the app, not written for this page. This is the scenario that explains the product: VERIFY was not a refusal — two tool calls turned an unsupported request into a supported action inside the same turn."
-        >
-          <SystemTrace
+        <DeeperDetail summary="Read one full request trace, end to end" hint="actual trace">
+  <ArtifactCard
             title="Refund duplicate charge"
-            id="ev_001 · synthetic"
-            rows={[
-              {
-                step: 'Request',
-                value: '“Refund this customer because they say they were charged twice.”',
-              },
-              {
-                step: 'Classification',
-                value: 'Refund request · commerce · deterministic classifier, 93% confidence',
-              },
-              { step: 'Risk', value: 'Medium · partially reversible' },
-              {
-                step: 'Evidence',
-                value: 'Insufficient — 0 items supplied · gap resolvable by verification',
-              },
-              { step: 'Authorization', value: 'Required · currently missing' },
-              {
-                step: 'Decision',
-                value: (
-                  <>
-                    <strong>VERIFY</strong> — rule R6, the claim has to be checked
-                    against a system of record before an action is supportable
-                  </>
-                ),
-                decision: true,
-              },
-              {
-                step: 'Tool call',
-                value: 'lookupTransaction(transaction_id: txn_88122, action: issue_refund, amount_usd: 89)',
-              },
-              {
-                step: 'Tool result',
-                value: 'Duplicate charge confirmed — txn_88122 and txn_88121, $89 each, 38 seconds apart',
-              },
-              {
-                step: 'Tool call',
-                value: 'checkAuthorization(action: issue_refund, role: support_agent_l1, amount_usd: 89)',
-              },
-              {
-                step: 'Tool result',
-                value: 'Role support_agent_l1 is authorized to issue_refund up to $100',
-              },
-              {
-                step: 'State update',
-                value: 'Evidence retrieved · authorization confirmed by the permission service',
-              },
-              {
-                step: 'Re-decision',
-                value: (
-                  <>
-                    <strong>ANSWER</strong> — risk inside the autonomous band,
-                    evidence now covers the request, no outstanding authorization
-                  </>
-                ),
-                decision: true,
-              },
-              {
-                step: 'Final behavior',
-                value: 'Answered with verified evidence, grounded in both tool results',
-              },
-              {
-                step: 'Outcome',
-                value: 'Verification completed; the action is now supported by retrieved evidence',
-              },
-            ]}
-          />
-        </ArtifactCard>
+            meta="Actual trace · scenario ev_001 · Balanced policy · deterministic mode"
+            caption="Copied from a run of the app, not written for this page. This is the scenario that explains the product: VERIFY was not a refusal — two tool calls turned an unsupported request into a supported action inside the same turn."
+          >
+            <SystemTrace
+              title="Refund duplicate charge"
+              id="ev_001 · synthetic"
+              rows={[
+                {
+                  step: 'Request',
+                  value: '“Refund this customer because they say they were charged twice.”',
+                },
+                {
+                  step: 'Classification',
+                  value: 'Refund request · commerce · deterministic classifier, 93% confidence',
+                },
+                { step: 'Risk', value: 'Medium · partially reversible' },
+                {
+                  step: 'Evidence',
+                  value: 'Insufficient — 0 items supplied · gap resolvable by verification',
+                },
+                { step: 'Authorization', value: 'Required · currently missing' },
+                {
+                  step: 'Decision',
+                  value: (
+                    <>
+                      <strong>VERIFY</strong> — rule R6, the claim has to be checked
+                      against a system of record before an action is supportable
+                    </>
+                  ),
+                  decision: true,
+                },
+                {
+                  step: 'Tool call',
+                  value: 'lookupTransaction(transaction_id: txn_88122, action: issue_refund, amount_usd: 89)',
+                },
+                {
+                  step: 'Tool result',
+                  value: 'Duplicate charge confirmed — txn_88122 and txn_88121, $89 each, 38 seconds apart',
+                },
+                {
+                  step: 'Tool call',
+                  value: 'checkAuthorization(action: issue_refund, role: support_agent_l1, amount_usd: 89)',
+                },
+                {
+                  step: 'Tool result',
+                  value: 'Role support_agent_l1 is authorized to issue_refund up to $100',
+                },
+                {
+                  step: 'State update',
+                  value: 'Evidence retrieved · authorization confirmed by the permission service',
+                },
+                {
+                  step: 'Re-decision',
+                  value: (
+                    <>
+                      <strong>ANSWER</strong> — risk inside the autonomous band,
+                      evidence now covers the request, no outstanding authorization
+                    </>
+                  ),
+                  decision: true,
+                },
+                {
+                  step: 'Final behavior',
+                  value: 'Answered with verified evidence, grounded in both tool results',
+                },
+                {
+                  step: 'Outcome',
+                  value: 'Verification completed; the action is now supported by retrieved evidence',
+                },
+              ]}
+            />
+          </ArtifactCard>
+        </DeeperDetail>
 
         <InfoPanel tone="white" label="Instrumentation">
           <p>
-            Twelve product events are defined in one catalog so the
-            instrumentation surface is reviewable rather than scattered:{' '}
-            <strong>scenario started</strong>,{' '}
-            <strong>decision generated</strong>,{' '}
-            <strong>clarification requested</strong>,{' '}
-            <strong>verification started and completed</strong>,{' '}
-            <strong>escalation triggered</strong>,{' '}
-            <strong>task completed</strong>,{' '}
-            <strong>decision overridden</strong>, <strong>benchmark run</strong>,{' '}
-            <strong>policy changed</strong>, <strong>experiment vote</strong> and{' '}
-            <strong>pipeline error</strong>. They fire into an in-app event stream
-            today. Once the system is live, the same fields become the operating
-            dashboard — decision distribution across the four behaviors, human
-            takeover rate, repeat-correction rate, and completion against latency
-            and cost per task. Those values will be populated from real usage, not
-            estimated.
+            Twelve product events are declared in one catalog, so the
+            instrumentation surface is reviewable rather than scattered through
+            the code. They fire into an in-app event stream today. Once the
+            system is live, the same fields become the operating dashboard —
+            decision distribution, human takeover rate, repeat-correction rate,
+            and completion against latency and cost per task. Those values will
+            come from real usage, not estimates.
           </p>
         </InfoPanel>
       </Section>
@@ -904,7 +932,7 @@ export default function TrustLayerPage() {
               target="_blank"
               rel="noreferrer"
             >
-              Try TrustLayer <span aria-hidden="true">→</span>
+              Try TrustLayer <Arrow />
             </a>
           </p>
         ) : null}

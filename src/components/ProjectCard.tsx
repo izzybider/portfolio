@@ -1,3 +1,4 @@
+import Arrow, { withArrows } from './Arrow';
 import Link from 'next/link';
 import type { Motif, Project } from '@/content/site';
 
@@ -72,12 +73,12 @@ export default function ProjectCard({ project }: { project: Project }) {
       <CardMotif motif={project.motif} />
       <ul className="project__proof">
         {project.proof.map((item) => (
-          <li key={item}>{item}</li>
+          <li key={item}>{withArrows(item)}</li>
         ))}
       </ul>
       <p className="project__owned">{project.owned}</p>
       <p className="project__cta">
-        Read the case study <span aria-hidden="true">→</span>
+        Read the case study <Arrow />
         {project.liveHref ? (
           <>
             {' '}
@@ -87,7 +88,7 @@ export default function ProjectCard({ project }: { project: Project }) {
               target="_blank"
               rel="noreferrer"
             >
-              Open live experiment <span aria-hidden="true">→</span>
+              Open live experiment <Arrow />
             </a>
           </>
         ) : null}
