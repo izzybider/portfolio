@@ -26,6 +26,7 @@ export const metadata: Metadata = {
   description:
     'Customer discovery for an AI phone agent that changed the target segment and the product thesis.',
   openGraph: { title: 'Designing AI Around Trust — Isabella “Izzy” Bider', description: 'Customer discovery for an AI phone agent that changed the target segment and the product thesis.' },
+  alternates: { canonical: '/work/designing-ai-around-trust' },
 };
 
 /* CONTENT INTEGRITY NOTE — Phase 2 edit.

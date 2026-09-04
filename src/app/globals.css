@@ -60,9 +60,13 @@
   --fs-h1: 44px;
   --fs-display: 50px;
 
-  --font-display: "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
-  --font-body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* The var(--font-*) names are supplied by next/font in layout.tsx. */
+  --font-display: var(--font-space-grotesk), "Space Grotesk", "Helvetica Neue",
+    Arial, sans-serif;
+  --font-body: var(--font-plex-sans), "IBM Plex Sans", "Helvetica Neue", Arial,
+    sans-serif;
+  --font-mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace,
+    SFMono-Regular, Menlo, monospace;
 }
 
 *,
@@ -2497,4 +2501,41 @@ a.support__card:hover {
   flex-direction: row-reverse;
   /* Anchor the dot, not the box, on the coordinate so the label stays inside. */
   transform: translate(calc(-100% + 6px), 50%);
+}
+
+/* ============================================================
+   404
+   ============================================================ */
+
+.notfound {
+  list-style: none;
+  margin: 0 0 var(--s5);
+  padding: 0;
+  border-top: 1px solid var(--rule);
+  max-width: var(--measure-wide);
+}
+
+.notfound li {
+  border-bottom: 1px solid var(--rule);
+}
+
+.notfound__link {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s1) var(--s3);
+  padding: 14px 0;
+  text-decoration: none;
+  color: inherit;
+}
+
+.notfound__link:hover .notfound__name {
+  color: var(--accent);
+}
+
+.notfound__name {
+  font-family: var(--font-display);
+  font-size: var(--fs-h4);
+  font-weight: 600;
+  color: var(--ink);
 }

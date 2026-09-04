@@ -26,6 +26,7 @@ export const metadata: Metadata = {
   description:
     'AI product ownership on a 10,000-user enterprise platform: evaluation harness, production-data diagnosis, and prioritization.',
   openGraph: { title: 'Enterprise AI Product Systems — Isabella “Izzy” Bider', description: 'AI product ownership on a 10,000-user enterprise platform: evaluation harness, production-data diagnosis, and prioritization.' },
+  alternates: { canonical: '/work/enterprise-ai-product-systems' },
 };
 
 /* TODO (verify before sending to employers): the synthetic dashboard figures,

@@ -34,6 +34,7 @@ export const metadata: Metadata = {
   description:
     'A 0→1 AI decision-support product for service-dog raisers: 75+ pilot users, measured against expert trainer judgment.',
   openGraph: { title: 'GuideAI — Isabella “Izzy” Bider', description: 'A 0→1 AI decision-support product for service-dog raisers: 75+ pilot users, measured against expert trainer judgment.' },
+  alternates: { canonical: '/work/guideai' },
 };
 
 /* TODO (verify before sending to employers): the analytics in this case study —

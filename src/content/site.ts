@@ -4,6 +4,16 @@
    case-study registry used for previous/next navigation.
    ============================================================ */
 
+/* Absolute base for canonical URLs, Open Graph images, the sitemap and the
+   JSON-LD profile. Vercel supplies the production hostname automatically, so
+   this is correct on deploy without hardcoding a domain. Set
+   NEXT_PUBLIC_SITE_URL once a custom domain is attached and it wins. */
+export const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : 'http://localhost:3000');
+
 export const site = {
   name: 'Isabella “Izzy” Bider',
   footerLine: 'Isabella “Izzy” Bider · 2027 New Grad · AI Product',
@@ -107,7 +117,7 @@ export const projects: Project[] = [
     statement:
       'An AI product thesis: the system should decide whether to answer, ask, verify or escalate before it generates anything.',
     owned:
-      'Owned: product thesis, decision-policy design, benchmark and evaluation design.',
+      'Owned end to end: product thesis, decision-policy design, the working Next.js app, the 53-scenario benchmark and the evaluation harness.',
     proof: [
       'ANSWER / ASK / VERIFY / ESCALATE decision policy',
       'Built and benchmarked: 53 scenarios, 3 systems',
