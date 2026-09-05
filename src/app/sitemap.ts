@@ -19,5 +19,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly' as const,
       priority: 0.8,
     })),
+    ...['/demo/guideai', '/demo/trustlayer'].map((href) => ({
+      url: `${siteUrl}${href}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    })),
   ];
 }

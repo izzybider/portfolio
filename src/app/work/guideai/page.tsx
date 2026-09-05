@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import {
   PageShell,
+  Arrow,
   CaseStudyHero,
   CaseGlance,
   CaseStudyNav,
@@ -82,6 +84,12 @@ export default function GuideAIPage() {
             { value: '60+', label: 'product iterations' },
           ]}
         />
+        <p className="demo__cta">
+          <Link href="/demo/guideai" className="button button--primary">
+            Try interactive demo <Arrow />
+          </Link>
+          <span className="meta">Synthetic demo data · no sign-in</span>
+        </p>
       </CaseStudyHero>
 
       <CaseGlance

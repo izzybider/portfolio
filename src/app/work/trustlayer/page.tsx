@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import {
   Arrow,
   PageShell,
@@ -52,9 +53,11 @@ export const metadata: Metadata = {
    study, the explanation experiment (Variant A/B trust and frustration), any
    production telemetry, and any claim of real-workflow deployment. */
 
-/* Set this once the TrustLayer app is deployed and a "Try TrustLayer →"
-   button appears in the hero and at the end of the case study. */
-const LIVE_DEMO_URL: string | null = null;
+/* The live artifact is the interactive experiment inside this site, at
+   /demo/trustlayer. It runs the same eleven-rule policy engine, the same
+   simulated tools and a subset of the same labelled scenarios as the
+   standalone repo. That repo is not publicly deployed. */
+const DEMO_HREF = '/demo/trustlayer';
 
 const NAV = [
   { id: 'thesis', label: 'Thesis' },
@@ -84,18 +87,15 @@ export default function TrustLayerPage() {
           Should an AI system optimize for answering, or for choosing the
           appropriate behavior?
         </InsightCallout>
-        {LIVE_DEMO_URL ? (
-          <p>
-            <a
-              className="button button--primary"
-              href={LIVE_DEMO_URL}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Try TrustLayer <Arrow />
-            </a>
-          </p>
-        ) : null}
+        <p className="demo__cta">
+          <Link href={DEMO_HREF} className="button button--primary">
+            Try the live experiment <Arrow />
+          </Link>
+          <a className="button button--quiet" href="#thesis">
+            Read methodology
+          </a>
+          <span className="meta">Synthetic scenarios · no sign-in</span>
+        </p>
         <ProvenanceNote>
           Independent project — designed, built and benchmarked end to end. It is
           a running Next.js application with a live decision demo, an evaluation
@@ -924,18 +924,12 @@ export default function TrustLayerPage() {
           behavior.
         </Statement>
 
-        {LIVE_DEMO_URL ? (
-          <p>
-            <a
-              className="button button--primary"
-              href={LIVE_DEMO_URL}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Try TrustLayer <Arrow />
-            </a>
-          </p>
-        ) : null}
+        <p className="demo__cta">
+          <Link href={DEMO_HREF} className="button button--primary">
+            Try the live experiment <Arrow />
+          </Link>
+          <span className="meta">Synthetic scenarios</span>
+        </p>
       </Section>
 
       <CaseStudyFooter current="/work/trustlayer" />
