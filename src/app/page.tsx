@@ -145,14 +145,16 @@ export default function HomePage() {
           </SupportCard>
 
           <SupportCard
-            label="Northwestern NDL · AI & Computational Language Research"
-            title="Speech and language systems for autistic communication research."
-            proof="Python / TTS workflow · Kokoro · in progress"
+            label="Northwestern NDL · AI & Computational Language Research Assistant"
+            title="LLM and transformer-based methods for autistic communication research."
+            proof="LLM conversational data collection · transformer speech + language models · Python / TTS (Kokoro) · in progress"
           >
-            Developing a Python/TTS workflow using Kokoro to convert narrative
-            transcripts into page-level speech stimuli, and reviewing
-            computational speech and language methods relevant to autistic
-            communication.
+            Developing LLM-based conversational experiences to collect
+            naturalistic language data, and applying transformer-based speech
+            and language models to characterize autistic communication —
+            ongoing work across computer science, psychology and communication
+            sciences. A Python/TTS stimulus workflow using Kokoro supports the
+            data collection.
           </SupportCard>
         </div>
       </Section>
@@ -165,8 +167,8 @@ export default function HomePage() {
               when: '2026',
               what: (
                 <>
-                  <strong>Accenture Applied Intelligence</strong> — AI Product
-                  Management / Product Owner (Technology Summer Analyst)
+                  <strong>Accenture</strong> — Applied Intelligence Technology
+                  Summer Analyst (AI Product Management)
                 </>
               ),
             },
@@ -175,7 +177,7 @@ export default function HomePage() {
               what: (
                 <>
                   <strong>AZcare.ai</strong> — AI Product Strategy &amp; Market
-                  Research
+                  Research Intern
                 </>
               ),
             },
@@ -186,7 +188,7 @@ export default function HomePage() {
                   <strong>
                     Northwestern Neurodevelopmental Disabilities Laboratory
                   </strong>{' '}
-                  — AI &amp; Computational Language Research
+                  — AI &amp; Computational Language Research Assistant
                 </>
               ),
             },

@@ -58,7 +58,7 @@ export default function DesigningAIAroundTrustPage() {
         title="Designing AI Around Trust"
         statement="AZcare had an AI phone agent that could navigate phone trees, wait on hold and complete tasks. I ran the discovery on whether it solved a real problem for Deaf and hard-of-hearing users. The evidence changed the answer."
         roles={[
-          'AI Product Strategy & Market Research',
+          'AI Product Strategy & Market Research Intern',
           'Customer discovery',
           'Segmentation',
           'Competitive research',

@@ -59,8 +59,7 @@ export default function EnterpriseAIPage() {
         title="Enterprise AI Product Systems"
         statement="Technical product ownership during an Applied Intelligence internship, inside a production AI platform serving more than 10,000 users — where a single customer complaint could originate in retrieval, in the data pipeline, or in the workflow itself."
         roles={[
-          'Technology Summer Analyst',
-          'AI Product Management / Product Owner',
+          'Applied Intelligence Technology Summer Analyst (AI Product Management)',
           'AI evaluation',
           'SQL / BigQuery',
           'Production-data investigation',
