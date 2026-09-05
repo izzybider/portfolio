@@ -34,7 +34,7 @@ export const evidence = [
   { value: '75+', label: 'pilot users' },
   { value: '10,000+', label: 'enterprise platform users' },
   { value: '1M+', label: 'production records analyzed' },
-  { value: '20+', label: 'discovery conversations' },
+  { value: '30+', label: 'discovery conversations' },
   { value: '60+', label: 'product iterations' },
 ];
 
@@ -85,7 +85,7 @@ export const projects: Project[] = [
     proof: [
       '10,000+ users · 1M+ records analyzed',
       '~50-question golden evaluation suite',
-      '45+ enhancements triaged · 4 adopted for Phase 2',
+      '40+ enhancements triaged · 4 adopted for Phase 2',
     ],
     motif: 'nodes',
     href: '/work/enterprise-ai-product-systems',
@@ -99,7 +99,7 @@ export const projects: Project[] = [
     owned:
       'Research strategy, recruiting, synthesis, segmentation, product recommendation.',
     proof: [
-      '20+ discovery conversations',
+      '30+ discovery conversations',
       '8+ stakeholder / expert interviews',
       'Workflow-based segmentation',
       'Adjustable-autonomy product thesis',

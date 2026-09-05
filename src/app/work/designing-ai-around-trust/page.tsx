@@ -71,7 +71,7 @@ export default function DesigningAIAroundTrustPage() {
           columns={4}
           size="sm"
           items={[
-            { value: '20+', label: 'customer discovery conversations' },
+            { value: '30+', label: 'customer discovery conversations' },
             { value: '8+', label: 'stakeholder / expert interviews' },
             { value: '4', label: 'workflow segments replacing a diagnosis-based one' },
             { value: '1', label: 'product thesis changed by the evidence' },
@@ -90,7 +90,7 @@ export default function DesigningAIAroundTrustPage() {
         }
         role={
           <>
-            I ran the research end to end: recruiting, 20+ discovery
+            I ran the research end to end: recruiting, 30+ discovery
             conversations, expert interviews, competitive and ecosystem
             analysis, synthesis, and the product recommendation.
           </>
@@ -153,7 +153,7 @@ export default function DesigningAIAroundTrustPage() {
               columns={1}
               items={[
                 {
-                  term: '20+ discovery conversations',
+                  term: '30+ discovery conversations',
                   desc: 'Recruited independently, across different phone workflows rather than one community channel.',
                 },
                 {

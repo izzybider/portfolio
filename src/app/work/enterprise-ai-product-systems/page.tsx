@@ -75,7 +75,7 @@ export default function EnterpriseAIPage() {
             { value: '10,000+', label: 'platform users' },
             { value: '1M+', label: 'records analyzed' },
             { value: '~50', label: 'question golden evaluation suite' },
-            { value: '45+', label: 'enhancements triaged' },
+            { value: '40+', label: 'enhancements triaged' },
             { value: '4', label: 'proposals adopted for Phase 2' },
           ]}
         />
@@ -111,7 +111,7 @@ export default function EnterpriseAIPage() {
         outcome={
           <>
             10,000+ users · 1M+ records analyzed · ~50-question golden evaluation
-            suite · 45+ enhancements triaged, 4 adopted for Phase 2.
+            suite · 40+ enhancements triaged, 4 adopted for Phase 2.
           </>
         }
       />
@@ -361,8 +361,8 @@ export default function EnterpriseAIPage() {
       <Section
         id="prioritization"
         label="04 · Prioritization"
-        title="45+ requests, finite engineering capacity, four things that shipped."
-        intro="Workshops, demos, UAT and production feedback produced 45+ candidate enhancements. The job was not maintaining the backlog — it was arguing for the few with real leverage."
+        title="40+ requests, finite engineering capacity, four things that shipped."
+        intro="Workshops, demos, UAT and production feedback produced 40+ candidate enhancements. The job was not maintaining the backlog — it was arguing for the few with real leverage."
       >
         <ArtifactCard
           title="Prioritization matrix"
