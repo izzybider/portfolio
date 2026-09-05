@@ -77,22 +77,22 @@ export default function ProjectCard({ project }: { project: Project }) {
         ))}
       </ul>
       <p className="project__owned">{project.owned}</p>
-      <p className="project__cta">
-        Read the case study <Arrow />
-        {project.liveHref ? (
-          <>
-            {' '}
-            <a
-              className="project__live"
-              href={project.liveHref}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Open live experiment <Arrow />
-            </a>
-          </>
-        ) : null}
-      </p>
+      {project.demoHref ? (
+        /* Two real links. They sit above the card-wide overlay from
+           .project__link::after, which still points at the case study. */
+        <p className="project__ctas">
+          <Link href={project.demoHref} className="project__cta project__cta--primary">
+            {project.demoLabel} <Arrow />
+          </Link>
+          <Link href={project.href} className="project__cta project__cta--secondary">
+            Read case study <Arrow />
+          </Link>
+        </p>
+      ) : (
+        <p className="project__cta">
+          Read the case study <Arrow />
+        </p>
+      )}
     </article>
   );
 }

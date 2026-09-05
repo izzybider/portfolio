@@ -506,8 +506,7 @@ export default function GuideAIDemo() {
                       {recommendation.plan && (
                         <>
                           {' '}
-                          <strong>Skill focus:</strong> {recommendation.plan.command}.{' '}
-                          {recommendation.plan.routine}
+                          <strong>Also worth recording:</strong> {recommendation.plan.routine}
                         </>
                       )}
                     </span>
@@ -527,6 +526,11 @@ export default function GuideAIDemo() {
                     </span>
                   </div>
                 </div>
+                <p className="meta" style={{ marginTop: 'var(--s2)' }}>
+                  The wording in this card is illustrative copy written for the demonstration. In
+                  the product this slot is filled from a trainer-approved resource set; nothing here
+                  is training guidance.
+                </p>
 
                 <div className="demopanel" style={{ marginTop: 'var(--s3)' }}>
                   <div className="demopanel__head">

@@ -50,9 +50,10 @@ export type Project = {
   motif: Motif;
   href: string;
   featured?: boolean;
-  /* Set once the live TrustLayer experiment is deployed — a secondary
-     "Open live experiment" CTA appears on the card automatically. */
-  liveHref?: string;
+  /* An interactive demo inside this site. When present the card leads with
+     it and the case study becomes the secondary link. */
+  demoHref?: string;
+  demoLabel?: string;
 };
 
 export const projects: Project[] = [
@@ -72,6 +73,8 @@ export const projects: Project[] = [
     ],
     motif: 'trend',
     href: '/work/guideai',
+    demoHref: '/demo/guideai',
+    demoLabel: 'Try interactive demo',
     featured: true,
   },
   {
@@ -123,6 +126,8 @@ export const projects: Project[] = [
     ],
     motif: 'behaviors',
     href: '/work/trustlayer',
+    demoHref: '/demo/trustlayer',
+    demoLabel: 'Try live experiment',
   },
 ];
 
