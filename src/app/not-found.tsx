@@ -9,6 +9,7 @@ export default function NotFound() {
     <PageShell>
       <Section
         label="404"
+        titleAs="h1"
         title="That page does not exist."
         intro="The link may be out of date. Everything on the site is one of these five case studies."
         width="wide"

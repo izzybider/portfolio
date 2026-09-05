@@ -400,7 +400,7 @@ export default function GuideAIPage() {
             steps={[
               'Assumption — if users like the recommendation, the system is working',
               'Evidence — trainer agreement was only 68%',
-              'Reinterpretation — plausibility ≠ expert-aligned usefulness',
+              'Reinterpretation — plausibility is not expert-aligned usefulness',
               'Action — structured evaluation; iterate retrieval, output, presentation',
               'Result — trainer agreement reached 91%',
             ]}

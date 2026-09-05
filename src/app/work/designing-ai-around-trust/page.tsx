@@ -56,7 +56,7 @@ export default function DesigningAIAroundTrustPage() {
       <CaseStudyHero
         eyebrow="03 · Product strategy case study · AZcare.ai"
         title="Designing AI Around Trust"
-        statement="AZcare had an AI phone agent that could navigate phone trees, wait on hold and complete tasks. I ran the discovery to find out whether it solved a real problem for Deaf and hard-of-hearing users — and the evidence changed both the target user and the product thesis."
+        statement="AZcare had an AI phone agent that could navigate phone trees, wait on hold and complete tasks. I ran the discovery on whether it solved a real problem for Deaf and hard-of-hearing users. The evidence changed the answer."
         roles={[
           'AI Product Strategy & Market Research',
           'Customer discovery',
@@ -158,11 +158,11 @@ export default function DesigningAIAroundTrustPage() {
                 },
                 {
                   term: '8+ stakeholder / expert interviews',
-                  desc: 'Accessibility practitioners and service providers, to test what already works.',
+                  desc: 'Practitioners and service providers, to test what already works.',
                 },
                 {
                   term: 'Competitive + ecosystem research',
-                  desc: 'VRS / IP relay, captioned calling, live captions, AI phone agents, human proxies, web workarounds.',
+                  desc: 'VRS / IP relay, captioned calling, AI phone agents, human proxies, web workarounds.',
                 },
               ]}
             />
@@ -171,14 +171,14 @@ export default function DesigningAIAroundTrustPage() {
             <ul className="stack-2">
               <li className="body-text">
                 <strong>Which calls actually create friction</strong> — not which
-                calls are hard in general?
+                are hard in general?
               </li>
               <li className="body-text">
                 <strong>What already works</strong>, and where does it fail?
               </li>
               <li className="body-text">
                 <strong>Which tasks would you hand over</strong>, and which would
-                you want to stay in?
+                you stay in?
               </li>
               <li className="body-text">
                 <strong>What should happen when the AI is uncertain?</strong>
@@ -193,12 +193,12 @@ export default function DesigningAIAroundTrustPage() {
         id="segmentation"
         label="03 · Evidence changed the thesis"
         title="Hearing loss itself was not enough to predict product value."
-        intro="Users with the same diagnosis had completely different phone lives — some already well served, others avoiding calls entirely. What predicted value was the workflow they already used."
+        intro="Users with the same diagnosis had completely different phone lives. What predicted value was the workflow they already used."
       >
         <ArtifactCard
           title="Workflow segmentation"
           meta="Replaced the diagnosis-based segment"
-          caption="Segments defined by the workflow someone already uses, the task, and how much control they want to keep — not by audiological profile."
+          caption="Segments defined by the workflow someone already uses, the task, and how much control they want to keep."
         >
           <DataTable
             columns={[
@@ -245,7 +245,7 @@ export default function DesigningAIAroundTrustPage() {
 
         <DecisionCallout
           label="Reframe"
-          note="This changed who the product is for. Two of the four segments were already well served; targeting by diagnosis would have spent the roadmap on users who did not need it."
+          note="Two of the four segments were already well served. Targeting by diagnosis would have spent the roadmap on users who did not need it."
         >
           Value is predicted by current workflow × task × desired autonomy — not
           by hearing loss.
@@ -283,14 +283,14 @@ export default function DesigningAIAroundTrustPage() {
       {/* ---------------- AUTONOMY ---------------- */}
       <Section
         id="autonomy"
-        label="05 · Participation ↔ delegation"
+        label="05 · Participation to delegation"
         title="The real product question is how much of the task you hand over."
-        intro="Accessibility tools answer “help me participate.” AI phone agents answer “complete the task for me.” Users wanted different answers for different tasks — sometimes on the same day."
+        intro="Users wanted different answers for different tasks — sometimes on the same day."
       >
         <ArtifactCard
           title="Autonomy continuum"
           meta="Where each task belongs"
-          caption="One automation level cannot serve this. Autonomy has to be a product control, not a decision made once."
+          caption="Autonomy has to be a product control, not a decision made once."
         >
           <Continuum
             ends={['User stays in the call', 'AI completes the task']}
@@ -327,7 +327,7 @@ export default function DesigningAIAroundTrustPage() {
         id="priorities"
         label="06 · Use-case prioritization"
         title="Start where delegation creates value and failure can be recovered."
-        intro="Not every high-pain task is a good first task. The second axis is what happens when the AI gets it wrong."
+        intro="Not every high-pain task is a good first task. The second axis is what it costs when the AI gets it wrong."
       >
         <Matrix2x2
           yAxis="User pain"
@@ -488,7 +488,7 @@ export default function DesigningAIAroundTrustPage() {
         id="next"
         label="09 · Proposed validation plan"
         title="The thesis is research-backed. It is not yet behaviorally proven."
-        intro="Stated willingness does not predict delegation behavior. This is what I would run next, and what each step would have to show."
+        intro="Stated willingness does not predict delegation behavior. This is what I would run next."
       >
         <DeeperDetail summary="The five-step validation sequence, in order" hint="not yet run">
   <ArtifactCard title="Validation sequence" meta="Not yet run">
@@ -524,23 +524,26 @@ export default function DesigningAIAroundTrustPage() {
           </ArtifactCard>
         </DeeperDetail>
 
-        <InfoPanel tone="white" label="Known constraint from the research">
-          <p>
-            Existing FCC / TRS reimbursement supports qualifying
-            telecommunications relay services; autonomous AI task completion
-            should not be assumed to qualify.{' '}
-            <strong>
-              The implication is sequencing: validate user value first, and
-              investigate regulatory and partnership pathways in parallel rather
-              than making reimbursement a prerequisite.
-            </strong>
-          </p>
-        </InfoPanel>
+        <DeeperDetail
+          summary="The reimbursement constraint, and what it implies for sequencing"
+          hint="regulatory"
+        >
+          <InfoPanel tone="white" label="Known constraint from the research">
+            <p>
+              Existing FCC / TRS reimbursement supports qualifying
+              telecommunications relay services; autonomous AI task completion
+              should not be assumed to qualify.{' '}
+              <strong>
+                The implication is sequencing: validate user value first, and
+                investigate regulatory and partnership pathways in parallel
+                rather than making reimbursement a prerequisite.
+              </strong>
+            </p>
+          </InfoPanel>
+        </DeeperDetail>
 
         <InsightCallout label="What I took from this">
-          Good discovery is not supposed to prove your original idea. It should be
-          capable of changing what you build — and here it changed the segment,
-          the task list, and the autonomy model.
+          Discovery that can only confirm the original idea is not discovery.
         </InsightCallout>
       </Section>
 

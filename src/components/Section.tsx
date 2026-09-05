@@ -7,6 +7,8 @@ export default function Section({
   id,
   label,
   title,
+  /** the 404 page needs its section title to be the page h1 */
+  titleAs: TitleTag = 'h2',
   width = 'default',
   intro,
   divider = true,
@@ -16,6 +18,7 @@ export default function Section({
   id?: string;
   label?: string;
   title?: React.ReactNode;
+  titleAs?: 'h1' | 'h2';
   width?: 'default' | 'wide' | 'full';
   intro?: React.ReactNode;
   divider?: boolean;
@@ -36,7 +39,7 @@ export default function Section({
     >
       <div className="container">
         {label ? <p className="eyebrow section__label">{label}</p> : null}
-        {title ? <h2 className={titleClass}>{title}</h2> : null}
+        {title ? <TitleTag className={titleClass}>{title}</TitleTag> : null}
         {intro ? (
           <div className="section__intro">
             {typeof intro === 'string' ? <p className="lede">{intro}</p> : intro}
