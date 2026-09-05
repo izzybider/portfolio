@@ -3,7 +3,7 @@ import { ImageResponse } from 'next/og';
 /* Social preview card. Rendered at build time from the site's own tokens —
    no external assets, no claims that are not already on the homepage. */
 export const runtime = 'nodejs';
-export const alt = 'Isabella “Izzy” Bider — AI Product · 2027 New Grad';
+export const alt = 'Isabella Bider — AI Product · 2027 New Grad';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -51,7 +51,7 @@ export default function OpengraphImage() {
               letterSpacing: -1.5,
             }}
           >
-            Isabella “Izzy” Bider
+            Isabella Bider
           </div>
           <div
             style={{

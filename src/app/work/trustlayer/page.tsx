@@ -27,10 +27,10 @@ import {
 } from '@/components';
 
 export const metadata: Metadata = {
-  title: 'TrustLayer — Isabella “Izzy” Bider',
+  title: 'TrustLayer — Isabella Bider',
   description:
     'An independent AI product experiment: should a system optimize for answering, or for choosing the appropriate behavior?',
-  openGraph: { title: 'TrustLayer — Isabella “Izzy” Bider', description: 'An independent AI product experiment: should a system optimize for answering, or for choosing the appropriate behavior?' },
+  openGraph: { title: 'TrustLayer — Isabella Bider', description: 'An independent AI product experiment: should a system optimize for answering, or for choosing the appropriate behavior?' },
   alternates: { canonical: '/work/trustlayer' },
 };
 

@@ -33,7 +33,7 @@ const description =
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'Isabella “Izzy” Bider — AI Product',
+    default: 'Isabella Bider — AI Product',
     template: '%s',
   },
   description,
@@ -49,14 +49,14 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     type: 'website',
-    siteName: 'Isabella “Izzy” Bider',
-    title: 'Isabella “Izzy” Bider — AI Product',
+    siteName: 'Isabella Bider',
+    title: 'Isabella Bider — AI Product',
     description,
     locale: 'en_US',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Isabella “Izzy” Bider — AI Product',
+    title: 'Isabella Bider — AI Product',
     description,
   },
   robots: { index: true, follow: true },
@@ -70,7 +70,6 @@ const personSchema = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: 'Isabella Bider',
-  alternateName: 'Izzy Bider',
   url: siteUrl,
   email: site.links.email.replace('mailto:', ''),
   jobTitle: 'AI Product — 2027 New Grad',

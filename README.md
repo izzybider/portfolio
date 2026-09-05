@@ -1,4 +1,4 @@
-# Isabella “Izzy” Bider — Portfolio
+# Isabella Bider — Portfolio
 
 Next.js (App Router) + React + TypeScript. Editorial product-case-study site
 built for 2027 new-grad APM / PM / AI product recruiting.

@@ -32,10 +32,10 @@ import {
 } from '@/components';
 
 export const metadata: Metadata = {
-  title: 'GuideAI — Isabella “Izzy” Bider',
+  title: 'GuideAI — Isabella Bider',
   description:
     'A 0→1 AI decision-support product for service-dog raisers: 75+ pilot users, measured against expert trainer judgment.',
-  openGraph: { title: 'GuideAI — Isabella “Izzy” Bider', description: 'A 0→1 AI decision-support product for service-dog raisers: 75+ pilot users, measured against expert trainer judgment.' },
+  openGraph: { title: 'GuideAI — Isabella Bider', description: 'A 0→1 AI decision-support product for service-dog raisers: 75+ pilot users, measured against expert trainer judgment.' },
   alternates: { canonical: '/work/guideai' },
 };
 

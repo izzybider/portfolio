@@ -16,10 +16,10 @@ import {
 } from '@/components';
 
 export const metadata: Metadata = {
-  title: 'KosiSonic — Isabella “Izzy” Bider',
+  title: 'KosiSonic — Isabella Bider',
   description:
     'A supporting mini case: when a better technical metric did not mean a better listening experience.',
-  openGraph: { title: 'KosiSonic — Isabella “Izzy” Bider', description: 'A supporting mini case: when a better technical metric did not mean a better listening experience.' },
+  openGraph: { title: 'KosiSonic — Isabella Bider', description: 'A supporting mini case: when a better technical metric did not mean a better listening experience.' },
   alternates: { canonical: '/work/kosisonic' },
 };
 

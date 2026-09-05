@@ -12,8 +12,8 @@ export const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ?? 'https://portfolio-izzy-bider.vercel.app';
 
 export const site = {
-  name: 'Isabella “Izzy” Bider',
-  footerLine: 'Isabella “Izzy” Bider · 2027 New Grad · AI Product',
+  name: 'Isabella Bider',
+  footerLine: 'Isabella Bider · 2027 New Grad · AI Product',
   links: {
     resume: '/IsabellaBider_Resume.pdf',
     linkedin: 'https://www.linkedin.com/in/ibider/',

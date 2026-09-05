@@ -151,10 +151,9 @@ export default function HomePage() {
           >
             Developing LLM-based conversational experiences to collect
             naturalistic language data, and applying transformer-based speech
-            and language models to characterize autistic communication —
-            ongoing work across computer science, psychology and communication
-            sciences. A Python/TTS stimulus workflow using Kokoro supports the
-            data collection.
+            and language models to characterize autistic communication.
+            Alongside this, I’m developing a Python/TTS workflow using Kokoro to
+            convert narrative transcripts into page-level speech stimuli.
           </SupportCard>
         </div>
       </Section>

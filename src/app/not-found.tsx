@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Arrow, PageShell, Section } from '@/components';
 import { caseStudies, site } from '@/content/site';
 
-export const metadata = { title: 'Page not found — Isabella “Izzy” Bider' };
+export const metadata = { title: 'Page not found — Isabella Bider' };
 
 export default function NotFound() {
   return (
