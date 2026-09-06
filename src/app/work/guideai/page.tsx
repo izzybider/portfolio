@@ -17,6 +17,7 @@ import {
   ProcessFlow,
   ArchitectureDiagram,
   CellGrid,
+  ExperimentComparison,
   HorizontalBarChart,
   ProductMockup,
   MockField,
@@ -305,38 +306,49 @@ export default function GuideAIPage() {
         </ProvenanceNote>
 
         <ArtifactCard
-          title="System architecture"
-          meta="OpenAI embeddings · pgvector · RAG · PostHog"
-          caption="Trainer-approved resources bound what the model is allowed to recommend; every recommendation is scored and fed back into evaluation."
+          title="Current demo architecture"
+          meta="TF-IDF vector index · cosine top-k retrieval · grounded composition · deterministic escalation · PostHog events"
+          caption="This is the architecture running in the interactive demo today, not a description of the pilot. Every stage is inspectable in the demo's pipeline trace, and the retrieval numbers in the evaluation below are produced by running it."
         >
           <ArchitectureDiagram
             rows={[
+              { nodes: [{ name: 'Observation history', sub: 'Structured behaviour records', tone: 'accent' }] },
               {
+                connector: 'line',
                 nodes: [
-                  { name: 'Behavior history', sub: 'Raiser-logged observations' },
                   {
-                    name: 'Approved resources',
-                    sub: 'Trainer-sanctioned guidance',
+                    name: 'Structured behaviour context',
+                    sub: 'Behaviour · setting spread · frequency · trend',
                   },
                 ],
               },
               {
                 connector: 'line',
                 nodes: [
+                  { name: 'Retrieval query', sub: 'Composed from the context, not the last note' },
+                ],
+              },
+              {
+                connector: 'line',
+                nodes: [
                   {
-                    name: 'Embedding + retrieval layer',
-                    sub: 'Relevant history and guidance for this dog',
+                    name: 'Vector index',
+                    sub: '28 synthetic resources · 154-dim TF-IDF · cosine',
                     tone: 'blue',
                   },
                 ],
               },
               {
                 connector: 'line',
+                nodes: [{ name: 'Top-4 relevant resources', sub: 'Shown as sources in the demo', tone: 'blue' }],
+              },
+              {
+                connector: 'line',
                 nodes: [
                   {
-                    name: 'LLM generation',
-                    sub: 'Constrained to retrieved context',
-                    tone: 'blue',
+                    name: 'Grounded composition',
+                    sub: 'Response assembled from retrieved resources only',
+                    tone: 'accent',
                   },
                 ],
               },
@@ -344,8 +356,8 @@ export default function GuideAIPage() {
                 connector: 'line',
                 nodes: [
                   {
-                    name: 'Structured recommendation',
-                    sub: 'Pattern · why · action · monitor · escalate',
+                    name: 'Escalation policy',
+                    sub: 'Deterministic · sensitive behaviours never auto-matched',
                     tone: 'accent',
                   },
                 ],
@@ -353,13 +365,53 @@ export default function GuideAIPage() {
               {
                 connector: 'fan',
                 nodes: [
-                  { name: 'Raiser feedback', sub: 'In-product signals' },
-                  { name: 'Trainer review', sub: 'Expert agreement labels' },
-                  { name: 'Evaluation + iteration', sub: 'Failure taxonomy' },
+                  { name: 'Recommendation', sub: 'With its sources' },
+                  { name: 'Trainer prep', sub: 'Judgment items named' },
+                  { name: 'PostHog events', sub: '9 product events', tone: 'gray' },
                 ],
               },
             ]}
           />
+          <p className="meta" style={{ marginTop: 'var(--s3)' }}>
+            The current demo uses a more robust retrieval architecture than the
+            earlier pilot implementation. The pilot metrics above describe that
+            earlier build, not this one. An OpenAI embedding path is implemented
+            (<code>npm run guideai:embed --openai</code>, text-embedding-3-small)
+            but is not what ships: the portfolio is a fully static site, so a
+            neural index would need a server route and an API key at request
+            time, and a recruiter opening the demo would depend on both. Retrieval
+            over 28 documents is exact either way.
+          </p>
+        </ArtifactCard>
+
+        <ArtifactCard
+          title="Retrieval evaluation"
+          meta="Synthetic evaluation set · 30 labelled scenarios · npm run guideai:eval"
+          caption="Computed by running the harness against the shipped retrieval stack, not written by hand. Labels and corpus were written by the same person, and 30 scenarios is a small set — these measure whether the pipeline behaves as designed, not how it would perform in the field."
+        >
+          <ExperimentComparison
+            metricLabel="Measure"
+            columns={[
+              { name: 'No retrieval', sub: 'Control' },
+              { name: 'Retrieval-grounded', sub: 'Shipped', win: true },
+            ]}
+            rows={[
+              { metric: 'Retrieval hit@4', values: ['—', '93%'] },
+              { metric: 'Escalation correctness', values: ['—', '100%'] },
+              { metric: 'Groundedness', values: ['0%', '100%'] },
+              { metric: 'Unsupported recommendations', values: ['10%', '0%'] },
+              { metric: 'Structural completeness', values: ['—', '100%'] },
+            ]}
+          />
+          <p className="meta" style={{ marginTop: 'var(--s3)' }}>
+            The control has no sources to cite, so groundedness is 0% by
+            construction; the number that matters is the 10% unsupported rate —
+            three scenarios where an ungrounded generator would answer a
+            sensitive observation the product should refer to a trainer instead.
+            Retrieved-set precision is 44%, and two of the thirty scenarios miss
+            their labelled resource entirely, both on vocalisation. Those are
+            reported rather than tuned away.
+          </p>
         </ArtifactCard>
       </Section>
 

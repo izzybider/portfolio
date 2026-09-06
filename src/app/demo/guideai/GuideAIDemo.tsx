@@ -1,7 +1,8 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import DemoTabs from '@/components/DemoTabs';
+import DeeperDetail from '@/components/DeeperDetail';
 import {
   CHALLENGE_BEHAVIORS,
   POSITIVE_BEHAVIORS,
@@ -22,6 +23,16 @@ import {
   trainerPrepText,
   weeklyBuckets,
 } from '@/lib/guideai/derive';
+import {
+  buildContext,
+  compose,
+  escalationCheck,
+  retrieve,
+  TOP_K,
+} from '@/lib/guideai/retrieve';
+import { INDEX } from '@/lib/guideai/embed';
+import { CORPUS } from '@/lib/guideai/corpus';
+import { track } from '@/lib/guideai/analytics';
 
 type Tab = 'overview' | 'log' | 'trends' | 'recommendation' | 'prep';
 
@@ -49,6 +60,22 @@ export default function GuideAIDemo() {
     [observations, recBehavior],
   );
   const prep = useMemo(() => buildTrainerPrep(observations, DOG.name), [observations]);
+
+  /* Retrieval pipeline for the behaviour currently in view. */
+  const pipeline = useMemo(() => {
+    if (!recommendation) return null;
+    const trend = trends.find((t) => t.behavior === recommendation.behavior);
+    const context = buildContext(
+      recommendation.behavior,
+      recommendation.basedOn,
+      trend?.direction ?? 'steady',
+      recommendation.contexts,
+    );
+    const retrieval = retrieve(context);
+    const escalation = escalationCheck(context);
+    const response = compose(context, retrieval, escalation);
+    return { context, retrieval, escalation, response };
+  }, [recommendation, trends]);
   const recent = useMemo(() => sorted(observations).slice(-4).reverse(), [observations]);
   const contextCounts = useMemo(() => counts(observations.map((o) => o.context)), [observations]);
 
@@ -75,6 +102,7 @@ export default function GuideAIDemo() {
     };
     const priorCount = observations.filter((o) => o.behavior === behavior).length;
     setObservations((prev) => [...prev, next]);
+    track('observation_logged', { behavior, context, frequency, type });
     setNote('');
     setSelectedBehavior(behavior);
     setConfirmation(
@@ -93,6 +121,7 @@ export default function GuideAIDemo() {
   const copyPrep = async () => {
     try {
       await navigator.clipboard.writeText(trainerPrepText(prep));
+      track('demo_completed', { observations: observations.length });
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2500);
     } catch {
@@ -101,6 +130,28 @@ export default function GuideAIDemo() {
   };
 
   const maxWeek = Math.max(1, ...weeks.map((w) => w.total));
+
+  useEffect(() => {
+    track('guideai_demo_started');
+  }, []);
+
+  useEffect(() => {
+    if (tab === 'trends') track('trend_viewed');
+    if (tab === 'prep') track('trainer_prep_generated');
+  }, [tab]);
+
+  useEffect(() => {
+    if (!pipeline) return;
+    track('recommendation_generated', {
+      behavior: pipeline.context.behavior,
+      retrieved: pipeline.retrieval.results.length,
+      weak_retrieval: pipeline.retrieval.weak,
+      deferred: pipeline.response.deferred,
+    });
+    if (pipeline.escalation.required) {
+      track('escalation_shown', { behavior: pipeline.context.behavior });
+    }
+  }, [pipeline]);
 
   return (
     <>
@@ -476,7 +527,7 @@ export default function GuideAIDemo() {
       {/* ---------------- RECOMMENDATION ---------------- */}
       {tab === 'recommendation' && (
         <div id="panel-recommendation" role="tabpanel" aria-labelledby="tab-recommendation">
-          {!recommendation ? (
+          {!recommendation || !pipeline ? (
             <div className="demopanel">
               <p className="reccard__value">
                 No concern has been logged yet, so there is nothing to interpret.
@@ -485,72 +536,157 @@ export default function GuideAIDemo() {
           ) : (
             <div className="demogrid demogrid--sidebar">
               <div>
+                {pipeline.escalation.required && (
+                  <div className="escalate">
+                    <p className="escalate__title">Trainer review recommended</p>
+                    <p className="escalate__reason">{pipeline.escalation.reason}</p>
+                  </div>
+                )}
+
                 <div className="demopanel__head">
                   <h2 className="demopanel__title">
-                    Structured recommendation — {recommendation.behavior}
+                    Grounded recommendation — {recommendation.behavior}
                   </h2>
+                  <span className="meta">
+                    {pipeline.response.deferred ? 'deferred' : 'retrieval-grounded'}
+                  </span>
                 </div>
                 <div className="reccard">
                   <div className="reccard__row">
                     <span className="reccard__label">What I&rsquo;m noticing</span>
-                    <span className="reccard__value">{recommendation.noticing}</span>
+                    <span className="reccard__value">{pipeline.response.noticing}</span>
                   </div>
                   <div className="reccard__row">
                     <span className="reccard__label">Why it may matter</span>
-                    <span className="reccard__value">{recommendation.whyItMayMatter}</span>
+                    <span className="reccard__value">{pipeline.response.whyItMayMatter}</span>
                   </div>
                   <div className="reccard__row">
                     <span className="reccard__label">Suggested next step</span>
-                    <span className="reccard__value">
-                      {recommendation.suggestedNextStep}
-                      {recommendation.plan && (
-                        <>
-                          {' '}
-                          <strong>Also worth recording:</strong> {recommendation.plan.routine}
-                        </>
-                      )}
-                    </span>
+                    <span className="reccard__value">{pipeline.response.suggestedNextStep}</span>
                   </div>
                   <div className="reccard__row">
                     <span className="reccard__label">When to ask a trainer</span>
-                    <span className="reccard__value">{recommendation.whenToAskTrainer}</span>
+                    <span className="reccard__value">{pipeline.response.whenToAskTrainer}</span>
                   </div>
                   <div className="reccard__row">
                     <span className="reccard__label">Based on</span>
-                    <span className="reccard__value">
-                      {recommendation.basedOn.length} observation
-                      {recommendation.basedOn.length === 1 ? '' : 's'} ·{' '}
-                      {recommendation.contexts
-                        .map((c) => `${contextLabel(c.key)} (${c.count})`)
-                        .join(', ')}
-                    </span>
+                    <span className="reccard__value">{pipeline.response.basedOn}</span>
                   </div>
                 </div>
-                <p className="meta" style={{ marginTop: 'var(--s2)' }}>
-                  The wording in this card is illustrative copy written for the demonstration. In
-                  the product this slot is filled from a trainer-approved resource set; nothing here
-                  is training guidance.
-                </p>
 
+                {/* ---- sources ---- */}
                 <div className="demopanel" style={{ marginTop: 'var(--s3)' }}>
                   <div className="demopanel__head">
-                    <h2 className="demopanel__title">The observations underneath</h2>
+                    <h2 className="demopanel__title">Sources used</h2>
+                    <span className="meta">
+                      top {pipeline.retrieval.topK} of {pipeline.retrieval.corpusSize}
+                    </span>
                   </div>
-                  <ul className="obslist">
-                    {[...recommendation.basedOn].reverse().map((o) => (
-                      <li key={o.id}>
-                        <div className="obslist__top">
-                          <span className="obslist__behavior">{o.behavior}</span>
-                          <span className="obstag">{contextLabel(o.context)}</span>
-                          <span className="obstag">{o.frequency}</span>
-                          <span className="meta" style={{ marginLeft: 'auto' }}>
-                            {o.date}
-                          </span>
-                        </div>
-                        {o.note && <p className="obslist__note">{o.note}</p>}
+                  <p className="meta" style={{ marginBottom: 'var(--s2)' }}>
+                    <strong>Why these were retrieved.</strong> {pipeline.retrieval.whyRetrieved}
+                  </p>
+                  <ul className="sources">
+                    {pipeline.retrieval.results.map((r) => (
+                      <li key={r.resource.id}>
+                        <details
+                          className="source"
+                          onToggle={(e) => {
+                            if ((e.currentTarget as HTMLDetailsElement).open) {
+                              track('source_opened', { resource_id: r.resource.id });
+                            }
+                          }}
+                        >
+                          <summary className="source__head">
+                            <span className="source__title">{r.resource.title}</span>
+                            <span className="source__cat">{r.resource.category}</span>
+                            <span className={`source__rel source__rel--${r.relevance}`}>
+                              {r.relevance} relevance
+                            </span>
+                          </summary>
+                          <p className="source__body">{r.resource.content}</p>
+                          <p className="source__meta">
+                            {r.resource.id} · tags: {r.resource.behavior_tags.join(', ')} ·{' '}
+                            {r.resource.source_type}
+                          </p>
+                        </details>
                       </li>
                     ))}
                   </ul>
+                  <p className="meta" style={{ marginTop: 'var(--s2)' }}>
+                    Synthetic, generalized demo resources written for this demonstration. Not
+                    official training guidance and not any organisation&rsquo;s material.
+                  </p>
+                </div>
+
+                {/* ---- pipeline trace ---- */}
+                <div
+                  onClick={() => track('retrieval_inspected', { behavior: recommendation.behavior })}
+                  role="presentation"
+                >
+                  <DeeperDetail summary="Inspect AI pipeline" hint="observable steps">
+                    <ol className="pipeline">
+                      <li>
+                        <span className="pipeline__step">Behaviour context assembled</span>
+                        <span className="pipeline__val">
+                          {pipeline.context.behavior} · {pipeline.context.observationCount}{' '}
+                          observations · {pipeline.context.contextCount} setting
+                          {pipeline.context.contextCount === 1 ? '' : 's'} ·{' '}
+                          {pipeline.context.strongestFrequency} · trend {pipeline.context.trend}
+                        </span>
+                      </li>
+                      <li>
+                        <span className="pipeline__step">Retrieval query constructed</span>
+                        <span className="pipeline__val pipeline__val--mono">
+                          {pipeline.retrieval.query}
+                        </span>
+                      </li>
+                      <li>
+                        <span className="pipeline__step">Query vector</span>
+                        <span className="pipeline__val">
+                          {pipeline.retrieval.embedder} · {pipeline.retrieval.dimension} dimensions
+                        </span>
+                      </li>
+                      <li>
+                        <span className="pipeline__step">Vector search</span>
+                        <span className="pipeline__val">
+                          cosine similarity over {pipeline.retrieval.corpusSize} indexed resources ·
+                          top-{pipeline.retrieval.topK}
+                          {pipeline.retrieval.sensitive
+                            ? ' · restricted to escalation material for this behaviour'
+                            : ''}
+                        </span>
+                      </li>
+                      <li>
+                        <span className="pipeline__step">Retrieved</span>
+                        <span className="pipeline__val pipeline__val--mono">
+                          {pipeline.retrieval.results
+                            .map((r) => `${r.resource.id} ${r.score.toFixed(3)}`)
+                            .join('  ·  ')}
+                        </span>
+                      </li>
+                      <li>
+                        <span className="pipeline__step">Response composed</span>
+                        <span className="pipeline__val">
+                          {pipeline.response.deferred
+                            ? 'Retrieval below the relevance floor or behaviour is sensitive — asked for more observation instead of suggesting a step.'
+                            : `Grounded in ${pipeline.response.sources.length} retrieved resources; every line traces to one of them.`}
+                        </span>
+                      </li>
+                      <li>
+                        <span className="pipeline__step">Escalation policy applied</span>
+                        <span className="pipeline__val">
+                          {pipeline.escalation.required
+                            ? `Trainer review required — ${pipeline.escalation.reason}`
+                            : 'No escalation condition met.'}
+                        </span>
+                      </li>
+                    </ol>
+                    <p className="meta">
+                      Observable system state only. No model reasoning text is requested, stored or
+                      shown — the response is composed from retrieved resources rather than
+                      generated freely, so there is none.
+                    </p>
+                  </DeeperDetail>
                 </div>
               </div>
 
@@ -560,19 +696,49 @@ export default function GuideAIDemo() {
                     <h2 className="demopanel__title">What this is not</h2>
                   </div>
                   <p className="reccard__value">
-                    GuideAI does not diagnose the dog, does not compute a behavioral or risk score,
-                    and does not issue training commands. It reads the observations the raiser
-                    logged, matches the closest interpretation, and names the point at which a
-                    trainer should be involved.
+                    GuideAI detects patterns, retrieves relevant resources, structures a next step
+                    and prepares the trainer conversation. It does not diagnose, does not score the
+                    dog, does not replace a trainer, and does not make autonomous decisions on
+                    anything high-risk.
                   </p>
                   <p className="reccard__value" style={{ marginTop: 'var(--s2)' }}>
-                    That constraint is the product decision. It is why the last row of the card is
-                    always &ldquo;when to ask a trainer&rdquo; rather than a verdict.
+                    When retrieval is weak or the behaviour is one the product treats as sensitive,
+                    it declines to suggest a step and asks for a trainer instead. That path is
+                    exercised by the evaluation set, not just described.
                   </p>
                 </div>
                 <div className="demopanel">
                   <div className="demopanel__head">
-                    <h2 className="demopanel__title">Another behavior</h2>
+                    <h2 className="demopanel__title">Index</h2>
+                  </div>
+                  <dl className="factorlist">
+                    <div className="factorlist__row">
+                      <dt className="factorlist__label">Embedder</dt>
+                      <dd className="factorlist__value factorlist__value--supporting">
+                        {INDEX.embedder}
+                      </dd>
+                    </div>
+                    <div className="factorlist__row">
+                      <dt className="factorlist__label">Dimension</dt>
+                      <dd className="factorlist__value factorlist__value--supporting">
+                        {INDEX.dimension}
+                      </dd>
+                    </div>
+                    <div className="factorlist__row">
+                      <dt className="factorlist__label">Corpus</dt>
+                      <dd className="factorlist__value factorlist__value--supporting">
+                        {CORPUS.length} resources
+                      </dd>
+                    </div>
+                    <div className="factorlist__row">
+                      <dt className="factorlist__label">Top-k</dt>
+                      <dd className="factorlist__value factorlist__value--supporting">{TOP_K}</dd>
+                    </div>
+                  </dl>
+                </div>
+                <div className="demopanel">
+                  <div className="demopanel__head">
+                    <h2 className="demopanel__title">Another behaviour</h2>
                   </div>
                   <div className="demo__actions">
                     {trends
