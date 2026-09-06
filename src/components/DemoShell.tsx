@@ -10,6 +10,7 @@ export default function DemoShell({
   eyebrow,
   title,
   lede,
+  badge = 'Interactive demo · synthetic example data',
   disclosure,
   caseStudyHref,
   caseStudyLabel,
@@ -19,6 +20,8 @@ export default function DemoShell({
   eyebrow: string;
   title: string;
   lede: React.ReactNode;
+  /** the short label beside the title */
+  badge?: string;
   disclosure: string;
   caseStudyHref: string;
   caseStudyLabel: string;
@@ -32,7 +35,7 @@ export default function DemoShell({
           <p className="eyebrow">{eyebrow}</p>
           <div className="demo__headrow">
             <h1 className="demo__title">{title}</h1>
-            <span className="demo__badge">Interactive demo · synthetic example data</span>
+            <span className="demo__badge">{badge}</span>
           </div>
           <p className="lede demo__lede">{lede}</p>
           <p className="demo__disclosure">{disclosure}</p>

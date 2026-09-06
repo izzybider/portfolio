@@ -3,20 +3,24 @@
 import { useMemo, useState } from 'react';
 import DemoTabs from '@/components/DemoTabs';
 import DeeperDetail from '@/components/DeeperDetail';
+import AgentRun from '@/components/AgentRun';
+import Arrow from '@/components/Arrow';
 import { runSystem } from '@/lib/trustlayer/pipeline';
 import { POLICY_PROFILES, type PolicyProfile } from '@/lib/trustlayer/config';
 import {
   DEMO_SCENARIOS,
   FAILURE_LAB_SCENARIOS,
   CATEGORY_LABELS,
+  CATEGORY_TESTS,
+  RECOMMENDED_SCENARIO_ID,
 } from '@/lib/trustlayer/scenarios';
 import { TOOL_CATALOG } from '@/lib/trustlayer/tools';
 import type { Scenario, SystemVariant } from '@/lib/trustlayer/types';
 
-type Tab = 'decide' | 'compare' | 'lab' | 'policy';
+type Tab = 'run' | 'compare' | 'lab' | 'policy';
 
 const TABS: { id: Tab; label: string }[] = [
-  { id: 'decide', label: 'Decide' },
+  { id: 'run', label: 'Agent run' },
   { id: 'compare', label: 'Compare systems' },
   { id: 'lab', label: 'Failure lab' },
   { id: 'policy', label: 'Policy' },
@@ -30,13 +34,8 @@ const SYSTEM_LABELS: Record<SystemVariant, string> = {
   trustlayer: 'TrustLayer',
 };
 
-function DecisionBadge({ behavior }: { behavior: string }) {
-  return (
-    <div className={`decisionbig${behavior === 'ANSWER' ? '' : ' decisionbig--accent'}`}>
-      <span className="decisionbig__route">{behavior}</span>
-    </div>
-  );
-}
+const RECOMMENDED =
+  DEMO_SCENARIOS.find((s) => s.id === RECOMMENDED_SCENARIO_ID) ?? DEMO_SCENARIOS[0];
 
 function ScenarioPicker({
   scenarios,
@@ -63,13 +62,83 @@ function ScenarioPicker({
             {CATEGORY_LABELS[s.category] ?? s.category} · {s.risk_level} risk
           </span>
           <span className="scenariocard__req">&ldquo;{s.user_request}&rdquo;</span>
+          <span className="scenariocard__tests">
+            {CATEGORY_TESTS[s.category] ?? 'Tests policy behavior'}
+          </span>
         </button>
       ))}
     </div>
   );
 }
 
-function RunView({ scenario, profile }: { scenario: Scenario; profile: PolicyProfile }) {
+/** Observable decision state — never model reasoning text. */
+function AgentStatePanel({
+  scenario,
+  profile,
+}: {
+  scenario: Scenario;
+  profile: PolicyProfile;
+}) {
+  const run = useMemo(
+    () =>
+      runSystem(
+        'trustlayer',
+        { user_request: scenario.user_request, context: scenario.context },
+        POLICY_PROFILES[profile],
+      ),
+    [scenario, profile],
+  );
+  const s = run.state;
+  const effective = run.post_verification_decision ?? run.decision;
+  const rows: [string, string][] = [
+    ['Task type', s.task_type.replace(/_/g, ' ')],
+    ['Domain', s.domain],
+    ['Risk', s.risk_level],
+    ['Reversibility', s.reversible.replace(/_/g, ' ')],
+    ['Evidence sufficiency', s.evidence_status.replace(/_/g, ' ')],
+    [
+      'Authorization',
+      s.authorization_required ? s.authorization_status.replace(/_/g, ' ') : 'not required',
+    ],
+    ['Information gap', s.information_gap.replace(/_/g, ' ')],
+    [
+      'Classification confidence',
+      `${(s.classification_confidence * 100).toFixed(0)}% (threshold ${(
+        POLICY_PROFILES[profile].min_confidence_for_autonomy * 100
+      ).toFixed(0)}%)`,
+    ],
+    ['Rule triggered', run.decision.rule_id],
+    ['Current route', effective.decision],
+  ];
+
+  return (
+    <DeeperDetail summary="Inspect agent state" hint="observable decision state">
+      <dl className="factorlist">
+        {rows.map(([k, v]) => (
+          <div className="factorlist__row" key={k}>
+            <dt className="factorlist__label">{k}</dt>
+            <dd className="factorlist__value factorlist__value--supporting">{v}</dd>
+          </div>
+        ))}
+      </dl>
+      <p className="meta">
+        These are product-policy facts the system acts on. The source
+        implementation never requests, stores or displays model reasoning text,
+        so there is none to show.
+      </p>
+    </DeeperDetail>
+  );
+}
+
+export default function TrustLayerDemo() {
+  const [tab, setTab] = useState<Tab>('run');
+  const [profile, setProfile] = useState<PolicyProfile>('balanced');
+  const [scenario, setScenario] = useState<Scenario>(RECOMMENDED);
+  const [labScenario, setLabScenario] = useState<Scenario>(FAILURE_LAB_SCENARIOS[0]);
+  const [started, setStarted] = useState(false);
+  /* bumped on every run so the reveal restarts even for the same scenario */
+  const [runKey, setRunKey] = useState(0);
+
   const run = useMemo(
     () =>
       runSystem(
@@ -80,162 +149,16 @@ function RunView({ scenario, profile }: { scenario: Scenario; profile: PolicyPro
     [scenario, profile],
   );
 
-  const initial = run.decision;
-  const post = run.post_verification_decision;
-  const effective = post ?? initial;
-
-  return (
-    <>
-      <div className="demopanel">
-        <div className="demopanel__head">
-          <h2 className="demopanel__title">Request</h2>
-          <span className="meta">{CATEGORY_LABELS[scenario.category] ?? scenario.category}</span>
-        </div>
-        <p className="reccard__value">&ldquo;{scenario.user_request}&rdquo;</p>
-      </div>
-
-      <div className="demogrid demogrid--sidebar" style={{ marginTop: 'var(--s3)' }}>
-        <div>
-          <div className="demopanel">
-            <div className="demopanel__head">
-              <h2 className="demopanel__title">Policy check</h2>
-              <span className="meta">what the policy reads before generating</span>
-            </div>
-            <dl className="factorlist">
-              {initial.factors.map((f) => (
-                <div className="factorlist__row" key={f.label}>
-                  <dt className="factorlist__label">
-                    <span className={`factorflag factorflag--${f.weight}`} aria-hidden="true" />
-                    {f.label}
-                  </dt>
-                  <dd className={`factorlist__value factorlist__value--${f.weight}`}>
-                    {f.value}
-                    <span className="visually-hidden"> ({f.weight})</span>
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-
-          {run.tool_results.length > 0 && (
-            <div className="demopanel" style={{ marginTop: 'var(--s3)' }}>
-              <div className="demopanel__head">
-                <h2 className="demopanel__title">Simulated tools</h2>
-                <span className="meta">local fixtures — nothing external is called</span>
-              </div>
-              {run.tool_calls.map((call, i) => {
-                const result = run.tool_results[i];
-                return (
-                  <div className="trend" key={call.id}>
-                    <div className="trend__top">
-                      <span className="trend__name" style={{ fontFamily: 'var(--font-mono)' }}>
-                        {call.tool}(
-                        {Object.entries(call.args)
-                          .map(([k, v]) => `${k}: ${v}`)
-                          .join(', ')}
-                        )
-                      </span>
-                      <span className="trend__dir">{result?.status}</span>
-                    </div>
-                    <p className="trend__evidence">{result?.summary}</p>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-
-        <div className="demogrid">
-          <div>
-            <p className="caps" style={{ color: 'var(--ink-muted)', marginBottom: 8 }}>
-              {post ? 'Initial route' : 'Route'}
-            </p>
-            <DecisionBadge behavior={initial.decision} />
-            <p className="meta" style={{ marginTop: 8 }}>
-              Rule {initial.rule_id}
-            </p>
-          </div>
-
-          {post && (
-            <div>
-              <p className="caps" style={{ color: 'var(--ink-muted)', marginBottom: 8 }}>
-                After verification
-              </p>
-              <DecisionBadge behavior={post.decision} />
-              <p className="meta" style={{ marginTop: 8 }}>
-                Rule {post.rule_id}
-              </p>
-            </div>
-          )}
-
-          <div className="demopanel">
-            <div className="demopanel__head">
-              <h2 className="demopanel__title">Why this route</h2>
-            </div>
-            <p className="reccard__value">{effective.reason}</p>
-            <p className="reccard__value" style={{ marginTop: 'var(--s2)' }}>
-              <strong>Next:</strong> {effective.next_step}
-            </p>
-          </div>
-
-          <div className="demopanel">
-            <div className="demopanel__head">
-              <h2 className="demopanel__title">What the user gets</h2>
-              <span className="meta">{run.final.behavior}</span>
-            </div>
-            <p className="reccard__value">
-              <strong>{run.final.headline}.</strong> {run.final.body}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <DeeperDetail summary="Show decision trace" hint="every step, in order">
-        <div className="trace">
-          <div className="trace__head">
-            <span className="trace__title">{scenario.id}</span>
-            <span className="trace__id">
-              {POLICY_PROFILES[profile].label} policy · deterministic
-            </span>
-          </div>
-          {run.trace.map((event) => (
-            <div
-              className={`trace__row${event.step === 'decision' ? ' trace__row--decision' : ''}`}
-              key={event.id}
-            >
-              <span className="trace__step">{event.title}</span>
-              <span className="trace__value">{event.detail}</span>
-            </div>
-          ))}
-        </div>
-        <p className="meta">
-          The trace records observable policy inputs and the rule that fired. It never contains
-          model reasoning text — the source system does not request or store any.
-        </p>
-      </DeeperDetail>
-
-      <div className="demopanel" style={{ marginTop: 'var(--s3)' }}>
-        <div className="demopanel__head">
-          <h2 className="demopanel__title">The label on this scenario</h2>
-          <span className="meta">expected: {scenario.expected_behavior}</span>
-        </div>
-        <p className="reccard__value">{scenario.explanation}</p>
-        <p className="meta" style={{ marginTop: 'var(--s2)' }}>
-          Labels were written before the engine was tuned against them. Where the engine disagrees,
-          the disagreement is shown rather than relabelled.
-        </p>
-      </div>
-    </>
+  const labRun = useMemo(
+    () =>
+      runSystem(
+        'trustlayer',
+        { user_request: labScenario.user_request, context: labScenario.context },
+        POLICY_PROFILES[profile],
+      ),
+    [labScenario, profile],
   );
-}
 
-export default function TrustLayerDemo() {
-  const [tab, setTab] = useState<Tab>('decide');
-  const [profile, setProfile] = useState<PolicyProfile>('balanced');
-  const [scenario, setScenario] = useState<Scenario>(DEMO_SCENARIOS[3]);
-  const [labScenario, setLabScenario] = useState<Scenario>(FAILURE_LAB_SCENARIOS[0]);
-
-  /* the same scenario under all three profiles */
   const profileRuns = useMemo(
     () =>
       PROFILES.map((p) => ({
@@ -248,9 +171,9 @@ export default function TrustLayerDemo() {
       })),
     [scenario],
   );
-  const profileVaries = new Set(profileRuns.map((r) => r.run.final.behavior)).size > 1;
+  const profileVaries =
+    new Set(profileRuns.map((r) => `${r.run.decision.decision}/${r.run.final.behavior}`)).size > 1;
 
-  /* the same scenario through all three systems */
   const systemRuns = useMemo(
     () =>
       (['direct_llm', 'rag_agent', 'trustlayer'] as SystemVariant[]).map((system) => ({
@@ -264,89 +187,190 @@ export default function TrustLayerDemo() {
     [scenario, profile],
   );
 
+  const select = (s: Scenario) => {
+    setScenario(s);
+    setStarted(true);
+    setRunKey((k) => k + 1);
+  };
+
   const reset = () => {
     setProfile('balanced');
-    setScenario(DEMO_SCENARIOS[3]);
+    setScenario(RECOMMENDED);
     setLabScenario(FAILURE_LAB_SCENARIOS[0]);
-    setTab('decide');
+    setStarted(false);
+    setTab('run');
+    setRunKey((k) => k + 1);
   };
+
+  const profileSwitch = (
+    <div className="demo__actions" style={{ marginBottom: 'var(--s2)' }}>
+      <div className="profileswitch" role="group" aria-label="Autonomy profile">
+        {PROFILES.map((p) => (
+          <button
+            key={p}
+            type="button"
+            className="profileswitch__btn"
+            aria-pressed={p === profile}
+            onClick={() => {
+              setProfile(p);
+              setRunKey((k) => k + 1);
+            }}
+          >
+            {POLICY_PROFILES[p].label}
+          </button>
+        ))}
+      </div>
+      <button type="button" className="button button--quiet" onClick={reset}>
+        Reset demo
+      </button>
+    </div>
+  );
 
   return (
     <>
-      <div className="demo__actions" style={{ marginBottom: 'var(--s3)' }}>
-        <div
-          className="profileswitch"
-          role="group"
-          aria-label="Autonomy profile"
-        >
-          {PROFILES.map((p) => (
-            <button
-              key={p}
-              type="button"
-              className="profileswitch__btn"
-              aria-pressed={p === profile}
-              onClick={() => setProfile(p)}
-            >
-              {POLICY_PROFILES[p].label}
-            </button>
-          ))}
-        </div>
-        <button type="button" className="button button--quiet" onClick={reset}>
-          Reset demo
-        </button>
-      </div>
+      {profileSwitch}
       <p className="meta" style={{ marginBottom: 'var(--s4)' }}>
         {POLICY_PROFILES[profile].summary}
       </p>
 
       <DemoTabs tabs={TABS} active={tab} onChange={setTab} label="TrustLayer demo sections" />
 
-      {/* ---------------- DECIDE ---------------- */}
-      {tab === 'decide' && (
-        <div id="panel-decide" role="tabpanel" aria-labelledby="tab-decide">
-          <p className="caps" style={{ color: 'var(--ink-muted)', marginBottom: 10 }}>
-            Pick a request
-          </p>
-          <ScenarioPicker
-            scenarios={DEMO_SCENARIOS}
-            selectedId={scenario.id}
-            onSelect={setScenario}
-            idPrefix="main"
-          />
-          <div style={{ marginTop: 'var(--s4)' }}>
-            <RunView scenario={scenario} profile={profile} />
-          </div>
+      {/* ---------------- AGENT RUN ---------------- */}
+      {tab === 'run' && (
+        <div id="panel-run" role="tabpanel" aria-labelledby="tab-run">
+          {!started ? (
+            <>
+              <div className="firstrun">
+                <p className="caps" style={{ color: 'var(--ink-muted)', margin: 0 }}>
+                  Try a 30-second run
+                </p>
+                <h2 className="firstrun__title">{RECOMMENDED.title}</h2>
+                <p className="firstrun__req">&ldquo;{RECOMMENDED.user_request}&rdquo;</p>
+                <p className="reccard__value" style={{ marginBottom: 'var(--s3)' }}>
+                  Watch the policy check the evidence, the authorization and the reversibility,
+                  route to <strong>VERIFY</strong>, call two simulated tools, fold what they return
+                  back into its state, and decide again — ending in{' '}
+                  <strong>ESCALATE</strong> because the acting role is not permitted to make this
+                  change.
+                </p>
+                <div className="demo__actions">
+                  <button
+                    type="button"
+                    className="button button--primary"
+                    onClick={() => select(RECOMMENDED)}
+                  >
+                    Run this scenario <Arrow />
+                  </button>
+                  <button
+                    type="button"
+                    className="button button--quiet"
+                    onClick={() => setStarted(true)}
+                  >
+                    Explore all scenarios
+                  </button>
+                </div>
+              </div>
 
-          {profileVaries && (
-            <div className="demopanel" style={{ marginTop: 'var(--s3)' }}>
-              <div className="demopanel__head">
-                <h2 className="demopanel__title">This scenario changes with the profile</h2>
+              <p className="meta">
+                Eight requests are available, spanning all four behaviors. Nothing external is
+                called and no model runs — the classifier and the policy are both deterministic.
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="caps" style={{ color: 'var(--ink-muted)', marginBottom: 10 }}>
+                Pick a request
+              </p>
+              <ScenarioPicker
+                scenarios={DEMO_SCENARIOS}
+                selectedId={scenario.id}
+                onSelect={select}
+                idPrefix="main"
+              />
+
+              <div style={{ marginTop: 'var(--s4)' }}>
+                <AgentRun key={`${scenario.id}-${profile}-${runKey}`} run={run} />
               </div>
-              <div className="table-wrap">
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th scope="col">Profile</th>
-                      <th scope="col">Route</th>
-                      <th scope="col">Rule</th>
-                      <th scope="col">User ends with</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {profileRuns.map(({ profile: p, run }) => (
-                      <tr key={p}>
-                        <td>{POLICY_PROFILES[p].label}</td>
-                        <td>{run.decision.decision}</td>
-                        <td style={{ fontFamily: 'var(--font-mono)', fontSize: 12 }}>
-                          {run.decision.rule_id}
-                        </td>
-                        <td>{run.final.behavior}</td>
+
+              <div style={{ marginTop: 'var(--s3)' }}>
+                <AgentStatePanel scenario={scenario} profile={profile} />
+              </div>
+
+              <div className="demopanel" style={{ marginTop: 'var(--s3)' }}>
+                <div className="demopanel__head">
+                  <h2 className="demopanel__title">Same request, three autonomy profiles</h2>
+                  <span className="meta">
+                    {profileVaries ? 'the profile changes the outcome here' : 'unchanged here'}
+                  </span>
+                </div>
+                <div className="table-wrap">
+                  <table className="table">
+                    <caption
+                      style={{
+                        captionSide: 'bottom',
+                        textAlign: 'left',
+                        padding: '10px 0 0',
+                        fontSize: 'var(--fs-micro)',
+                        color: 'var(--ink-muted)',
+                      }}
+                    >
+                      More autonomy does not automatically improve task completion when evidence or
+                      authorization is missing — on the benchmark reported in the case study,
+                      loosening the policy changed where the system escalated rather than whether it
+                      did.
+                    </caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">Profile</th>
+                        <th scope="col">Initial behavior</th>
+                        <th scope="col">Tool use</th>
+                        <th scope="col">Final behavior</th>
+                        <th scope="col">Changed?</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {profileRuns.map(({ profile: p, run: r }, i) => {
+                        const base = profileRuns[1].run; /* Balanced is the default */
+                        const changed =
+                          i !== 1 &&
+                          (r.decision.decision !== base.decision.decision ||
+                            r.final.behavior !== base.final.behavior);
+                        return (
+                          <tr key={p}>
+                            <td>
+                              {POLICY_PROFILES[p].label}
+                              {p === profile ? ' ·' : ''}
+                            </td>
+                            <td>{r.decision.decision}</td>
+                            <td>
+                              {r.tool_calls.length
+                                ? `${r.tool_calls.length} tool${r.tool_calls.length === 1 ? '' : 's'}`
+                                : 'none'}
+                            </td>
+                            <td>
+                              <strong>{r.final.behavior}</strong>
+                            </td>
+                            <td>{i === 1 ? 'baseline' : changed ? 'yes' : 'no'}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
+
+              <div className="demopanel" style={{ marginTop: 'var(--s3)' }}>
+                <div className="demopanel__head">
+                  <h2 className="demopanel__title">The label on this scenario</h2>
+                  <span className="meta">expected: {scenario.expected_behavior}</span>
+                </div>
+                <p className="reccard__value">{scenario.explanation}</p>
+                <p className="meta" style={{ marginTop: 'var(--s2)' }}>
+                  Labels were written before the engine was tuned against them. Where the engine
+                  disagrees, the disagreement is shown rather than relabelled.
+                </p>
+              </div>
+            </>
           )}
         </div>
       )}
@@ -360,7 +384,7 @@ export default function TrustLayerDemo() {
           <ScenarioPicker
             scenarios={DEMO_SCENARIOS}
             selectedId={scenario.id}
-            onSelect={setScenario}
+            onSelect={select}
             idPrefix="cmp"
           />
 
@@ -380,40 +404,43 @@ export default function TrustLayerDemo() {
                     color: 'var(--ink-muted)',
                   }}
                 >
-                  Behavior on one synthetic scenario with simulated tools. This is not production
-                  performance and not a user outcome.
+                  Behavior on one synthetic scenario with simulated tools. Not production
+                  performance and not a user outcome. &ldquo;Supported&rdquo; means the user did not
+                  end up with an answer the scenario says was not answerable.
                 </caption>
                 <thead>
                   <tr>
                     <th scope="col">System</th>
-                    <th scope="col">Route</th>
-                    <th scope="col">Used evidence</th>
-                    <th scope="col">Escalated</th>
-                    <th scope="col">Ends in an unsupported answer</th>
+                    <th scope="col">Initial behavior</th>
+                    <th scope="col">Evidence used?</th>
+                    <th scope="col">Tool use?</th>
+                    <th scope="col">Final behavior</th>
+                    <th scope="col">Supported?</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {systemRuns.map(({ system, run }) => {
+                  {systemRuns.map(({ system, run: r }) => {
                     const usedEvidence =
-                      run.tool_results.some((r) => r.status === 'ok') ||
-                      run.state.available_evidence.length > 0;
-                    const escalated = run.final.behavior === 'ESCALATE';
-                    /* "Unsupported" mirrors the source harness: the user ends
-                       with an answer where the label says answering was not an
-                       acceptable behavior. */
+                      r.tool_results.some((t) => t.status === 'ok') ||
+                      r.state.available_evidence.length > 0;
                     const unsupported =
-                      run.final.behavior === 'ANSWER' &&
+                      r.final.behavior === 'ANSWER' &&
                       !scenario.acceptable_behaviors.includes('ANSWER') &&
-                      !(run.decision.decision === 'VERIFY' && run.tool_results.length > 0);
+                      !(r.decision.decision === 'VERIFY' && r.tool_results.length > 0);
                     return (
                       <tr key={system}>
                         <td>
                           <strong>{SYSTEM_LABELS[system]}</strong>
                         </td>
-                        <td>{run.final.behavior}</td>
+                        <td>{r.decision.decision}</td>
                         <td>{usedEvidence ? 'yes' : 'no'}</td>
-                        <td>{escalated ? 'yes' : 'no'}</td>
-                        <td>{unsupported ? 'yes' : 'no'}</td>
+                        <td>
+                          {r.tool_calls.length
+                            ? `${r.tool_calls.length} tool${r.tool_calls.length === 1 ? '' : 's'}`
+                            : 'no'}
+                        </td>
+                        <td>{r.final.behavior}</td>
+                        <td>{unsupported ? 'unsupported' : 'supported'}</td>
                       </tr>
                     );
                   })}
@@ -423,15 +450,15 @@ export default function TrustLayerDemo() {
           </div>
 
           <div className="demogrid demogrid--3" style={{ marginTop: 'var(--s3)' }}>
-            {systemRuns.map(({ system, run }) => (
+            {systemRuns.map(({ system, run: r }) => (
               <div className="demopanel" key={system}>
                 <div className="demopanel__head">
                   <h2 className="demopanel__title">{SYSTEM_LABELS[system]}</h2>
                 </div>
                 <p className="meta" style={{ marginBottom: 8 }}>
-                  {run.decision.rule_id}
+                  {r.decision.rule_id}
                 </p>
-                <p className="reccard__value">{run.final.body}</p>
+                <p className="reccard__value">{r.final.body}</p>
               </div>
             ))}
           </div>
@@ -450,11 +477,17 @@ export default function TrustLayerDemo() {
             <ScenarioPicker
               scenarios={FAILURE_LAB_SCENARIOS}
               selectedId={labScenario.id}
-              onSelect={setLabScenario}
+              onSelect={(s) => {
+                setLabScenario(s);
+                setRunKey((k) => k + 1);
+              }}
               idPrefix="lab"
             />
           </div>
-          <RunView scenario={labScenario} profile={profile} />
+          <AgentRun key={`${labScenario.id}-${profile}-${runKey}`} run={labRun} />
+          <div style={{ marginTop: 'var(--s3)' }}>
+            <AgentStatePanel scenario={labScenario} profile={profile} />
+          </div>
         </div>
       )}
 
@@ -514,15 +547,16 @@ export default function TrustLayerDemo() {
                 <div className="trend" key={p}>
                   <div className="trend__top">
                     <span className="trend__name">{POLICY_PROFILES[p].label}</span>
-                    {p === profile && <span className="trend__dir trend__dir--improving">active</span>}
+                    {p === profile && (
+                      <span className="trend__dir trend__dir--improving">active</span>
+                    )}
                   </div>
                   <p className="trend__evidence">{POLICY_PROFILES[p].summary}</p>
                 </div>
               ))}
               <p className="meta" style={{ marginTop: 'var(--s3)' }}>
-                Switch profiles above and re-run a scenario. On the benchmark reported in the case
-                study, loosening the policy did not buy autonomy back on this scenario set — it
-                changed where the system escalated rather than whether it did.
+                Switch profiles above and re-run a scenario. More autonomy does not automatically
+                improve task completion when evidence or authorization is missing.
               </p>
             </div>
           </div>

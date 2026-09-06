@@ -21,15 +21,17 @@ export default function TrustLayerDemoPage() {
       <DemoShell
         eyebrow="Interactive experiment · TrustLayer"
         title="TrustLayer"
+        badge="Interactive demo · synthetic scenarios"
         lede={
           <>
-            Most assistants decide what to say. TrustLayer decides{' '}
-            <strong>what behavior is appropriate</strong> first — routing a request to ANSWER, ASK,
-            VERIFY or ESCALATE based on the evidence, authorization and reversibility actually
-            available. Pick a request and watch the policy run.
+            Most assistants decide what to say. TrustLayer is the decision layer in front of an
+            agent: it decides <strong>what behavior is appropriate</strong> before anything is
+            generated — routing a request to ANSWER, ASK, VERIFY or ESCALATE on the evidence,
+            authorization and reversibility actually available, and calling tools only when the
+            route calls for them.
           </>
         }
-        disclosure="Interactive demo · synthetic scenarios. Scenarios and results here are synthetic and designed to test policy behavior, not production performance. Tools are simulated over local fixtures, the escalation handoff is simulated, and no model is called — the classifier and the policy are both deterministic."
+        disclosure="Scenarios, tool results, and benchmark results are synthetic and test policy behavior, not production performance. Tools are simulated over local fixtures, the escalation handoff is simulated, and no model is called — the classifier and the policy are both deterministic."
         caseStudyHref="/work/trustlayer"
         caseStudyLabel="Read the full case study"
       >
