@@ -105,6 +105,49 @@ export default function HomePage() {
         />
       </Section>
 
+      {/* ---------------- PRODUCT EXPERIMENTS ---------------- */}
+      <Section
+        id="experiments"
+        label="Product experiments"
+        title="Smaller bets, run to learn something."
+        width="wide"
+      >
+        <div className="experiments">
+          <article className="expcard">
+            <p className="expcard__label">Consumer product experiment</p>
+            <h3 className="expcard__title">CommonGround</h3>
+            <p className="expcard__line">
+              Can structured preference elicitation help groups reach a decision with less
+              back-and-forth?
+            </p>
+            <p className="expcard__status">Interactive prototype · study running</p>
+            <p className="expcard__ctas">
+              <Link href="/experiments/commonground" className="project__cta project__cta--primary">
+                Try the experiment <Arrow />
+              </Link>
+              <Link
+                href="/experiments/commonground#study-design"
+                className="project__cta project__cta--secondary"
+              >
+                Study design <Arrow />
+              </Link>
+            </p>
+          </article>
+          <div>
+            <p className="body-text">
+              Recommendation systems optimize for one person. Group decisions break somewhere else:
+              preferences conflict, people have hard nos, and the coordination is most of the cost.
+            </p>
+            <p className="body-text">
+              CommonGround keeps hard constraints, soft preferences and vetoes apart and ranks by
+              the least satisfied person before the group average — so an option one person rejects
+              cannot win on a high average. Whether that actually reduces friction is the thing
+              being tested, not something claimed.
+            </p>
+          </div>
+        </div>
+      </Section>
+
       {/* ---------------- SUPPORTING WORK ---------------- */}
       <Section
         label="Supporting work"

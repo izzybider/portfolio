@@ -19,7 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly' as const,
       priority: 0.8,
     })),
-    ...['/demo/guideai', '/demo/trustlayer'].map((href) => ({
+    ...['/demo/guideai', '/demo/trustlayer', '/experiments/commonground'].map((href) => ({
       url: `${siteUrl}${href}`,
       lastModified: now,
       changeFrequency: 'monthly' as const,
