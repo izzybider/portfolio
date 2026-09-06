@@ -10,10 +10,16 @@
 export default function Arrow({
   direction = 'right',
 }: {
-  direction?: 'right' | 'left' | 'down';
+  direction?: 'right' | 'left' | 'down' | 'up';
 }) {
   const rotation =
-    direction === 'left' ? 180 : direction === 'down' ? 90 : 0;
+    direction === 'left'
+      ? 180
+      : direction === 'down'
+        ? 90
+        : direction === 'up'
+          ? -90
+          : 0;
 
   return (
     <svg

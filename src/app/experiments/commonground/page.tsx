@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { PageShell, Section, Arrow } from '@/components';
 import CommonGroundApp from './CommonGroundApp';
+import ResultsPreview from './ResultsPreview';
+import { resultsAreVisible } from '@/data/commonground-placeholder-results';
 
 export const metadata: Metadata = {
   title: 'CommonGround — Isabella Bider',
@@ -199,6 +201,10 @@ export default function CommonGroundPage() {
           </p>
         </div>
       </Section>
+
+      {/* Placeholder values are gated: real results render on their own, an
+          invented layout preview only with NEXT_PUBLIC_SHOW_CG_PLACEHOLDER. */}
+      {resultsAreVisible() ? <ResultsPreview /> : null}
     </PageShell>
   );
 }
