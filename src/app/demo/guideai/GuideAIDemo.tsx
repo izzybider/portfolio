@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import DemoTabs from '@/components/DemoTabs';
 import DeeperDetail from '@/components/DeeperDetail';
+import Arrow from '@/components/Arrow';
 import {
   CHALLENGE_BEHAVIORS,
   POSITIVE_BEHAVIORS,
@@ -36,13 +37,20 @@ import { track } from '@/lib/guideai/analytics';
 
 type Tab = 'overview' | 'log' | 'trends' | 'recommendation' | 'prep';
 
+/* Ordered for the path a recruiter actually takes: see what changed, read the
+   recommendation and its evidence, end at the trainer-prep summary. Logging
+   and trends stay available but are not the first thing offered. */
 const TABS: { id: Tab; label: string }[] = [
   { id: 'overview', label: 'Overview' },
-  { id: 'log', label: 'Log observation' },
-  { id: 'trends', label: 'Trends' },
   { id: 'recommendation', label: 'Recommendation' },
   { id: 'prep', label: 'Trainer prep' },
+  { id: 'log', label: 'Log observation' },
+  { id: 'trends', label: 'Trends' },
 ];
+
+/* A behaviour the product deliberately refuses to advise on: retrieval is
+   restricted to escalation material and the response defers to a trainer. */
+const HIGHER_RISK_BEHAVIOR = 'growling';
 
 export default function GuideAIDemo() {
   const [observations, setObservations] = useState<Observation[]>(SEED_OBSERVATIONS);
@@ -50,6 +58,11 @@ export default function GuideAIDemo() {
   const [confirmation, setConfirmation] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [selectedBehavior, setSelectedBehavior] = useState<string | null>(null);
+  const [whySources, setWhySources] = useState(false);
+  const hasHigherRisk = useMemo(
+    () => observations.some((o) => o.behavior === HIGHER_RISK_BEHAVIOR),
+    [observations],
+  );
 
   const trends = useMemo(() => behaviorTrends(observations), [observations]);
   const weeks = useMemo(() => weeklyBuckets(observations), [observations]);
@@ -155,14 +168,32 @@ export default function GuideAIDemo() {
 
   return (
     <>
-      <div className="demo__actions" style={{ marginBottom: 'var(--s4)' }}>
-        <button type="button" className="button button--quiet" onClick={reset}>
-          Reset demo
-        </button>
-        <span className="meta">
-          {observations.length} observations · {DOG.name} · {DOG.age_group} · {DOG.breed}
-        </span>
-      </div>
+      {tab === 'overview' && (
+        <div className="leadin">
+            <p className="leadin__line">
+              Four weeks of {DOG.name}&rsquo;s observations are already logged.
+            </p>
+            <div className="demo__actions">
+              <button
+                type="button"
+                className="button button--primary"
+                onClick={() => {
+                  setSelectedBehavior(null);
+                  setTab('recommendation');
+                }}
+              >
+                See what changed with {DOG.name} <Arrow />
+              </button>
+              <button
+                type="button"
+                className="button button--quiet"
+                onClick={() => setTab('log')}
+              >
+                Log an observation
+              </button>
+            </div>
+          </div>
+      )}
 
       <DemoTabs tabs={TABS} active={tab} onChange={setTab} label="GuideAI demo sections" />
 
@@ -219,18 +250,6 @@ export default function GuideAIDemo() {
                 </div>
               )}
 
-              <div className="demo__actions">
-                <button
-                  type="button"
-                  className="button button--primary"
-                  onClick={() => setTab('log')}
-                >
-                  Log an observation
-                </button>
-                <button type="button" className="button" onClick={() => setTab('prep')}>
-                  Prepare for trainer
-                </button>
-              </div>
             </div>
           </div>
 
@@ -539,7 +558,30 @@ export default function GuideAIDemo() {
                 {pipeline.escalation.required && (
                   <div className="escalate">
                     <p className="escalate__title">Trainer review recommended</p>
-                    <p className="escalate__reason">{pipeline.escalation.reason}</p>
+                    <p className="caps escalate__label">Why escalated</p>
+                    <ul className="escalate__list">
+                      <li>{pipeline.escalation.reason}</li>
+                      {pipeline.context.contextCount > 1 && (
+                        <li>
+                          Appearing in {pipeline.context.contextCount} different settings rather
+                          than one.
+                        </li>
+                      )}
+                      {pipeline.context.strongestFrequency === 'repeated' && (
+                        <li>Logged as repeated at its strongest, not a one-off.</li>
+                      )}
+                      {pipeline.response.deferred && (
+                        <li>
+                          The retrieved resources do not confidently support a next-step
+                          recommendation for this pattern.
+                        </li>
+                      )}
+                    </ul>
+                    <p className="caps escalate__label">Next step</p>
+                    <p className="escalate__reason">
+                      Bring this pattern to the trainer rather than relying on an automated
+                      recommendation.
+                    </p>
                   </div>
                 )}
 
@@ -570,7 +612,15 @@ export default function GuideAIDemo() {
                   </div>
                   <div className="reccard__row">
                     <span className="reccard__label">Based on</span>
-                    <span className="reccard__value">{pipeline.response.basedOn}</span>
+                    <span className="reccard__value">
+                      {pipeline.context.observationCount} recent observation
+                      {pipeline.context.observationCount === 1 ? '' : 's'} ·{' '}
+                      {recommendation.contexts
+                        .map((c) => `${contextLabel(c.key)} (${c.count})`)
+                        .join(', ')}{' '}
+                      · trend {pipeline.context.trend} ·{' '}
+                      {pipeline.retrieval.results.length} retrieved resources
+                    </span>
                   </div>
                 </div>
 
@@ -582,9 +632,18 @@ export default function GuideAIDemo() {
                       top {pipeline.retrieval.topK} of {pipeline.retrieval.corpusSize}
                     </span>
                   </div>
-                  <p className="meta" style={{ marginBottom: 'var(--s2)' }}>
-                    <strong>Why these were retrieved.</strong> {pipeline.retrieval.whyRetrieved}
-                  </p>
+                  <button
+                    type="button"
+                    className="whysources"
+                    aria-expanded={whySources}
+                    onClick={() => setWhySources((v) => !v)}
+                  >
+                    <span className="whysources__mark" aria-hidden="true" />
+                    Why these sources?
+                  </button>
+                  {whySources && (
+                    <p className="whysources__body">{pipeline.retrieval.whyRetrieved}</p>
+                  )}
                   <ul className="sources">
                     {pipeline.retrieval.results.map((r) => (
                       <li key={r.resource.id}>
@@ -623,61 +682,88 @@ export default function GuideAIDemo() {
                   onClick={() => track('retrieval_inspected', { behavior: recommendation.behavior })}
                   role="presentation"
                 >
-                  <DeeperDetail summary="Inspect AI pipeline" hint="observable steps">
+                  <DeeperDetail summary="Inspect how GuideAI reached this" hint="observable steps">
                     <ol className="pipeline">
                       <li>
-                        <span className="pipeline__step">Behaviour context assembled</span>
+                        <span className="pipeline__step">Structured behavior context assembled</span>
                         <span className="pipeline__val">
                           {pipeline.context.behavior} · {pipeline.context.observationCount}{' '}
                           observations · {pipeline.context.contextCount} setting
                           {pipeline.context.contextCount === 1 ? '' : 's'} ·{' '}
                           {pipeline.context.strongestFrequency} · trend {pipeline.context.trend}
+                          <span className="pipestat pipestat--complete">complete</span>
                         </span>
                       </li>
                       <li>
-                        <span className="pipeline__step">Retrieval query constructed</span>
+                        <span className="pipeline__step">Retrieval query created</span>
                         <span className="pipeline__val pipeline__val--mono">
                           {pipeline.retrieval.query}
+                          <span className="pipestat pipestat--complete">complete</span>
                         </span>
                       </li>
                       <li>
-                        <span className="pipeline__step">Query vector</span>
+                        <span className="pipeline__step">Query vector built</span>
                         <span className="pipeline__val">
                           {pipeline.retrieval.embedder} · {pipeline.retrieval.dimension} dimensions
+                          <span className="pipestat pipestat--complete">complete</span>
                         </span>
                       </li>
                       <li>
-                        <span className="pipeline__step">Vector search</span>
+                        <span className="pipeline__step">Relevant resources retrieved</span>
                         <span className="pipeline__val">
                           cosine similarity over {pipeline.retrieval.corpusSize} indexed resources ·
                           top-{pipeline.retrieval.topK}
                           {pipeline.retrieval.sensitive
                             ? ' · restricted to escalation material for this behaviour'
                             : ''}
+                          <span
+                            className={`pipestat pipestat--${
+                              pipeline.retrieval.weak ? 'weak' : 'matched'
+                            }`}
+                          >
+                            {pipeline.retrieval.weak ? 'no strong match' : 'matched'}
+                          </span>
                         </span>
                       </li>
                       <li>
-                        <span className="pipeline__step">Retrieved</span>
+                        <span className="pipeline__step">Retrieved context added</span>
                         <span className="pipeline__val pipeline__val--mono">
                           {pipeline.retrieval.results
                             .map((r) => `${r.resource.id} ${r.score.toFixed(3)}`)
                             .join('  ·  ')}
+                          <span className="pipestat pipestat--complete">
+                            {pipeline.retrieval.results.length} added
+                          </span>
                         </span>
                       </li>
                       <li>
-                        <span className="pipeline__step">Response composed</span>
+                        <span className="pipeline__step">Recommendation composed</span>
                         <span className="pipeline__val">
                           {pipeline.response.deferred
                             ? 'Retrieval below the relevance floor or behaviour is sensitive — asked for more observation instead of suggesting a step.'
                             : `Grounded in ${pipeline.response.sources.length} retrieved resources; every line traces to one of them.`}
+                          <span
+                            className={`pipestat pipestat--${
+                              pipeline.response.deferred ? 'weak' : 'complete'
+                            }`}
+                          >
+                            {pipeline.response.deferred ? 'deferred' : 'complete'}
+                          </span>
                         </span>
                       </li>
                       <li>
-                        <span className="pipeline__step">Escalation policy applied</span>
+                        <span className="pipeline__step">Escalation policy checked</span>
                         <span className="pipeline__val">
                           {pipeline.escalation.required
                             ? `Trainer review required — ${pipeline.escalation.reason}`
                             : 'No escalation condition met.'}
+                          <span
+                            className={`pipestat pipestat--${
+                              pipeline.escalation.required ? 'escalate' : 'continue'
+                            }`}
+                          >
+                            {pipeline.escalation.required ? 'escalate' : 'continue'}
+                          </span>
                         </span>
                       </li>
                     </ol>
@@ -755,6 +841,52 @@ export default function GuideAIDemo() {
                         </button>
                       ))}
                   </div>
+                  {hasHigherRisk && (
+                    <>
+                      <p className="meta" style={{ marginTop: 'var(--s2)' }}>
+                        One of these is handled differently on purpose.
+                      </p>
+                      <button
+                        type="button"
+                        className="button"
+                        onClick={() => setSelectedBehavior(HIGHER_RISK_BEHAVIOR)}
+                      >
+                        Try a higher-risk example <Arrow />
+                      </button>
+                    </>
+                  )}
+                </div>
+
+                <div className="demopanel demopanel--payoff">
+                  <div className="demopanel__head">
+                    <h2 className="demopanel__title">Then prepare for the trainer</h2>
+                  </div>
+                  <p className="reccard__value">
+                    The recommendation is the middle of the workflow. The end of it is a summary the
+                    raiser can hand over, with the judgment calls named rather than answered.
+                  </p>
+                  <button
+                    type="button"
+                    className="button button--primary"
+                    onClick={() => setTab('prep')}
+                  >
+                    Prepare for trainer <Arrow />
+                  </button>
+                </div>
+
+                <div className="demopanel">
+                  <div className="demopanel__head">
+                    <h2 className="demopanel__title">How this is evaluated</h2>
+                  </div>
+                  <p className="reccard__value">
+                    Recommendations are evaluated on retrieval relevance, groundedness, escalation
+                    behavior and unsupported-output rate using a synthetic test set.
+                  </p>
+                  <p>
+                    <a className="button button--quiet" href="/work/guideai#evaluation">
+                      See evaluation methodology <Arrow />
+                    </a>
+                  </p>
                 </div>
               </div>
             </div>
@@ -768,7 +900,7 @@ export default function GuideAIDemo() {
           <div className="demopanel__head">
             <h2 className="demopanel__title">Trainer-prep summary — {prep.dogName}</h2>
             <button type="button" className="button button--primary" onClick={copyPrep}>
-              {copied ? 'Copied' : 'Copy summary'}
+              {copied ? 'Copied' : 'Copy trainer-prep summary'}
             </button>
           </div>
           <p className="meta" style={{ marginBottom: 'var(--s3)' }}>
@@ -810,7 +942,7 @@ export default function GuideAIDemo() {
               </span>
             </div>
             <div className="reccard__row">
-              <span className="reccard__label">Context patterns</span>
+              <span className="reccard__label">Patterns by context</span>
               <span className="reccard__value">
                 {prep.contextPatterns.map((c) => `${contextLabel(c.key)} (${c.count})`).join(' · ')}
               </span>
@@ -842,6 +974,23 @@ export default function GuideAIDemo() {
               </span>
             </div>
             <div className="reccard__row">
+              <span className="reccard__label">Sources / evidence used</span>
+              <span className="reccard__value">
+                {pipeline ? (
+                  <>
+                    Recommendation for <strong>{pipeline.context.behavior}</strong> drew on{' '}
+                    {pipeline.retrieval.results.length} retrieved resources:{' '}
+                    {pipeline.retrieval.results.map((r) => r.resource.title).join(' · ')}.{' '}
+                    <em>
+                      Synthetic demo resources, not official training guidance.
+                    </em>
+                  </>
+                ) : (
+                  <em>No recommendation has been generated in this session yet.</em>
+                )}
+              </span>
+            </div>
+            <div className="reccard__row">
               <span className="reccard__label">Representative observations</span>
               <span className="reccard__value">
                 <ul style={{ margin: 0, paddingLeft: '1.1em' }}>
@@ -862,6 +1011,14 @@ export default function GuideAIDemo() {
           </p>
         </div>
       )}
+      <div className="demo__actions demo__actions--footer">
+        <button type="button" className="button button--quiet" onClick={reset}>
+          Reset demo
+        </button>
+        <span className="meta">
+          {observations.length} observations · {DOG.name} · {DOG.age_group} · {DOG.breed}
+        </span>
+      </div>
     </>
   );
 }

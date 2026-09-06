@@ -112,7 +112,10 @@ export default function GuideAIPage() {
           <Link href="/demo/guideai" className="button button--primary">
             Try interactive demo <Arrow />
           </Link>
-          <span className="meta">Synthetic demo data · no sign-in</span>
+          <span className="meta">
+            See grounded recommendations, source retrieval and trainer escalation in the live demo
+            · synthetic demo data · no sign-in
+          </span>
         </p>
       </CaseStudyHero>
 
@@ -383,36 +386,6 @@ export default function GuideAIPage() {
             over 28 documents is exact either way.
           </p>
         </ArtifactCard>
-
-        <ArtifactCard
-          title="Retrieval evaluation"
-          meta="Synthetic evaluation set · 30 labelled scenarios · npm run guideai:eval"
-          caption="Computed by running the harness against the shipped retrieval stack, not written by hand. Labels and corpus were written by the same person, and 30 scenarios is a small set — these measure whether the pipeline behaves as designed, not how it would perform in the field."
-        >
-          <ExperimentComparison
-            metricLabel="Measure"
-            columns={[
-              { name: 'No retrieval', sub: 'Control' },
-              { name: 'Retrieval-grounded', sub: 'Shipped', win: true },
-            ]}
-            rows={[
-              { metric: 'Retrieval hit@4', values: ['—', '93%'] },
-              { metric: 'Escalation correctness', values: ['—', '100%'] },
-              { metric: 'Groundedness', values: ['0%', '100%'] },
-              { metric: 'Unsupported recommendations', values: ['10%', '0%'] },
-              { metric: 'Structural completeness', values: ['—', '100%'] },
-            ]}
-          />
-          <p className="meta" style={{ marginTop: 'var(--s3)' }}>
-            The control has no sources to cite, so groundedness is 0% by
-            construction; the number that matters is the 10% unsupported rate —
-            three scenarios where an ungrounded generator would answer a
-            sensitive observation the product should refer to a trainer instead.
-            Retrieved-set precision is 44%, and two of the thirty scenarios miss
-            their labelled resource entirely, both on vocalisation. Those are
-            reported rather than tuned away.
-          </p>
-        </ArtifactCard>
       </Section>
 
       {/* ---------------- ANALYTICS ---------------- */}
@@ -517,6 +490,49 @@ export default function GuideAIPage() {
           </ArtifactCard>
         </div>
 
+
+        <ArtifactCard
+          title="Retrieval evaluation"
+          meta="Synthetic evaluation set · 30 labelled scenarios · npm run guideai:eval"
+          caption="Computed by running the harness against the shipped retrieval stack, not written by hand. Labels and corpus were written by the same person, and 30 scenarios is a small set — these measure whether the pipeline behaves as designed, not how it would perform in the field."
+        >
+          <ExperimentComparison
+            metricLabel="Measure"
+            columns={[
+              { name: 'No retrieval', sub: 'Control' },
+              { name: 'Retrieval-grounded', sub: 'Shipped', win: true },
+            ]}
+            rows={[
+              { metric: 'Retrieval hit@4', values: ['—', '93%'] },
+              { metric: 'Escalation correctness', values: ['—', '100%'] },
+              { metric: 'Groundedness', values: ['0%', '100%'] },
+              { metric: 'Unsupported recommendations', values: ['10%', '0%'] },
+              { metric: 'Structural completeness', values: ['—', '100%'] },
+            ]}
+          />
+          <p className="meta" style={{ marginTop: 'var(--s3)' }}>
+            The control has no sources to cite, so groundedness is 0% by
+            construction; the number that matters is the 10% unsupported rate —
+            three scenarios where an ungrounded generator would answer a
+            sensitive observation the product should refer to a trainer instead.
+          </p>
+          <p className="meta" style={{ marginTop: 'var(--s2)' }}>
+            <strong>What the evaluation surfaced.</strong> Retrieved-set precision
+            is 44%: at top-4 over 28 documents, some retrieved resources are only
+            loosely relevant. Two of the thirty scenarios miss their labelled
+            resource entirely, both on vocalisation — the corpus covers that
+            behaviour thinly, which is a coverage gap rather than a ranking bug.
+            Both point at the same next step: more resources per behaviour, and
+            reranking the retrieved set before it reaches the response. Reported
+            rather than tuned away.
+          </p>
+          <p className="meta" style={{ marginTop: 'var(--s2)' }}>
+            The demo is instrumented with the events this product would actually
+            need: observation logging, trend viewing, recommendation generation,
+            source inspection, pipeline inspection, trainer-prep generation and
+            escalation. No usage number in this case study is derived from them.
+          </p>
+        </ArtifactCard>
 
         <DecisionCallout note="Retrieval that is aware of this dog's own history costs latency and spend against a simpler design. For a product used a few times a week, where a recommendation a trainer disagrees with is the expensive failure, that was the right side of the trade.">
           Ship context-aware retrieval despite the added latency and cost.

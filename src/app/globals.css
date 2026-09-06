@@ -4433,3 +4433,167 @@ a.support__card:hover {
     gap: 3px;
   }
 }
+
+/* ---- GuideAI demo: recruiter path ---- */
+
+.leadin {
+  border-left: 3px solid var(--accent);
+  padding: 2px 0 2px var(--s3);
+  margin-bottom: var(--s4);
+  display: grid;
+  gap: var(--s2);
+}
+
+.leadin__line {
+  font-size: var(--fs-meta);
+  line-height: 1.55;
+  color: var(--ink-body);
+  margin: 0;
+  max-width: var(--measure);
+}
+
+.demopanel--payoff {
+  border-color: var(--border-strong);
+  border-left: 3px solid var(--accent);
+}
+
+.escalate__label {
+  color: var(--ink-muted);
+  margin: var(--s2) 0 5px;
+}
+
+.escalate__list {
+  margin: 0;
+  padding-left: 1.1em;
+  display: grid;
+  gap: 4px;
+  font-size: var(--fs-meta);
+  line-height: 1.5;
+  color: var(--ink-body);
+}
+
+.whysources {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 4px 0 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  color: var(--accent);
+  cursor: pointer;
+  min-height: 32px;
+}
+
+.whysources:hover {
+  color: var(--accent-deep);
+}
+
+.whysources:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.whysources__mark {
+  position: relative;
+  width: 9px;
+  height: 9px;
+  flex: none;
+}
+
+.whysources__mark::before,
+.whysources__mark::after {
+  content: '';
+  position: absolute;
+  background: var(--accent);
+  inset: 50% 0 auto 0;
+  height: 1.5px;
+  margin-top: -0.75px;
+}
+
+.whysources__mark::after {
+  inset: 0 50% auto auto;
+  width: 1.5px;
+  height: 100%;
+  margin: 0 -0.75px 0 0;
+}
+
+.whysources[aria-expanded='true'] .whysources__mark::after {
+  opacity: 0;
+}
+
+.whysources__body {
+  font-size: var(--fs-micro);
+  line-height: 1.55;
+  color: var(--ink-body);
+  background: var(--bg);
+  border-radius: var(--r-sm);
+  padding: 9px 11px;
+  margin: 0 0 var(--s2);
+}
+
+/* PM-readable status chips in the pipeline drawer */
+.pipestat {
+  display: inline-block;
+  margin-left: 8px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid var(--border-strong);
+  border-radius: 2px;
+  padding: 1px 5px;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  vertical-align: 1px;
+}
+
+.pipestat--matched,
+.pipestat--continue {
+  border-color: var(--accent-soft);
+  color: var(--accent);
+}
+
+.pipestat--escalate,
+.pipestat--weak {
+  border-color: var(--ink);
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.demo__actions--footer {
+  margin-top: var(--s5);
+  padding-top: var(--s3);
+  border-top: 1px solid var(--rule);
+}
+
+/* On a phone the demo header is the only thing between the recruiter and the
+   first action, so it tightens up. Nothing is removed — the lede, the badge
+   and the disclosure all stay. */
+@media (max-width: 560px) {
+  .demo {
+    padding-top: var(--s4);
+  }
+  .demo__head {
+    padding-bottom: var(--s3);
+    margin-bottom: var(--s3);
+  }
+  .demo__title {
+    font-size: 30px;
+  }
+  .demo__headrow {
+    margin: 4px 0 10px;
+  }
+  .demo__lede {
+    margin-bottom: 10px;
+  }
+  .demo__disclosure {
+    margin-bottom: var(--s2);
+  }
+  .leadin {
+    margin-bottom: var(--s3);
+  }
+}
