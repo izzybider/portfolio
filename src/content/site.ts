@@ -66,7 +66,7 @@ export const projects: Project[] = [
     owned:
       'Owned end to end: discovery, product, RAG architecture, pilot recruiting, analytics, AI evaluation.',
     proof: [
-      '75+ pilot users · 87% weekly retention',
+      '75+ pilot users · 60+ product iterations',
       '68% → 91% expert agreement',
       '45% less trainer-prep time',
       '8,500+ recommendations evaluated',

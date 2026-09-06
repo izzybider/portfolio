@@ -360,7 +360,7 @@ export default function EnterpriseAIPage() {
       <Section
         id="prioritization"
         label="04 · Prioritization"
-        title="40+ requests, finite engineering capacity, four things that shipped."
+        title="40+ requests, finite engineering capacity, four adopted for Phase 2."
         intro="Workshops, demos, UAT and production feedback produced 40+ candidate enhancements. The job was not maintaining the backlog — it was arguing for the few with real leverage."
       >
         <ArtifactCard

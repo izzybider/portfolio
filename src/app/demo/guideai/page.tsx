@@ -23,12 +23,12 @@ export default function GuideAIDemoPage() {
         title="GuideAI"
         lede={
           <>
-            GuideAI helps service-dog raisers turn repeated behavioral observations into structured
-            patterns, a grounded recommendation, and a summary they can hand a trainer. Log one
-            observation and every view below recalculates.
+            GuideAI turns repeated behavioral observations into structured patterns, a grounded
+            recommendation, and a summary a raiser can hand a trainer. Log one observation and every
+            view recalculates.
           </>
         }
-        disclosure="This demonstration uses synthetic dog and observation data to illustrate the GuideAI workflow. Maple is not a real dog and no record here comes from the pilot. The outcome metrics in the case study come from that pilot and are separate from this demo."
+        disclosure="Synthetic dog and observation data, used to illustrate the workflow. Maple is not a real dog and no record here comes from the pilot; the case-study metrics refer to that pilot and are separate from this demo."
         caseStudyHref="/work/guideai"
         caseStudyLabel="Read the full case study"
       >

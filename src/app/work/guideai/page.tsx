@@ -16,10 +16,8 @@ import {
   InsightCallout,
   ProcessFlow,
   ArchitectureDiagram,
-  Funnel,
+  CellGrid,
   HorizontalBarChart,
-  RetentionCurve,
-  ExperimentComparison,
   ProductMockup,
   MockField,
   MockRows,
@@ -41,12 +39,38 @@ export const metadata: Metadata = {
   alternates: { canonical: '/work/guideai' },
 };
 
-/* TODO (verify before sending to employers): the analytics in this case study —
-   funnel percentages, feature adoption, retention cohort, the 1.7× Week-2 lift,
-   the A/B readout, and the three-system evaluation table — should be confirmed
-   against the source PostHog / evaluation data. The hero metrics are the
-   headline numbers you supplied. Anything you cannot confirm, delete the number
-   and keep the structure. */
+/* CREDIBILITY AUDIT — read before restoring anything removed here.
+
+   The one analytics artifact available locally is a PostHog export covering
+   2026-05-24 to 2026-06-21 (~/Downloads/guideai_mvp/guideaipilot.csv, 985
+   events). It is genuine — the event taxonomy is real and the instrumentation
+   is real. It does not support several figures this page used to carry, and
+   for two of them it points the other way:
+
+   - "87% weekly retention": in that export, week-over-week return was 4%, 9%,
+     20% and 33%, and only 6 of 58 distinct ids were active in more than one
+     week. REMOVED from the recruiter-facing view.
+   - "4.8 / 5 satisfaction": no numeric satisfaction field exists anywhere in
+     the export or in user_feedback.csv. The feedback instrument is categorical
+     (useful yes/no, trust yes/maybe, trainer-prep helpful yes/somewhat).
+     REMOVED.
+   - Activation funnel, feature-adoption bars, the weekly retention curve, the
+     1.7x Week-2 lift, the 24-user comparative test and its five measures, the
+     three-system comparison with latency and cost, and the failure-taxonomy
+     percentages: no supporting artifact locally. REMOVED or reduced to the
+     part that is supportable.
+
+   TODO (Isabella): if you hold the source data for any of these — a later
+   pilot window, an offline evaluation run, a survey export — restore the
+   figure together with a note on where it came from. Do not restore any of
+   them from memory.
+
+   KEPT, because the resume served at /IsabellaBider_Resume.pdf states them and
+   nothing available contradicts them: 75+ pilot users, 60+ iterations, 45%
+   reduction in trainer summary preparation time, 68% -> 91% trainer agreement,
+   8,500+ AI recommendations evaluated, and the OpenAI embeddings / pgvector /
+   RAG / PostHog stack. These are self-corroborated only; you should still be
+   able to point an interviewer at the underlying data. */
 
 const NAV = [
   { id: 'problem', label: 'Problem' },
@@ -77,10 +101,9 @@ export default function GuideAIPage() {
           columns={3}
           items={[
             { value: '75+', label: 'pilot users recruited and onboarded' },
-            { value: '87%', label: 'weekly retention' },
-            { value: '4.8 / 5', label: 'user satisfaction' },
             { value: '68% → 91%', label: 'agreement with expert trainers' },
             { value: '45%', label: 'less trainer-prep time' },
+            { value: '8,500+', label: 'AI recommendations evaluated' },
             { value: '60+', label: 'product iterations' },
           ]}
         />
@@ -117,8 +140,8 @@ export default function GuideAIPage() {
         }
         outcome={
           <>
-            75+ pilot users · 87% weekly retention · 4.8/5 satisfaction ·
-            68% → 91% expert agreement · 45% less trainer-prep time.
+            75+ pilot users · 68% → 91% agreement with expert trainers · 45%
+            less trainer-prep time · 8,500+ AI recommendations evaluated.
           </>
         }
       />
@@ -345,51 +368,42 @@ export default function GuideAIPage() {
         id="analytics"
         label="04 · Product analytics"
         title="What users did mattered more than what they said."
-        intro="I instrumented the product from the first pilot cohort so activation and habit were observable, not inferred from feedback."
+        intro="I instrumented the product from the first pilot cohort so activation and habit were observable rather than inferred from feedback. The event taxonomy below is the one actually in the product."
       >
-        <ArtifactCard title="Activation funnel" meta="Pilot cohort">
-          <Funnel
-            steps={[
-              { label: 'Signed up', value: 100 },
-              { label: 'Logged first behavior', value: 84 },
-              { label: 'Generated first recommendation', value: 78 },
-              { label: 'Returned within 7 days', value: 68 },
-              { label: 'Generated trainer-prep summary', value: 59 },
+        <ArtifactCard
+          title="What I instrumented"
+          meta="Product events captured in PostHog"
+          caption="Naming the events was the product decision: each one corresponds to a step in the raiser's workflow, so a drop-off could be located rather than guessed at."
+        >
+          <CellGrid
+            columns={3}
+            items={[
+              <strong key="1">logged_observation</strong>,
+              <strong key="2">viewed_pattern_summary</strong>,
+              <strong key="3">generated_ai_reflection</strong>,
+              <strong key="4">viewed_resource_recommendations</strong>,
+              <strong key="5">saved_weekly_checkin</strong>,
+              <strong key="6">downloaded_trainer_summary</strong>,
+              <strong key="7">submitted_feedback</strong>,
+              <strong key="8">updated_dog_profile</strong>,
+              <strong key="9">clicked_log_observation</strong>,
             ]}
           />
         </ArtifactCard>
 
-        <div className="grid grid--2">
-          <ArtifactCard title="Feature adoption" meta="% of pilot users">
-            <HorizontalBarChart
-              rows={[
-                { label: 'Behavior logging', value: 92 },
-                { label: 'AI recommendation', value: 81 },
-                { label: 'History', value: 74 },
-                { label: 'Trend view', value: 63 },
-                { label: 'Trainer summary', value: 58 },
-              ]}
-            />
-          </ArtifactCard>
-          <ArtifactCard title="Retention by week" meta="Pilot cohort">
-            <RetentionCurve
-              points={[
-                { label: 'Week 1', value: 87 },
-                { label: 'Week 2', value: 79 },
-                { label: 'Week 3', value: 73 },
-                { label: 'Week 4', value: 68 },
-              ]}
-            />
-          </ArtifactCard>
-        </div>
-
         <DecisionCallout
           label="Behavior → decision"
-          note="Onboarding changed to guide new users toward three observations in their first 72 hours, rather than explaining features."
+          note="Early logging was the thing that predicted whether a raiser came back at all, so onboarding was changed to get a new user to their first few observations rather than to explain features."
         >
-          Users who logged at least 3 observations in their first 72 hours were
-          1.7× more likely to return in Week 2.
+          The habit to build was logging, not reading.
         </DecisionCallout>
+
+        <ProvenanceNote>
+          Per-step conversion, feature-adoption and retention figures were
+          removed from this page: the analytics export available to me does not
+          support them. The instrumentation and the decision above are what I
+          can stand behind.
+        </ProvenanceNote>
       </Section>
 
       {/* ---------------- AI EVALUATION ---------------- */}
@@ -417,22 +431,23 @@ export default function GuideAIPage() {
         </ArtifactCard>
 
         <div className="grid grid--2">
-          <ArtifactCard title="Failure taxonomy" meta="Share of failed recommendations">
-            <HorizontalBarChart
-              max={25}
-              rows={[
-                { label: 'Retrieval failure', value: 22 },
-                { label: 'Overgeneralized', value: 19 },
-                { label: 'Incorrect emphasis', value: 17 },
-                { label: 'Excessive detail', value: 16 },
-                { label: 'Missing escalation', value: 14 },
-                { label: 'Thin historical context', value: 12 },
+          <ArtifactCard title="Failure taxonomy" meta="How a bad recommendation was classified">
+            <CellGrid
+              columns={2}
+              items={[
+                <strong key="1">Retrieval failure</strong>,
+                <strong key="2">Overgeneralized</strong>,
+                <strong key="3">Incorrect emphasis</strong>,
+                <strong key="4">Excessive detail</strong>,
+                <strong key="5">Missing escalation</strong>,
+                <strong key="6">Thin historical context</strong>,
               ]}
             />
             <p className="meta" style={{ marginTop: 'var(--s2)' }}>
               Naming the failure modes is what made the fixes assignable —
               retrieval problems went to the index, emphasis problems to the
-              output structure.
+              output structure. The per-class shares are not shown because I
+              cannot evidence them here.
             </p>
           </ArtifactCard>
           <ArtifactCard title="Trainer agreement" meta="Before → after iteration">
@@ -450,78 +465,24 @@ export default function GuideAIPage() {
           </ArtifactCard>
         </div>
 
-        <DeeperDetail summary="Compare the three system designs on the same evaluation set" hint="methodology">
-  <ArtifactCard title="System comparison" meta="Same evaluation set, three designs">
-            <ExperimentComparison
-              metricLabel="Measure"
-              columns={[
-                { name: 'Direct LLM', sub: 'No retrieval' },
-                { name: 'Basic RAG', sub: 'Generic retrieval' },
-                { name: 'Context-aware RAG', sub: 'Selected', win: true },
-              ]}
-              rows={[
-                { metric: 'Correctness', values: ['76%', '84%', '90%'] },
-                { metric: 'Groundedness', values: ['64%', '88%', '94%'] },
-                { metric: 'Trainer agreement', values: ['72%', '82%', '91%'] },
-                { metric: 'Unsupported recommendation', values: ['14%', '8%', '4%'] },
-                { metric: 'Latency', values: ['1.5 sec', '2.1 sec', '2.8 sec'] },
-                { metric: 'Cost / recommendation', values: ['$0.012', '$0.019', '$0.027'] },
-              ]}
-            />
-          </ArtifactCard>
-        </DeeperDetail>
 
-        <DecisionCallout note="A 1.3-second latency cost and roughly double the per-recommendation spend were acceptable for a product used a few times a week, where a wrong recommendation costs a trainer's trust.">
-          Ship context-aware RAG despite higher latency and cost.
-        </DecisionCallout>
-      </Section>
-
-      {/* ---------------- EXPERIMENT ---------------- */}
-      <Section
-        id="experiment"
-        label="06 · Product experiment"
-        title="Structure beat eloquence."
-        intro="Hypothesis: structured recommendations improve comprehension and actionability versus long-form AI responses, without reducing perceived personalization."
-      >
-        <ArtifactCard title="Comparative usability test" meta="24 pilot users">
-          <ExperimentComparison
-            columns={[
-              { name: 'Variant A', sub: 'Long-form narrative recommendation' },
-              {
-                name: 'Variant B',
-                sub: 'Pattern · why · action · monitor · escalate',
-                win: true,
-              },
-            ]}
-            rows={[
-              { metric: 'Usefulness', values: ['4.0 / 5', '4.6 / 5'] },
-              { metric: 'Next-action comprehension', values: ['71%', '92%'] },
-              { metric: 'Median time to decide', values: ['54 sec', '31 sec'] },
-              { metric: 'Confidence', values: ['3.8 / 5', '4.4 / 5'] },
-              { metric: 'Preference', values: ['7 / 24', '17 / 24'] },
-            ]}
-          />
-        </ArtifactCard>
-
-        <DecisionCallout note="Personalization was not what made the output useful — structure was. The short personalized line stayed because it kept the recommendation legible as being about this dog.">
-          Make structured recommendations the default, keeping one short
-          personalized explanation.
+        <DecisionCallout note="Retrieval that is aware of this dog's own history costs latency and spend against a simpler design. For a product used a few times a week, where a recommendation a trainer disagrees with is the expensive failure, that was the right side of the trade.">
+          Ship context-aware retrieval despite the added latency and cost.
         </DecisionCallout>
       </Section>
 
       {/* ---------------- RESULTS ---------------- */}
       <Section
         id="results"
-        label="07 · Results and ownership"
-        title="Four questions, four answers."
+        label="06 · Results and ownership"
+        title="Three questions, three answers."
       >
         <MetricStrip
           variant="rule"
-          columns={4}
+          columns={3}
           size="sm"
           items={[
-            { value: '87% weekly retention', label: 'Did users come back?' },
-            { value: '4.8 / 5', label: 'Did users perceive value?' },
+            { value: '75+ pilot users', label: 'Did anyone actually use it?' },
             {
               value: '68% → 91%',
               label: 'Did recommendations align with expert judgment?',

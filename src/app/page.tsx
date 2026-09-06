@@ -149,11 +149,10 @@ export default function HomePage() {
             title="LLM and transformer-based methods for autistic communication research."
             proof="LLM conversational data collection · transformer speech + language models · Python / TTS (Kokoro) · in progress"
           >
-            Developing LLM-based conversational experiences to collect
-            naturalistic language data, and applying transformer-based speech
-            and language models to characterize autistic communication.
-            Alongside this, I’m developing a Python/TTS workflow using Kokoro to
-            convert narrative transcripts into page-level speech stimuli.
+            Developing LLM-based conversational experiences and transformer-based
+            speech and language methods for autistic communication research;
+            alongside this, building a Kokoro TTS workflow for narrative speech
+            stimuli.
           </SupportCard>
         </div>
       </Section>
