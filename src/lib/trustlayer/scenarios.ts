@@ -394,5 +394,14 @@ export const CATEGORY_TESTS: Record<string, string> = {
   'healthcare-operations': 'Tests professional judgment',
 };
 
-/** Offered as the recommended 30-second run: VERIFY, two tools, then ESCALATE. */
-export const RECOMMENDED_SCENARIO_ID = 'auth_001';
+/**
+ * The guided 30-second run. ev_001 is the primary because it shows the
+ * decision layer *unlocking* an action: VERIFY, two tools, evidence and
+ * authorization both come back, and the policy re-decides to ANSWER. Leading
+ * with a refusal makes the whole thing read as a blocker, which is the
+ * opposite of the point.
+ */
+export const RECOMMENDED_SCENARIO_ID = 'ev_001';
+
+/** The counterpart: same VERIFY start, but authorization cannot be established. */
+export const HANDOFF_SCENARIO_ID = 'auth_001';

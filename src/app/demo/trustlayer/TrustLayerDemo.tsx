@@ -14,6 +14,7 @@ import {
   CATEGORY_LABELS,
   CATEGORY_TESTS,
   RECOMMENDED_SCENARIO_ID,
+  HANDOFF_SCENARIO_ID,
 } from '@/lib/trustlayer/scenarios';
 import { TOOL_CATALOG } from '@/lib/trustlayer/tools';
 import type { Scenario, SystemVariant } from '@/lib/trustlayer/types';
@@ -42,6 +43,9 @@ const SYSTEM_LABELS: Record<SystemVariant, string> = {
 function runStepCount(run: Run): number {
   return 7 + run.tool_calls.length + (run.post_verification_decision ? 1 : 0);
 }
+
+const HANDOFF =
+  DEMO_SCENARIOS.find((s) => s.id === HANDOFF_SCENARIO_ID) ?? DEMO_SCENARIOS[0];
 
 const RECOMMENDED =
   DEMO_SCENARIOS.find((s) => s.id === RECOMMENDED_SCENARIO_ID) ?? DEMO_SCENARIOS[0];
@@ -229,18 +233,25 @@ export default function TrustLayerDemo() {
           </button>
         ))}
       </div>
-      <button type="button" className="button button--quiet" onClick={reset}>
-        Reset demo
-      </button>
     </div>
   );
 
   return (
     <>
-      {profileSwitch}
-      <p className="meta" style={{ marginBottom: 'var(--s4)' }}>
-        {POLICY_PROFILES[profile].summary}
-      </p>
+      {/* The autonomy profiles are product depth, not a first impression —
+          they live in the Policy tab. Balanced stays the default everywhere
+          else, and the reset control moves up here on its own. */}
+      <div className="demo__actions" style={{ marginBottom: 'var(--s3)' }}>
+        <button type="button" className="button button--quiet" onClick={reset}>
+          Reset demo
+        </button>
+        {profile !== 'balanced' && (
+          <span className="meta">
+            Running the <strong>{POLICY_PROFILES[profile].label}</strong> profile —{' '}
+            {POLICY_PROFILES[profile].summary}
+          </span>
+        )}
+      </div>
 
       <DemoTabs tabs={TABS} active={tab} onChange={setTab} label="TrustLayer demo sections" />
 
@@ -255,13 +266,32 @@ export default function TrustLayerDemo() {
                 </p>
                 <h2 className="firstrun__title">{RECOMMENDED.title}</h2>
                 <p className="firstrun__req">&ldquo;{RECOMMENDED.user_request}&rdquo;</p>
-                <p className="reccard__value" style={{ marginBottom: 'var(--s3)' }}>
-                  Watch the policy check the evidence, the authorization and the reversibility,
-                  route to <strong>VERIFY</strong>, call two simulated tools, fold what they return
-                  back into its state, and decide again — ending in{' '}
-                  <strong>ESCALATE</strong> because the acting role is not permitted to make this
-                  change.
+
+                {/* The four beats, in plain English, before anything runs. The
+                    recruiter should know what they are about to see. */}
+                <ol className="preview">
+                  <li>
+                    <span className="preview__k">What is missing</span>
+                    <span className="preview__v">Evidence, and permission to act</span>
+                  </li>
+                  <li>
+                    <span className="preview__k">TrustLayer chooses</span>
+                    <span className="preview__v preview__v--dec">VERIFY</span>
+                  </li>
+                  <li>
+                    <span className="preview__k">Tools return</span>
+                    <span className="preview__v">Duplicate charge confirmed · agent authorized</span>
+                  </li>
+                  <li>
+                    <span className="preview__k">It decides again</span>
+                    <span className="preview__v preview__v--dec">ANSWER</span>
+                  </li>
+                </ol>
+                <p className="firstrun__lesson">
+                  VERIFY is not a refusal. Here it is the step that turns an
+                  unsupported action into a supported one.
                 </p>
+
                 <div className="demo__actions">
                   <button
                     type="button"
@@ -269,6 +299,13 @@ export default function TrustLayerDemo() {
                     onClick={() => select(RECOMMENDED)}
                   >
                     Run this scenario <Arrow />
+                  </button>
+                  <button
+                    type="button"
+                    className="button button--quiet"
+                    onClick={() => select(HANDOFF)}
+                  >
+                    See when it hands off instead
                   </button>
                   <button
                     type="button"
@@ -469,6 +506,12 @@ export default function TrustLayerDemo() {
             </div>
           </div>
 
+          {/* The single most transferable finding in the project. */}
+          <p className="takeaway">
+            Retrieval improves what an agent <em>knows</em>. It does not by itself
+            decide what the agent should <em>do</em> with that knowledge.
+          </p>
+
           <div className="demogrid demogrid--3" style={{ marginTop: 'var(--s3)' }}>
             {systemRuns.map(({ system, run: r }) => (
               <div className="demopanel" key={system}>
@@ -514,6 +557,23 @@ export default function TrustLayerDemo() {
       {/* ---------------- POLICY ---------------- */}
       {tab === 'policy' && (
         <div id="panel-policy" role="tabpanel" aria-labelledby="tab-policy">
+          {/* The autonomy sweep lives here, framed as the product question it
+              exists to answer rather than as three loose toggles. */}
+          <div className="demopanel" style={{ marginBottom: 'var(--s3)' }}>
+            <div className="demopanel__head">
+              <h2 className="demopanel__title">Experiment with autonomy</h2>
+              <span className="meta">the tradeoff, made adjustable</span>
+            </div>
+            <p className="reccard__value" style={{ marginBottom: 'var(--s2)' }}>
+              These three profiles exist to answer one product question: how much
+              autonomy can the system give back before unsupported action or missed
+              escalation starts rising again? Move the profile and re-run a
+              scenario to see where a behavior flips.
+            </p>
+            {profileSwitch}
+            <p className="meta">{POLICY_PROFILES[profile].summary}</p>
+          </div>
+
           <div className="demogrid demogrid--2">
             <div className="demopanel">
               <div className="demopanel__head">

@@ -68,13 +68,17 @@ function whatChanged(run: Run): string | null {
     blocks.push('authorization could not be established from any available tool');
   }
 
+  /* "but" only when something actually blocks — otherwise the sentence
+     contradicts itself ("evidence became sufficient, but authorization was
+     confirmed"). */
   const parts = [...gains, ...blocks];
+  const joiner = blocks.length > 0 ? ', but ' : ', and ';
   const joined =
     parts.length === 0
       ? 'the returned evidence did not change the decision state'
       : parts.length === 1
         ? parts[0]
-        : `${parts.slice(0, -1).join(', ')}, but ${parts[parts.length - 1]}`;
+        : `${parts.slice(0, -1).join(', ')}${joiner}${parts[parts.length - 1]}`;
 
   return `${joined[0].toUpperCase()}${joined.slice(1)} — so it decided again: ${after.decision}.`;
 }

@@ -61,11 +61,11 @@ export const metadata: Metadata = {
 const DEMO_HREF = '/demo/trustlayer';
 
 const NAV = [
-  { id: 'thesis', label: 'Thesis' },
-  { id: 'behaviors', label: 'Policy' },
-  { id: 'architecture', label: 'Architecture' },
-  { id: 'evaluation', label: 'Evaluation' },
-  { id: 'tradeoff', label: 'Results' },
+  { id: 'thesis', label: 'Problem' },
+  { id: 'behaviors', label: 'Product' },
+  { id: 'headline', label: 'Result' },
+  { id: 'evaluation', label: 'Experiment' },
+  { id: 'architecture', label: 'Technical depth' },
 ];
 
 export default function TrustLayerPage() {
@@ -74,20 +74,48 @@ export default function TrustLayerPage() {
       <CaseStudyHero
         eyebrow="04 · Independent AI product experiment"
         title="TrustLayer"
-        statement="An AI system that knows when not to answer. TrustLayer is a working decision policy that chooses whether to ANSWER, ASK, VERIFY or ESCALATE before it generates anything — and a controlled experiment that measures whether that judgment is worth the friction it adds."
+        statement="Decision policy for useful, appropriately autonomous AI agents. Most assistants optimize for producing an answer. TrustLayer asks a different question first: should the agent answer, ask, verify something with a tool, or hand the decision to a person? I built a working decision layer that weighs evidence, authorization, risk and reversibility before an agent responds or acts — and a controlled experiment to find out what that judgment costs."
         roles={[
           'Independent project',
           'AI product thesis',
           'Decision-policy design',
-          'Agent evaluation',
-          'Built it: Next.js / TypeScript',
-          'Appropriate autonomy',
+          'Built the system',
+          'Designed the benchmark',
+          'Ran the experiment',
         ]}
       >
-        <InsightCallout label="The product question">
-          Should an AI system optimize for answering, or for choosing the
-          appropriate behavior?
-        </InsightCallout>
+        <div className="firstscreen">
+          <div>
+            <p className="caps firstscreen__k">Problem</p>
+            <p className="firstscreen__v">
+              Agents answer or act when the evidence, the permission or the human
+              judgment a task needs is missing.
+            </p>
+          </div>
+          <div>
+            <p className="caps firstscreen__k">Product bet</p>
+            <p className="firstscreen__v">
+              Choose the behavior <em>before</em> generating: answer, ask, verify,
+              or hand off.
+            </p>
+          </div>
+          <div>
+            <p className="caps firstscreen__k">Proof</p>
+            <p className="firstscreen__v">
+              A working prototype plus a controlled 53-scenario synthetic
+              benchmark against two baselines.
+            </p>
+          </div>
+          <div>
+            <p className="caps firstscreen__k">Result</p>
+            <p className="firstscreen__v">
+              Unsupported answers and actions fell from <strong>75%</strong> to{' '}
+              <strong>0%</strong>, with no missed escalations — and autonomous
+              completion fell to <strong>42%</strong>. That trade is the product
+              decision.
+            </p>
+          </div>
+        </div>
         <p className="demo__cta">
           <Link href={DEMO_HREF} className="button button--primary">
             Try the live experiment <Arrow />
@@ -148,6 +176,84 @@ export default function TrustLayerPage() {
           </>
         }
       />
+
+      {/* ---------------- WHAT I BUILT + HEADLINE RESULT ---------------- */}
+      <Section
+        id="headline"
+        label="What I built, and what it did"
+        title="A working decision layer, and a benchmark that priced its judgment."
+        width="wide"
+      >
+        <div className="grid grid--2">
+          <div className="demopanel">
+            <div className="demopanel__head">
+              <h3 className="demopanel__title">What I built</h3>
+              <span className="meta">independent project</span>
+            </div>
+            <ul className="builtlist">
+              <li>A decision layer choosing ANSWER / ASK / VERIFY / ESCALATE before generation</li>
+              <li>Tool-gated verification, with the result folded back in and the decision re-run</li>
+              <li>Three adjustable autonomy profiles</li>
+              <li>A 53-scenario benchmark across ten task categories</li>
+              <li>Direct-response and RAG baselines on the same pipeline</li>
+              <li>A failure taxonomy and an evaluation harness</li>
+              <li>Observable decision traces</li>
+              <li>An interactive web prototype</li>
+            </ul>
+            <p className="cg-note" style={{ marginTop: 'var(--s2)' }}>
+              I identified the thesis, defined the behaviors, designed the policy,
+              built the application, created the benchmark and the evaluation
+              framework, ran the experiments and analysed the tradeoff.
+            </p>
+          </div>
+
+          <div className="cgr-band">
+            <div className="cgr-band__head">
+              <h3 className="cgr-q">What the benchmark showed</h3>
+              <p className="cgr-sample">53 synthetic scenarios · 3 systems · one pipeline</p>
+            </div>
+            <div className="benchrow">
+              {[
+                { sys: 'Direct response', unsupported: '75%', completion: '100%', tone: '' },
+                { sys: 'RAG agent', unsupported: '43%', completion: '100%', tone: '' },
+                { sys: 'TrustLayer', unsupported: '0%', completion: '42%', tone: ' is-key' },
+              ].map((r) => (
+                <div className={`benchrow__row${r.tone}`} key={r.sys}>
+                  <p className="benchrow__sys">{r.sys}</p>
+                  <p className="benchrow__n">
+                    <span>{r.unsupported}</span>
+                    <small>unsupported answer / action</small>
+                  </p>
+                  <p className="benchrow__n">
+                    <span>{r.completion}</span>
+                    <small>autonomous completion</small>
+                  </p>
+                </div>
+              ))}
+            </div>
+            <p className="cgr-note">
+              TrustLayer also missed no escalations and escalated unnecessarily on
+              3%. Synthetic fixtures and simulated tools — this is behavior on a
+              controlled scenario set, not production performance, and no human
+              study has been run.
+            </p>
+          </div>
+        </div>
+
+        <DecisionCallout label="Product decision">
+          Do not optimize TrustLayer for the highest autonomous completion rate.
+          Optimize for the most autonomy the system can support without materially
+          increasing unsupported action or missed escalation.
+        </DecisionCallout>
+
+        <p className="body-text" style={{ maxWidth: 'var(--measure)' }}>
+          The policy eliminated unsupported behavior on this fixture set, and it
+          paid for that with 58 points of autonomy. That trade — not the safety
+          number on its own — is the product decision, and it is why the three
+          autonomy profiles exist: they are the sweep that finds where the line
+          actually sits.
+        </p>
+      </Section>
 
       {/* ---------------- THESIS ---------------- */}
       <Section
@@ -646,7 +752,7 @@ export default function TrustLayerPage() {
         <ArtifactCard
           title="Measured tradeoff"
           meta="53 scenarios · 3 systems · Balanced policy · host-supplied context"
-          caption="Positions computed from the benchmark, not illustrative. Synthetic scenarios and simulated tools — this is behavior on a fixture set, not production performance."
+          caption="Positions computed from the benchmark, not illustrative."
         >
           <TradeoffPlot
             xAxis="Autonomous task completion →"
@@ -841,7 +947,45 @@ export default function TrustLayerPage() {
         id="plan"
         label="10 · What I am testing next"
         title="It survived the first measurement. That is not the same as being validated."
+        intro="The synthetic experiment established that the mechanism is worth testing. It did not establish user or production value — so the next four things are ordered by what would actually change my mind, not by what is most interesting to build."
       >
+        <div className="nextup">
+          {[
+            {
+              n: '01',
+              what: 'A human task study',
+              q: 'Does TrustLayer improve task success, trust and correction burden against a normal agent — or does the friction just annoy people?',
+            },
+            {
+              n: '02',
+              what: 'External labels',
+              q: 'Have people who did not design the policy label the scenarios. Right now the author of the policy also wrote the answer key, which is the weakest part of the whole experiment.',
+            },
+            {
+              n: '03',
+              what: 'A real workflow',
+              q: 'Actual tools, real latency, real failures and real permissions — where verification is slow and sometimes wrong.',
+            },
+            {
+              n: '04',
+              what: 'Operating metrics',
+              q: 'Takeover rate, repeat-correction rate, time to completion, unnecessary escalation, task success, and cost per resolved task.',
+            },
+          ].map((r) => (
+            <div className="nextup__row" key={r.n}>
+              <p className="nextup__n">{r.n}</p>
+              <div>
+                <p className="nextup__what">{r.what}</p>
+                <p className="nextup__q">{r.q}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <p className="cg-note" style={{ maxWidth: 'var(--measure)', marginBottom: 'var(--s5)' }}>
+          Deeper classifier and model work comes after those, not before. A better
+          classifier on an unvalidated mechanism is the wrong thing to optimise.
+        </p>
+
         <div className="grid grid--2">
           <ArtifactCard title="Built and running" meta="In the app today">
             <KeyValueRows
@@ -941,7 +1085,6 @@ export default function TrustLayerPage() {
           <Link href={DEMO_HREF} className="button button--primary">
             Try the live experiment <Arrow />
           </Link>
-          <span className="meta">Synthetic scenarios</span>
         </p>
       </Section>
 
