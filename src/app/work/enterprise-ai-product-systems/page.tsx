@@ -57,7 +57,7 @@ export default function EnterpriseAIPage() {
       <CaseStudyHero
         eyebrow="02 · Internship case study · Accenture Applied Intelligence"
         title="Enterprise AI Product Systems"
-        statement="Technical product ownership during an Applied Intelligence internship, inside a production AI platform serving more than 10,000 users — where a single customer complaint could originate in retrieval, in the data pipeline, or in the workflow itself."
+        statement="AI product work during an Applied Intelligence internship, inside a production platform serving more than 10,000 users — where a single customer complaint could originate in retrieval, the data pipeline, the product surface, or the workflow itself."
         roles={[
           'Applied Intelligence Technology Summer Analyst (AI Product Management)',
           'AI evaluation',
@@ -95,9 +95,10 @@ export default function EnterpriseAIPage() {
         }
         role={
           <>
-            I owned requirements and enhancement prioritization, supported
-            release and UAT, investigated production data issues, and built the
-            AI evaluation and reporting that had been ad hoc.
+            I owned requirements and enhancement prioritization, supported release
+            and UAT, investigated production-data issues, built the AI evaluation
+            and reporting workflows, and translated findings across product,
+            engineering, data, and business stakeholders.
           </>
         }
         decision={
@@ -267,6 +268,53 @@ export default function EnterpriseAIPage() {
           />
         </ArtifactCard>
 
+        <ArtifactCard
+          title="What the test rounds returned"
+          meta="Structured evaluation rounds · not production model performance"
+          caption="Results from running the harness against release candidates. These are scored test-round outcomes on a fixed question set, not a measurement of how the assistant performed in production."
+        >
+          <div className="grid grid--2">
+            <MetricStrip
+              variant="band"
+              columns={2}
+              size="sm"
+              caps
+              items={[
+                { value: '54', label: 'Questions evaluated' },
+                { value: '50', label: 'Correct' },
+                { value: '4', label: 'Partially correct' },
+                { value: '~93%', label: 'Combined accuracy' },
+              ]}
+            />
+            <MetricStrip
+              variant="plain"
+              columns={2}
+              size="sm"
+              caps
+              items={[
+                { value: '27', label: 'Questions, later round' },
+                { value: '26', label: 'Correct' },
+                { value: '96%', label: 'Accuracy that round' },
+                { value: '5', label: 'Failure classes in use' },
+              ]}
+            />
+          </div>
+          <p className="reccard__value" style={{ marginTop: 'var(--s3)' }}>
+            Repeated test rounds turned ad-hoc chatbot checks into a measurable
+            iteration loop. The number mattered less than the fact that it was the
+            same question set every time, so a change could be attributed rather
+            than argued about.
+          </p>
+        </ArtifactCard>
+
+        <InsightCallout label="Why the taxonomy came first">
+          Failures were not treated as one generic accuracy problem; they were
+          diagnosed by class — <strong>retrieval</strong>,{' '}
+          <strong>generation</strong>, <strong>source data</strong>,{' '}
+          <strong>product</strong> and <strong>performance</strong> — so the next
+          intervention had an owner.
+        </InsightCallout>
+
         <DecisionCallout
           label="What this changed"
           note="Release comparison became a scored diff rather than an argument. Quality improved across correctness, groundedness and retrieval success between the releases I evaluated, at a small latency cost — and every regression arrived with an owner attached."
@@ -347,6 +395,82 @@ export default function EnterpriseAIPage() {
             </div>
           </ArtifactCard>
         </DeeperDetail>
+
+        <ArtifactCard
+          title="Operational cost dashboard"
+          meta="Synthetic reconstruction · no client data"
+          caption="A publication-safe reconstruction of the weekly operational view, showing the kinds of decisions it supported. Every figure, workload name and window here is invented; the structure is what mattered."
+        >
+          <MetricStrip
+            variant="band"
+            columns={3}
+            size="sm"
+            caps
+            items={[
+              { value: '$41.2K', label: 'Rolling 7-day cost' },
+              { value: '+12.4%', label: 'Week over week' },
+              { value: '86.4K', label: 'Queries run' },
+              { value: '$0.48', label: 'Average cost per query' },
+              { value: '02:00–05:00', label: 'Peak processing window' },
+              { value: 'Ingest · claims', label: 'Highest-cost workload' },
+            ]}
+          />
+          <div className="table-wrap" style={{ marginTop: 'var(--s3)' }}>
+            <table className="table">
+              <caption className="cg-caption">
+                Synthetic workload names and figures. The drilldown is the point:
+                a week-over-week number is only actionable once you can see which
+                workload moved.
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Workload</th>
+                  <th scope="col">This week</th>
+                  <th scope="col">Last week</th>
+                  <th scope="col">Delta</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ['Ingest · claims', '$14,880', '$9,940', '+49.7%', 'investigate'],
+                  ['Feature build · nightly', '$9,310', '$9,120', '+2.1%', 'normal'],
+                  ['Assistant retrieval', '$6,740', '$6,510', '+3.5%', 'normal'],
+                  ['Reporting extracts', '$5,120', '$6,880', '−25.6%', 'normal'],
+                  ['Ad-hoc analysis', '$5,150', '$4,220', '+22.0%', 'watch'],
+                ].map(([w, cur, prev, delta, status]) => (
+                  <tr key={w}>
+                    <td>{w}</td>
+                    <td>{cur}</td>
+                    <td>{prev}</td>
+                    <td>{delta}</td>
+                    <td>
+                      <Tag tone={status === 'normal' ? 'gray' : 'blue'}>{status}</Tag>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <InfoPanel tone="blue" label="What the drilldown surfaced">
+            <p>
+              One workload accounted for almost the entire week-over-week increase.
+              The rise was concentrated in a single processing window rather than
+              spread across the week — a scheduling and re-run pattern, not
+              organic growth in demand.
+            </p>
+          </InfoPanel>
+          <p className="reccard__value" style={{ marginTop: 'var(--s3)' }}>
+            I turned fragmented operational signals into a reusable decision layer
+            so teams could see where cost and workload anomalies were actually
+            coming from, rather than rebuilding the analysis by hand every week.
+          </p>
+        </ArtifactCard>
+
+        <InsightCallout label="Why it mattered">
+          The value was not the visualization. It was making operational anomalies
+          inspectable enough to act on.
+        </InsightCallout>
 
         <DecisionCallout
           label="What this changed"
@@ -525,9 +649,9 @@ export default function EnterpriseAIPage() {
           actually improves the user outcome?”
         </InsightCallout>
         <p className="body-text">
-          Working across retrieval, data, product and infrastructure changed how I
-          evaluate AI products: I now assume a confident output is a claim to be
-          traced, and I want the failure taxonomy before I want the demo.
+          I learned to treat every confident AI output as a claim to trace through
+          the system — and to define the failure taxonomy before deciding what to
+          fix.
         </p>
       </Section>
 
