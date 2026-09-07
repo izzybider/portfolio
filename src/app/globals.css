@@ -2109,52 +2109,6 @@ a.support__card:hover {
   margin-top: 9px;
 }
 
-/* Waveform / spectrogram (KosiSonic) */
-.waveform {
-  display: flex;
-  align-items: flex-end;
-  gap: 3px;
-  height: 42px;
-}
-
-.waveform span {
-  flex: 1;
-  background: var(--ink);
-  border-radius: 1px;
-}
-
-.waveform--muted span {
-  background: var(--border-strong);
-}
-
-.spectrogram {
-  display: flex;
-  gap: 2px;
-}
-
-.spectrogram span {
-  flex: 1;
-  height: 18px;
-  background: rgba(16, 16, 16, 0.14);
-}
-
-.spectrogram span.is-dense {
-  background: var(--ink);
-}
-
-.spectrogram span.is-mid {
-  background: rgba(16, 16, 16, 0.45);
-}
-
-.codeblock {
-  font-family: var(--font-mono);
-  font-size: var(--fs-micro);
-  line-height: 1.9;
-  color: var(--ink-body);
-  white-space: pre-wrap;
-  overflow-x: auto;
-}
-
 /* ============================================================
    RESPONSIVE
    ============================================================ */

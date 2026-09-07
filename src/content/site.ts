@@ -149,9 +149,4 @@ export const caseStudies = [
     name: 'TrustLayer',
     sub: 'When is autonomy the right product behavior?',
   },
-  {
-    href: '/work/kosisonic',
-    name: 'KosiSonic',
-    sub: 'When a better metric is not a better product',
-  },
 ];

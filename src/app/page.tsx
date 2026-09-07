@@ -172,8 +172,6 @@ export default function HomePage() {
             label="KosiSonic · Software Engineering Intern"
             title="When a better technical metric was not a better product."
             proof="Python / MATLAB signal processing · 25 user + clinician interviews"
-            href="/work/kosisonic"
-            cta="Read the mini case"
           >
             Built signal-processing work for AI hearing technology and interviewed
             the people using it — then had to reconcile the two when they
