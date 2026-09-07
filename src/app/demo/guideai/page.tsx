@@ -28,7 +28,7 @@ export default function GuideAIDemoPage() {
             it.</strong>
           </>
         }
-        disclosure="Synthetic dog and observation data, used to illustrate the workflow. Maple is not a real dog and no record here comes from the pilot; the case-study metrics refer to that pilot and are separate from this demo."
+        disclosure="This demo reconstructs the GuideAI workflow with synthetic data and local retrieval. The piloted product ran over approved training resources, the raiser's own longitudinal dog history, and an AI synthesis layer. Maple is not a real dog and no record here comes from the pilot; the case-study metrics refer to that pilot, not to this reconstruction."
         caseStudyHref="/work/guideai"
         caseStudyLabel="Read the full case study"
       >

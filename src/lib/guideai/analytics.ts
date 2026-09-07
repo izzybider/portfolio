@@ -20,6 +20,7 @@ export type GuideAIEvent =
   | 'source_opened'
   | 'trainer_prep_generated'
   | 'escalation_shown'
+  | 'followup_asked'
   | 'demo_completed';
 
 /** Documented in one place so the instrumentation surface is reviewable. */
@@ -31,6 +32,7 @@ export const EVENT_CATALOG: { name: GuideAIEvent; when: string }[] = [
   { name: 'retrieval_inspected', when: 'The AI pipeline trace is expanded.' },
   { name: 'source_opened', when: 'A retrieved source card is expanded.' },
   { name: 'trainer_prep_generated', when: 'The trainer-prep summary is produced.' },
+  { name: 'followup_asked', when: 'A conversational follow-up question is opened.' },
   { name: 'escalation_shown', when: 'Trainer review is recommended for a behaviour.' },
   { name: 'demo_completed', when: 'The trainer-prep summary is copied.' },
 ];

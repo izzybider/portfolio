@@ -69,14 +69,26 @@ export const metadata: Metadata = {
    KEPT, because the resume served at /IsabellaBider_Resume.pdf states them and
    nothing available contradicts them: 75+ pilot users, 60+ iterations, 45%
    reduction in trainer summary preparation time, 68% -> 91% trainer agreement,
-   8,500+ AI recommendations evaluated, and the OpenAI embeddings / pgvector /
-   RAG / PostHog stack. These are self-corroborated only; you should still be
-   able to point an interviewer at the underlying data. */
+   8,500+ AI recommendations evaluated, and the PostHog instrumentation. These
+   are self-corroborated only; you should still be able to point an interviewer
+   at the underlying data.
+
+   ARCHITECTURE NAMES — deliberately absent from the rendered page. The resume
+   names an "OpenAI embeddings / pgvector / RAG" stack. The newest GuideAI build
+   available locally (~/Downloads/guideai_demo (6)) does not match that: its
+   resource_service does deterministic keyword matching, docs/architecture.md
+   says "no semantic retrieval yet", and ai_service.py states that RAG and
+   embeddings are "intentionally out of scope". This page therefore describes
+   the product behaviour — longitudinal history, retrieval over approved
+   resources, grounded synthesis, escalation, trainer prep — and names no
+   provider, vector store or model anywhere. Resolve the resume wording against
+   whichever build you actually shipped before an interviewer asks. */
 
 const NAV = [
   { id: 'problem', label: 'Problem' },
   { id: 'product', label: 'Product' },
   { id: 'analytics', label: 'Analytics' },
+  { id: 'pilot', label: 'The pilot' },
   { id: 'evaluation', label: 'AI evaluation' },
   { id: 'results', label: 'Results' },
 ];
@@ -87,14 +99,14 @@ export default function GuideAIPage() {
       <CaseStudyHero
         eyebrow="01 · Flagship case study · 0→1 AI product"
         title="GuideAI"
-        statement="I noticed that service-dog raisers were collecting behavioral data they could not synthesize before a trainer conversation. I built the product that closed that gap — and then measured it against expert judgment."
+        statement="GuideAI turns weeks of service-dog behavior logs and notes into personalized, resource-grounded guidance and trainer-ready summaries. It holds longitudinal context for the individual dog, retrieves relevant approved training resources, and synthesises the two — so raisers understand the pattern, get guidance that fits their dog, and arrive at trainer conversations with better questions. Trainers stay the final judgment layer."
         roles={[
           'Founder & Product Lead',
-          '0→1 discovery',
-          'RAG architecture',
-          'Product analytics',
-          'AI evaluation',
+          '0→1 AI product',
+          'Retrieval grounding + personalization',
           'Pilot design',
+          'Product analytics',
+          'Human-in-the-loop evaluation',
         ]}
       >
         <MetricStrip
@@ -105,7 +117,7 @@ export default function GuideAIPage() {
             { value: '68% → 91%', label: 'agreement with expert trainers' },
             { value: '45%', label: 'less trainer-prep time' },
             { value: '8,500+', label: 'AI recommendations evaluated' },
-            { value: '60+', label: 'product iterations' },
+            { value: '60+', label: 'product iterations across capture, synthesis, retrieval, escalation and trainer prep' },
           ]}
         />
         <p className="demo__cta">
@@ -113,8 +125,8 @@ export default function GuideAIPage() {
             Try interactive demo <Arrow />
           </Link>
           <span className="meta">
-            See grounded recommendations, source retrieval and trainer escalation in the live demo
-            · synthetic demo data · no sign-in
+            A synthetic reconstruction of the workflow — history, grounded recommendation, follow-up
+            questions, escalation and trainer prep · no sign-in
           </span>
         </p>
       </CaseStudyHero>
@@ -130,16 +142,18 @@ export default function GuideAIPage() {
         }
         role={
           <>
-            No one assigned this. I found the gap, ran discovery, built the
-            product, recruited the pilot, instrumented usage and designed the AI
-            evaluation.
+            No one assigned this. I found the gap, ran discovery, designed and
+            built the product, recruited the pilot, collected feedback,
+            instrumented usage, evaluated AI quality against expert judgment, and
+            iterated on what I learned.
           </>
         }
         decision={
           <>
-            Support trainer judgment rather than replace it — and treat{' '}
-            <strong>agreement with expert trainers</strong>, not fluency, as the
-            quality bar.
+            Ground every recommendation in{' '}
+            <strong>this dog&rsquo;s history plus approved resources</strong>,
+            support trainer judgment rather than replace it, and treat agreement
+            with expert trainers — not fluency — as the quality bar.
           </>
         }
         outcome={
@@ -234,8 +248,15 @@ export default function GuideAIPage() {
       >
         <ProcessFlow
           tone="blue"
-          steps={['Log', 'History', 'Pattern', 'Recommendation', 'Trainer prep']}
-          highlight={[3]}
+          steps={[
+            'Log',
+            'Longitudinal history',
+            'Pattern',
+            'Retrieve approved guidance',
+            'Personalised synthesis',
+            'Trainer prep',
+          ]}
+          highlight={[4]}
         />
 
         <div className="grid grid--3">
@@ -308,17 +329,77 @@ export default function GuideAIPage() {
           Interface reconstruction of the product built and piloted with raisers.
         </ProvenanceNote>
 
+        <ArtifactCard
+          title="How the product works"
+          meta="Personalisation comes from the dog's history · grounding comes from approved resources"
+          caption="The two inputs do different jobs. Longitudinal history is what makes a recommendation about this dog rather than about dogs in general; the approved resource corpus is what keeps the guidance anchored to material the programme already endorses. Neither on its own is enough."
+        >
+          <ArchitectureDiagram
+            rows={[
+              {
+                nodes: [
+                  { name: 'Dog profile + longitudinal observations', sub: 'Weeks of structured logs, context and notes', tone: 'accent' },
+                ],
+              },
+              {
+                connector: 'line',
+                nodes: [
+                  { name: 'History / pattern synthesis', sub: 'Recurrence, direction, context spread' },
+                ],
+              },
+              {
+                connector: 'line',
+                nodes: [
+                  { name: 'Retrieval query', sub: 'Built from the behaviour context, not the last note' },
+                ],
+              },
+              {
+                connector: 'line',
+                nodes: [
+                  { name: 'Approved resource corpus', sub: 'Programme-endorsed training material', tone: 'accent' },
+                ],
+              },
+              {
+                connector: 'line',
+                nodes: [
+                  { name: 'AI synthesis', sub: "Dog's history + retrieved guidance, cited back to source", tone: 'accent' },
+                ],
+              },
+              {
+                connector: 'fan',
+                nodes: [
+                  { name: 'Conversational follow-up', sub: 'Why this, what changed, what to ask' },
+                  { name: 'Escalation / trainer review', sub: 'Higher-risk or ambiguous cases stop here' },
+                ],
+              },
+              {
+                connector: 'line',
+                nodes: [
+                  { name: 'Trainer-prep summary', sub: 'Trends, representative observations, open questions', tone: 'accent' },
+                ],
+              },
+            ]}
+          />
+          <p className="reccard__value" style={{ marginTop: 'var(--s3)' }}>
+            The system never closes the loop on its own. Where a situation is
+            higher-risk, ambiguous or genuinely a matter of trainer judgment, the
+            product routes to a person instead of producing authoritative
+            guidance — and the trainer-prep summary exists to make that handoff
+            worth more than a screenshot of the log.
+          </p>
+        </ArtifactCard>
+
         {/* Implementation detail, one click away — the PM story above should
             not be crowded out by the diagram. Fully accessible, and still in
             the HTML for search and indexing. */}
         <DeeperDetail
-          summary="Inspect the current demo architecture"
-          hint="retrieval, grounding and escalation, stage by stage"
+          summary="Inspect the public demo architecture"
+          hint="how the synthetic reconstruction is actually built"
         >
           <ArtifactCard
-            title="Current demo architecture"
-            meta="TF-IDF vector index · cosine top-k retrieval · grounded composition · deterministic escalation · PostHog events"
-            caption="This is the architecture running in the interactive demo today, not a description of the pilot. Every stage is inspectable in the demo's pipeline trace, and the retrieval numbers in the evaluation below are produced by running it."
+            title="Public demo architecture"
+            meta="Local retrieval over a synthetic corpus · grounded composition · deterministic escalation · no API key"
+            caption="This is the publication-safe reconstruction that runs in the interactive demo — not the piloted system. Every stage is inspectable in the demo's pipeline trace, and the retrieval numbers in the evaluation below are produced by running it."
           >
             <ArchitectureDiagram
               rows={[
@@ -377,20 +458,20 @@ export default function GuideAIPage() {
                   nodes: [
                     { name: 'Recommendation', sub: 'With its sources' },
                     { name: 'Trainer prep', sub: 'Judgment items named' },
-                    { name: 'PostHog events', sub: '9 product events', tone: 'gray' },
+                    { name: 'PostHog events', sub: '10 product events', tone: 'gray' },
                   ],
                 },
               ]}
             />
             <p className="meta" style={{ marginTop: 'var(--s3)' }}>
-              The current demo uses a more robust retrieval architecture than the
-              earlier pilot implementation. The pilot metrics above describe that
-              earlier build, not this one. An OpenAI embedding path is implemented
-              (<code>npm run guideai:embed --openai</code>, text-embedding-3-small)
-              but is not what ships: the portfolio is a fully static site, so a
-              neural index would need a server route and an API key at request
-              time, and a recruiter opening the demo would depend on both. Retrieval
-              over 28 documents is exact either way.
+              This is a reconstruction, not the piloted stack. The public demo
+              swaps the approved resource corpus for a synthetic one and runs
+              retrieval locally, so the workflow can be shown without exposing
+              proprietary training material or pilot data, and without an API key,
+              an account or a network call a recruiter would have to wait on. The
+              shape is preserved — history, retrieval, grounded synthesis,
+              escalation, trainer prep — and the pilot metrics above describe the
+              piloted product, not this reconstruction.
             </p>
           </ArtifactCard>
         </DeeperDetail>
@@ -439,10 +520,103 @@ export default function GuideAIPage() {
         </ProvenanceNote>
       </Section>
 
+      {/* ---------------- WHAT USERS CHANGED ---------------- */}
+      <Section
+        id="pilot"
+        label="05 · The pilot"
+        title="The pilot changed the product, not just the interface."
+        intro="Six changes that came out of watching raisers use it and listening to what they said was missing. Each one moved the product further from “an assistant that answers questions” and closer to “a system that remembers this dog and prepares a better conversation.”"
+        width="wide"
+      >
+        <div className="changelog">
+          {[
+            {
+              observed: 'Raisers did not want another chatbot',
+              evidence:
+                'Asked what they wanted help with, they described synthesising weeks of observations before a trainer conversation — not getting an answer to a question they already knew how to ask.',
+              change:
+                'Moved the product from open-ended AI advice toward longitudinal pattern synthesis and trainer preparation.',
+              why: 'It changed what the product was for. The unit of value became the pattern across weeks, not the reply to a prompt.',
+            },
+            {
+              observed: 'Generic guidance did not land',
+              evidence:
+                'Advice that was reasonable in general was still wrong for a particular dog with a particular history, and raisers noticed immediately.',
+              change:
+                "Made the individual dog's longitudinal history part of generating the recommendation rather than context shown beside it.",
+              why: 'Personalisation stopped being a display concern and became an input to the output.',
+            },
+            {
+              observed: 'People would not act on advice they could not trace',
+              evidence:
+                'The recurring question was not “what should I do” but “why are you telling me this?”',
+              change:
+                'Added retrieved-resource grounding and visible sources, so each recommendation names the guidance and the observations behind it.',
+              why: 'A recommendation that cannot be interrogated does not get used, however good it is.',
+            },
+            {
+              observed: 'Confident AI on trainer-judgment situations made people uneasy',
+              evidence:
+                'Raisers were uncomfortable with the system sounding authoritative on exactly the cases they would take to a professional.',
+              change:
+                'Added explicit escalation with a stated reason, and positioned the product as decision support rather than a trainer substitute.',
+              why: 'Declining well turned out to be a feature, not a gap in coverage.',
+            },
+            {
+              observed: 'Logging had to be fast enough to become a habit',
+              evidence:
+                'The product only produces a pattern once there is enough history, and history only accumulates if capture is quick.',
+              change:
+                'Simplified structured observation capture and designed for repeat logging rather than for reading content.',
+              why: 'The retention loop was capture, not consumption — which is also what the analytics said.',
+            },
+            {
+              observed: 'A raw history was still work to explain',
+              evidence:
+                'Even with the pattern visible, raisers were re-deriving what mattered in the moment, in front of the trainer.',
+              change:
+                'Added trainer-prep summaries: trends, representative observations, source-backed context, and the questions still open.',
+              why: 'The job ended at the trainer conversation, so that is where the output had to be aimed.',
+            },
+          ].map((row) => (
+            <article className="changelog__row" key={row.observed}>
+              <div className="changelog__what">
+                <p className="caps changelog__label">What I observed</p>
+                <p className="changelog__observed">{row.observed}</p>
+                <p className="changelog__evidence">{row.evidence}</p>
+              </div>
+              <div className="changelog__then">
+                <p className="caps changelog__label">What I changed</p>
+                <p className="changelog__change">{row.change}</p>
+                <p className="changelog__why">
+                  <span className="caps changelog__label">Why it mattered</span>
+                  {row.why}
+                </p>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <InsightCallout label="Three different signals, kept apart">
+          What raisers <strong>said</strong> was confusing, what they actually{' '}
+          <strong>did</strong> in the product, and whether the AI was{' '}
+          <strong>correct</strong> are three different questions. Satisfaction was
+          never used as a proxy for correctness — that is what the expert-agreement
+          bar in the next section is for.
+        </InsightCallout>
+
+        <ProvenanceNote>
+          These are the product decisions the pilot produced and the reasoning
+          behind them. Specific quote counts and per-theme frequencies are
+          deliberately absent: the feedback artifact available to me is small, and
+          the decisions are what I can stand behind.
+        </ProvenanceNote>
+      </Section>
+
       {/* ---------------- AI EVALUATION ---------------- */}
       <Section
         id="evaluation"
-        label="05 · AI evaluation"
+        label="06 · AI evaluation"
         title="Positive feedback was not enough."
         intro="Users liked outputs that sounded plausible even when a trainer disagreed with the recommendation. That forced me to treat AI quality as a measurable product problem."
       >
@@ -550,7 +724,7 @@ export default function GuideAIPage() {
       {/* ---------------- RESULTS ---------------- */}
       <Section
         id="results"
-        label="06 · Results and ownership"
+        label="07 · Results and ownership"
         title="Three questions, three answers."
       >
         <MetricStrip

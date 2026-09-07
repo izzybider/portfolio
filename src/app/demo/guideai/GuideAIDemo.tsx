@@ -31,6 +31,7 @@ import {
   retrieve,
   TOP_K,
 } from '@/lib/guideai/retrieve';
+import { buildFollowUps } from '@/lib/guideai/followup';
 import { INDEX } from '@/lib/guideai/embed';
 import { CORPUS } from '@/lib/guideai/corpus';
 import { track } from '@/lib/guideai/analytics';
@@ -59,6 +60,7 @@ export default function GuideAIDemo() {
   const [copied, setCopied] = useState(false);
   const [selectedBehavior, setSelectedBehavior] = useState<string | null>(null);
   const [whySources, setWhySources] = useState(false);
+  const [openFollowUp, setOpenFollowUp] = useState<string | null>(null);
   const hasHigherRisk = useMemo(
     () => observations.some((o) => o.behavior === HIGHER_RISK_BEHAVIOR),
     [observations],
@@ -87,8 +89,24 @@ export default function GuideAIDemo() {
     const retrieval = retrieve(context);
     const escalation = escalationCheck(context);
     const response = compose(context, retrieval, escalation);
-    return { context, retrieval, escalation, response };
+    return { context, retrieval, escalation, response, trend };
   }, [recommendation, trends]);
+
+  /* Follow-up answers, derived from the same structured state. */
+  const followUps = useMemo(
+    () =>
+      pipeline
+        ? buildFollowUps({
+            context: pipeline.context,
+            retrieval: pipeline.retrieval,
+            escalation: pipeline.escalation,
+            response: pipeline.response,
+            trend: pipeline.trend,
+            observations,
+          })
+        : [],
+    [pipeline, observations],
+  );
   const recent = useMemo(() => sorted(observations).slice(-4).reverse(), [observations]);
   const contextCounts = useMemo(() => counts(observations.map((o) => o.context)), [observations]);
 
@@ -675,6 +693,44 @@ export default function GuideAIDemo() {
                     Synthetic, generalized demo resources written for this demonstration. Not
                     official training guidance and not any organisation&rsquo;s material.
                   </p>
+                </div>
+
+                {/* ---- conversational follow-up ---- */}
+                <div className="followup">
+                  <p className="caps followup__label">Ask a follow-up</p>
+                  <p className="cg-note followup__note">
+                    Answered from the same structured state the recommendation came
+                    from — the logged observations, the trend and the retrieved
+                    sources. Deterministic, so every answer can be checked against
+                    the record.
+                  </p>
+                  <ul className="followup__list">
+                    {followUps.map((f) => {
+                      const open = openFollowUp === f.id;
+                      return (
+                        <li key={f.id}>
+                          <button
+                            type="button"
+                            className="followup__q"
+                            aria-expanded={open}
+                            onClick={() => {
+                              setOpenFollowUp(open ? null : f.id);
+                              if (!open) track('followup_asked', { question: f.id });
+                            }}
+                          >
+                            <span className="followup__mark" aria-hidden="true" />
+                            {f.question}
+                          </button>
+                          {open && (
+                            <div className="followup__a">
+                              <p>{f.answer}</p>
+                              <p className="followup__src">{f.basedOn}</p>
+                            </div>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
                 </div>
 
                 {/* ---- pipeline trace ---- */}

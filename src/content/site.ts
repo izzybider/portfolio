@@ -62,9 +62,9 @@ export const projects: Project[] = [
     title: 'GuideAI',
     tag: 'Flagship · 0→1 AI product',
     statement:
-      'Found an unaddressed workflow gap, built the AI product that closed it, and measured whether it actually helped.',
+      'Built and piloted an AI decision-support product that turns longitudinal service-dog behavior logs into personalized, resource-grounded guidance and better trainer conversations.',
     owned:
-      'Owned end to end: discovery, product, RAG architecture, pilot recruiting, analytics, AI evaluation.',
+      'Owned end to end: discovery, longitudinal behavior data, retrieval over approved resources, pilot design, product analytics, and human-in-the-loop evaluation.',
     proof: [
       '75+ pilot users · 60+ product iterations',
       '68% → 91% expert agreement',

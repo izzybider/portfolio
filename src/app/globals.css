@@ -5835,3 +5835,174 @@ a.support__card:hover {
   border-top: 1px solid var(--border-strong);
   padding-top: var(--s2);
 }
+
+/* ============================================================
+   GUIDEAI — pilot change log (observed → changed → why)
+   ============================================================ */
+
+.changelog {
+  display: grid;
+  gap: var(--s2);
+}
+
+.changelog__row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s3);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: var(--s3);
+}
+
+.changelog__row:nth-child(odd) {
+  border-left: 3px solid var(--border-strong);
+}
+
+.changelog__row:nth-child(even) {
+  border-left: 3px solid var(--accent-soft);
+}
+
+.changelog__label {
+  color: var(--ink-muted);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.changelog__observed {
+  font-family: var(--font-display);
+  font-size: var(--fs-h4);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.3;
+  margin: 0 0 var(--s1);
+}
+
+.changelog__evidence,
+.changelog__change {
+  font-size: var(--fs-meta);
+  line-height: 1.55;
+  color: var(--ink-body);
+  margin: 0;
+}
+
+.changelog__change {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.changelog__why {
+  font-size: var(--fs-micro);
+  line-height: 1.5;
+  color: var(--ink-muted);
+  margin: var(--s2) 0 0;
+  border-top: 1px solid var(--rule);
+  padding-top: var(--s1);
+}
+
+.changelog__then {
+  border-left: 1px solid var(--rule);
+  padding-left: var(--s3);
+}
+
+@media (max-width: 760px) {
+  .changelog__row {
+    grid-template-columns: 1fr;
+    gap: var(--s2);
+  }
+  .changelog__then {
+    border-left: 0;
+    border-top: 1px solid var(--rule);
+    padding-left: 0;
+    padding-top: var(--s2);
+  }
+}
+
+/* ============================================================
+   GUIDEAI DEMO — conversational follow-up
+   ============================================================ */
+
+.followup {
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: var(--s2);
+  margin-top: var(--s3);
+  background: var(--surface);
+}
+
+.followup__label {
+  color: var(--accent);
+  margin: 0 0 3px;
+}
+
+.followup__note {
+  margin: 0 0 var(--s2);
+  max-width: var(--measure);
+}
+
+.followup__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.followup__q {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: var(--fs-meta);
+  color: var(--ink);
+  background: var(--gray-panel-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.followup__q:hover {
+  border-color: var(--border-strong);
+}
+
+.followup__q:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.followup__mark {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+}
+
+.followup__q[aria-expanded='true'] {
+  background: var(--blue-panel);
+  border-color: var(--accent-soft);
+}
+
+.followup__a {
+  padding: 9px 10px 2px 24px;
+}
+
+.followup__a p {
+  font-size: var(--fs-meta);
+  line-height: 1.6;
+  color: var(--ink-body);
+  margin: 0;
+  max-width: var(--measure);
+}
+
+.followup__src {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-muted) !important;
+  margin-top: 6px !important;
+}
