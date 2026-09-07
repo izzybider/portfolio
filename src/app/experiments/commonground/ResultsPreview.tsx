@@ -327,7 +327,7 @@ export default function ResultsPreview() {
           <p className="cg-body">{mixedFinding.productResponse}</p>
           <p className="cgr-mixed__next">
             Leads to <strong>{mixedFinding.leadsTo}</strong>
-            <span className="cgr-pill">next iteration · not built</span>
+            <span className="cgr-pill">shipped in the prototype</span>
           </p>
         </div>
       </div>

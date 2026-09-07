@@ -200,6 +200,46 @@ export default function CommonGroundPage() {
             the app says which rejection changed the list.
           </p>
         </div>
+
+        <div className="demopanel">
+          <div className="demopanel__head">
+            <h3 className="demopanel__title">When nothing fits</h3>
+            <span className="meta">resolve the conflict</span>
+          </div>
+          <p className="reccard__value">
+            Constraints often leave no option standing at all. Rather than loosening the ranking
+            until something appears, the prototype diagnoses which constraints are doing the
+            damage, then searches for the smallest change to one person&rsquo;s stated limit that
+            would put real options back on the table.
+          </p>
+          <ol className="cg-steps" style={{ marginTop: 'var(--s3)' }}>
+            <li>
+              <strong>Diagnose.</strong> For every option, record which hard constraints eliminate
+              it, who vetoed it, and whose preferences drag its score down.
+            </li>
+            <li>
+              <strong>Search.</strong> Enumerate every minimal edit to a single stated constraint —
+              a budget raised to exactly the price of the cheapest thing it blocks, a veto dropped,
+              a setting requirement released — and re-run the ranker on each to measure what it
+              actually opens up. Where no single change is enough, look for the smallest pair.
+            </li>
+            <li>
+              <strong>Rank by the size of the ask,</strong> not by the group score, and check who is
+              being asked. A change that lands on someone already carrying the group&rsquo;s
+              compromises is moved down in favour of a comparable one that does not, and the app
+              says when it has done that.
+            </li>
+            <li>
+              <strong>Try it provisionally.</strong> Applying a suggestion layers it on top of what
+              people answered and re-ranks. Nobody&rsquo;s stated preferences are edited, and Undo
+              takes it straight back off.
+            </li>
+          </ol>
+          <p className="meta" style={{ marginTop: 'var(--s3)' }}>
+            Deterministic end to end: the same group answers always produce the same diagnosis and
+            the same suggestions. No model is involved, and no key is needed.
+          </p>
+        </div>
       </Section>
 
       {/* Placeholder values are gated: real results render on their own, an

@@ -11,7 +11,8 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "guideai:embed": "tsx scripts/guideai-embed.ts",
-    "guideai:eval": "tsx scripts/guideai-eval.ts"
+    "guideai:eval": "tsx scripts/guideai-eval.ts",
+    "cg:test": "tsx scripts/commonground-resolve-test.ts"
   },
   "dependencies": {
     "next": "^14.2.35",

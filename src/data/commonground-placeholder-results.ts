@@ -287,7 +287,7 @@ export const LOOP: LoopStep[] = [
   },
   {
     label: 'Next iteration',
-    body: 'Resolve the conflict — negotiate constraints instead of re-ranking.',
+    body: 'Resolve the conflict — negotiate constraints instead of re-ranking. Built, and running in the prototype above.',
   },
 ];
 

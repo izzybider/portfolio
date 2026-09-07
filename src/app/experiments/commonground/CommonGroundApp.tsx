@@ -12,6 +12,12 @@ import {
 } from '@/lib/commonground/activities';
 import { describeRule, rank } from '@/lib/commonground/rank';
 import {
+  applyRelaxations,
+  resolveConflict,
+  type Relaxation,
+} from '@/lib/commonground/resolve';
+import ResolveConflict from './ResolveConflict';
+import {
   download,
   emptyRound,
   mailtoHref,
@@ -139,15 +145,55 @@ export default function CommonGroundApp() {
   const setId = roundIndex === 0 ? 'A' : 'B';
   const activities = ACTIVITY_SETS[setId].items;
 
+  /* Provisional constraint relaxations the group is trying out. These layer
+     on top of what people actually answered — the stated preferences are
+     never edited, so Undo is just dropping one off the end. */
+  const [relaxations, setRelaxations] = useState<Relaxation[]>([]);
+
+  const effectiveParticipants = useMemo(
+    () => applyRelaxations(participants, relaxations),
+    [participants, relaxations],
+  );
+
+  const rankInput = useMemo(
+    () => ({ activities, participants: effectiveParticipants, removedIds, rules }),
+    [activities, effectiveParticipants, removedIds, rules],
+  );
+
   const ranked = useMemo(
-    () =>
-      participants.length
-        ? rank({ activities, participants, removedIds, rules })
-        : null,
-    [activities, participants, removedIds, rules],
+    () => (participants.length ? rank(rankInput) : null),
+    [participants.length, rankInput],
   );
 
   const top3 = useMemo(() => ranked?.shortlist.slice(0, 3) ?? [], [ranked]);
+
+  /* Diagnosis and relaxation search. Deterministic, and only run when the
+     group is actually stuck or the best option is lopsided. */
+  const resolution = useMemo(
+    () => (participants.length ? resolveConflict(rankInput, relaxations) : null),
+    [participants.length, rankInput, relaxations],
+  );
+
+  /* The panel also stays up once a relaxation has been applied, even when
+     that resolved the conflict — otherwise applying a change unmounts the
+     only route back to undoing it. */
+  const showResolve =
+    stage === 'results' &&
+    resolution !== null &&
+    (resolution.diagnosis.severity !== 'none' || relaxations.length > 0);
+
+  const applyRelaxation = (r: Relaxation) => {
+    setRelaxations((prev) => (prev.some((x) => x.id === r.id) ? prev : [...prev, r]));
+    setLastUpdate(`Trying: ${r.sentence} Nothing was saved to anyone's answers.`);
+  };
+  const undoRelaxation = () => {
+    setRelaxations((prev) => prev.slice(0, -1));
+    setLastUpdate('Undid the last change. Back to what everyone actually said.');
+  };
+  const resetRelaxations = () => {
+    setRelaxations([]);
+    setLastUpdate('Cleared every provisional change.');
+  };
 
   /* ---------------- flow ---------------- */
 
@@ -157,6 +203,7 @@ export default function CommonGroundApp() {
     setCurrent(0);
     setRemovedIds([]);
     setRules([]);
+    setRelaxations([]);
     setLastUpdate(null);
     setShortlistSeen(new Set());
     setVetoCount(0);
@@ -259,6 +306,7 @@ export default function CommonGroundApp() {
     setCurrent(0);
     setRemovedIds([]);
     setRules([]);
+    setRelaxations([]);
     setLastUpdate(null);
     setShortlistSeen(new Set());
     setVetoCount(0);
@@ -671,21 +719,26 @@ export default function CommonGroundApp() {
           </div>
 
           {top3.length === 0 ? (
-            <div className="cg-panel cg-panel--warn">
-              <h3 className="cg-h3">Nothing fits everyone yet</h3>
-              <p className="cg-body">
-                {ranked.bindingConstraint === 'vetoes'
-                  ? 'Everything left has been ruled out by someone. Somebody needs to drop a veto, or the group needs a different kind of activity.'
-                  : `The binding constraint is ${ranked.bindingConstraint}. Relaxing that for one person opens options back up.`}
-              </p>
-              <p className="cg-body">
-                {ranked.infeasible.length} option
-                {ranked.infeasible.length === 1 ? '' : 's'} removed by hard constraints,{' '}
-                {ranked.vetoed.length} blocked by a veto.
-              </p>
-              <button type="button" className="button" onClick={() => setStage('setup')}>
-                Start over
-              </button>
+            <div className="cg-results">
+              {showResolve && resolution && (
+                <ResolveConflict
+                  resolution={resolution}
+                  applied={relaxations}
+                  onApply={applyRelaxation}
+                  onUndo={undoRelaxation}
+                  onReset={resetRelaxations}
+                />
+              )}
+              <div className="cg-panel cg-panel--warn">
+                <p className="cg-note">
+                  {ranked.infeasible.length} option
+                  {ranked.infeasible.length === 1 ? '' : 's'} removed by hard constraints,{' '}
+                  {ranked.vetoed.length} blocked by a veto.
+                </p>
+                <button type="button" className="button" onClick={() => setStage('setup')}>
+                  Start over
+                </button>
+              </div>
             </div>
           ) : (
             <>
@@ -780,6 +833,16 @@ export default function CommonGroundApp() {
                   </li>
                 ))}
               </ol>
+
+              {showResolve && resolution && (
+                <ResolveConflict
+                  resolution={resolution}
+                  applied={relaxations}
+                  onApply={applyRelaxation}
+                  onUndo={undoRelaxation}
+                  onReset={resetRelaxations}
+                />
+              )}
 
               <div className="cg-panel">
                 <p className="cg-body">

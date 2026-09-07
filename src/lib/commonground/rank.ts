@@ -42,7 +42,7 @@ const VETO_PENALTY = 1;
 const W_MIN = 0.65;
 const W_MEAN = 0.35;
 
-function hardFailures(a: Activity, p: Participant, groupSize: number) {
+export function hardFailures(a: Activity, p: Participant, groupSize: number) {
   const out: FailReason[] = [];
   if (a.cost > p.maxCost) out.push('over budget');
   if (a.duration > p.maxMinutes) out.push('takes too long');
@@ -60,7 +60,7 @@ function hardFailures(a: Activity, p: Participant, groupSize: number) {
 }
 
 /** 0–1. How well this activity serves one participant's soft preferences. */
-function satisfaction(a: Activity, p: Participant): number {
+export function satisfaction(a: Activity, p: Participant): number {
   const interestIndex = p.interests.indexOf(a.category);
   /* Ranked interests: first choice counts full, later ones taper. */
   const interest =
