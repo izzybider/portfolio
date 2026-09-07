@@ -54,9 +54,9 @@ export default function DesigningAIAroundTrustPage() {
       nav={<CaseStudyNav title="Designing AI Around Trust" items={NAV} />}
     >
       <CaseStudyHero
-        eyebrow="03 · Product strategy case study · AZcare.ai"
+        eyebrow="03 · Product strategy case study · AZcare.ai · research synthesis, ongoing"
         title="Designing AI Around Trust"
-        statement="AZcare had an AI phone agent that could navigate phone trees, wait on hold and complete tasks. I ran the discovery on whether it solved a real problem for Deaf and hard-of-hearing users. The evidence changed what I recommended building."
+        statement="AZcare assumed that being Deaf or hard of hearing was itself what predicted demand for AI phone delegation. I ran the discovery that tested it. What actually predicted value was current workflow × task × desired autonomy — which changed both the target segment and what I recommended building."
         roles={[
           'AI Product Strategy & Market Research Intern',
           'Customer discovery',
@@ -91,23 +91,25 @@ export default function DesigningAIAroundTrustPage() {
         role={
           <>
             I ran the research end to end: recruiting, 30+ discovery
-            conversations, expert interviews, competitive and ecosystem
-            analysis, synthesis, and the product recommendation.
+            conversations, 8+ stakeholder and expert interviews, competitive and
+            ecosystem analysis, synthesis, segmentation, and the product
+            recommendation.
           </>
         }
         decision={
           <>
-            Re-segment on{' '}
-            <strong>current workflow × task × desired autonomy</strong> rather
-            than diagnosis, and build adjustable autonomy for bounded,
-            high-friction tasks.
+            Replace diagnosis-based targeting with{' '}
+            <strong>current workflow × task × desired autonomy</strong>, then
+            prioritise bounded tasks and make autonomy a user-facing control
+            rather than a fixed product assumption.
           </>
         }
         outcome={
           <>
-            The target user and the product thesis both changed. The thesis is
-            research-backed, not yet behaviorally validated — section 09 is the
-            plan that would test it.
+            The target user and the product thesis both changed on the evidence.
+            The thesis is research-backed and <strong>not yet behaviorally
+            validated</strong>; the proposed validation plan in section 09 is the
+            next step, and the internship is ongoing.
           </>
         }
       />
@@ -116,7 +118,7 @@ export default function DesigningAIAroundTrustPage() {
       <Section
         id="hypothesis"
         label="01 · Initial hypothesis"
-        title="I started from a hypothesis I was willing to lose."
+        title="I started from four assumptions, written down so they could be disproved."
         intro="Working hypothesis: Deaf and hard-of-hearing users face phone-accessibility barriers, so AI phone delegation should create broad value."
       >
         <CellGrid
@@ -137,7 +139,8 @@ export default function DesigningAIAroundTrustPage() {
           ]}
         />
         <p className="body-text">
-          Assumptions to test, not conclusions. Three of the four were wrong.
+          Assumptions to test, not conclusions. The research contradicted three
+          of the four.
         </p>
       </Section>
 
@@ -193,7 +196,7 @@ export default function DesigningAIAroundTrustPage() {
         id="segmentation"
         label="03 · Evidence changed the thesis"
         title="Hearing loss itself was not enough to predict product value."
-        intro="Users with the same diagnosis had completely different phone lives. What predicted value was the workflow they already used."
+        intro="Users with the same diagnosis had completely different phone lives. What predicted value was the workflow they already used — and that distinction has a direct roadmap cost: targeting by diagnosis would have spent product effort on people whose current workflow already works well, while missing the users with real workflow friction and genuine willingness to delegate."
       >
         <ArtifactCard
           title="Workflow segmentation"
@@ -316,9 +319,13 @@ export default function DesigningAIAroundTrustPage() {
           />
         </ArtifactCard>
 
-        <DecisionCallout label="Product thesis">
-          Build adjustable autonomy — let the user choose how much of each task
-          the AI handles.
+        <DecisionCallout
+          label="Product thesis"
+          note="The same person wanted different levels for different tasks, sometimes on the same day — booking a repeat appointment is not the same decision as disputing a bill. A product that picks one level picks wrong for most of the tasks it handles."
+        >
+          Autonomy is a product control, not a one-time product assumption.
+          Build it adjustable, and let the user set how much of each task the AI
+          handles.
         </DecisionCallout>
       </Section>
 
@@ -444,7 +451,11 @@ export default function DesigningAIAroundTrustPage() {
         </DecisionCallout>
 
         <DeeperDetail summary="Read the product definition from the PRD" hint="PRD extract">
-  <ArtifactCard title="Product definition" meta="Extract from the PRD I wrote">
+  <ArtifactCard
+            title="Product definition"
+            meta="Extract from the PRD I wrote · the direction I would test next"
+            caption="This is what the discovery pointed at, written up so it could be argued with — not a specification for something already proven to work."
+          >
             <KeyValueRows
               rows={[
                 {
@@ -488,7 +499,7 @@ export default function DesigningAIAroundTrustPage() {
         id="next"
         label="09 · Proposed validation plan"
         title="The thesis is research-backed. It is not yet behaviorally proven."
-        intro="Stated willingness does not predict delegation behavior. This is what I would run next."
+        intro="Stated willingness to delegate does not prove that someone will repeatedly use delegation in practice. Interviews established the thesis; only behavior can validate it. This is the sequence I would run next."
       >
         <DeeperDetail summary="The five-step validation sequence, in order" hint="not yet run">
   <ArtifactCard title="Validation sequence" meta="Not yet run">
@@ -543,7 +554,8 @@ export default function DesigningAIAroundTrustPage() {
         </DeeperDetail>
 
         <InsightCallout label="What I took from this">
-          Discovery that can only confirm the original idea is not discovery.
+          Discovery is useful when it changes the decision, not when it simply
+          confirms the starting idea.
         </InsightCallout>
       </Section>
 
