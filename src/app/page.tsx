@@ -26,8 +26,11 @@ export default function HomePage() {
           <p className="lede homehero__intro">
             Northwestern Biomedical Engineering + HCI. I work where understanding
             the user, diagnosing the system, and deciding what to change all
-            matter at once — across 0→1 products, production AI platforms, and
-            evaluation.
+            matter at once.
+          </p>
+          <p className="homehero__caps">
+            0→1 AI products · Enterprise AI platforms · Customer discovery &amp;
+            product strategy · AI evaluation &amp; agent systems
           </p>
           <div className="homehero__actions">
             <Link href="#work" className="button button--primary">
@@ -270,10 +273,15 @@ export default function HomePage() {
       >
         <p className="lede">
           I study Biomedical Engineering and Human-Computer Interaction at
-          Northwestern because I care about both sides of a system: how it works
-          and how people experience it. The work I want is the kind where product
-          judgment depends on users, data, and the technical system at the same
-          time.
+          Northwestern because I care about both sides of a system: how it works,
+          and how people experience it.
+        </p>
+        <p className="body-text" style={{ marginTop: 'var(--s3)' }}>
+          I&rsquo;m drawn to products where a technically correct system can still
+          fail because it misunderstood the user, the workflow, or the cost of
+          being wrong. That gap is usually where the real product problem is —
+          and it is why I would rather diagnose a system than take the feature
+          request at face value.
         </p>
       </Section>
 

@@ -80,7 +80,7 @@ export const projects: Project[] = [
   {
     index: '02',
     title: 'Enterprise AI Product Systems',
-    tag: 'Enterprise · Product ownership',
+    tag: 'Enterprise · Technical PM & AI evaluation',
     statement:
       'Owned product problems inside a 10,000-user enterprise AI platform, where the same symptom could originate in retrieval, data, infrastructure, or the workflow itself.',
     owned:
@@ -113,7 +113,7 @@ export const projects: Project[] = [
   {
     index: '04',
     title: 'TrustLayer',
-    tag: 'Independent AI experiment',
+    tag: 'Independent · AI agents & decision policy',
     statement:
       'An AI product thesis: the system should decide whether to answer, ask, verify or escalate before it generates anything.',
     owned:

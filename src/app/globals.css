@@ -5383,3 +5383,14 @@ a.support__card:hover {
     flex-wrap: wrap;
   }
 }
+
+/* Compact capability line under the hero lede — the four things the four
+   flagship projects are each meant to prove, in scanning order. */
+.homehero__caps {
+  margin-top: var(--s2);
+  max-width: 660px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  line-height: 1.6;
+  color: var(--ink-muted);
+}

@@ -43,6 +43,14 @@ export default function CommonGroundPage() {
               <a className="button button--quiet" href="#study-design">
                 Study design <Arrow direction="down" />
               </a>
+              <a
+                className="button button--quiet"
+                href="https://github.com/izzybider/portfolio/tree/main/src/lib/commonground"
+                target="_blank"
+                rel="noreferrer"
+              >
+                View source
+              </a>
               <Link href="/#experiments" className="button button--quiet">
                 Back to the portfolio
               </Link>

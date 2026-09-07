@@ -56,7 +56,8 @@ export const metadata: Metadata = {
 /* The live artifact is the interactive experiment inside this site, at
    /demo/trustlayer. It runs the same eleven-rule policy engine, the same
    simulated tools and a subset of the same labelled scenarios as the
-   standalone repo. That repo is not publicly deployed. */
+   standalone repo. The source for that repo is public at
+   github.com/izzybider/trustlayer; it is not deployed anywhere. */
 const DEMO_HREF = '/demo/trustlayer';
 
 const NAV = [
@@ -93,6 +94,14 @@ export default function TrustLayerPage() {
           </Link>
           <a className="button button--quiet" href="#thesis">
             Read methodology
+          </a>
+          <a
+            className="button button--quiet"
+            href="https://github.com/izzybider/trustlayer"
+            target="_blank"
+            rel="noreferrer"
+          >
+            View source
           </a>
           <span className="meta">Synthetic scenarios · no sign-in</span>
         </p>
