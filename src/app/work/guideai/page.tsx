@@ -99,14 +99,14 @@ export default function GuideAIPage() {
       <CaseStudyHero
         eyebrow="01 · Flagship case study · 0→1 AI product"
         title="GuideAI"
-        statement="GuideAI turns weeks of service-dog behavior logs and notes into personalized, resource-grounded guidance and trainer-ready summaries. It holds longitudinal context for the individual dog, retrieves relevant approved training resources, and synthesises the two — so raisers understand the pattern, get guidance that fits their dog, and arrive at trainer conversations with better questions. Trainers stay the final judgment layer."
+        statement="Personalized, source-grounded AI decision support for service-dog raisers. Raisers had weeks of behavior logs and no good way to synthesise them before a trainer conversation. GuideAI turns those observations into patterns, personalized guidance grounded in CCI-approved training resources, and trainer-ready summaries — with trainers as the final judgment layer."
         roles={[
           'Founder & Product Lead',
           '0→1 AI product',
-          'Retrieval grounding + personalization',
-          'Pilot design',
-          'Product analytics',
-          'Human-in-the-loop evaluation',
+          'Longitudinal personalization',
+          'RAG over approved resources',
+          'Pilot + product analytics',
+          'Expert-aligned AI evaluation',
         ]}
       >
         <MetricStrip
@@ -142,10 +142,10 @@ export default function GuideAIPage() {
         }
         role={
           <>
-            No one assigned this. I found the gap, ran discovery, designed and
-            built the product, recruited the pilot, collected feedback,
-            instrumented usage, evaluated AI quality against expert judgment, and
-            iterated on what I learned.
+            No one assigned this. I identified the workflow gap, ran discovery,
+            designed and built the product, recruited pilot users, instrumented
+            usage, designed the AI evaluation framework, synthesised feedback and
+            iterated through 60+ product changes.
           </>
         }
         decision={
@@ -163,6 +163,78 @@ export default function GuideAIPage() {
           </>
         }
       />
+
+      {/* ---------------- PILOTED PRODUCT VS PUBLIC DEMO + PILOT PREVIEW ---------------- */}
+      <Section
+        label="What was piloted, and what you can click"
+        title="The piloted product and the public demo are not the same system."
+        width="wide"
+      >
+        <div className="grid grid--2">
+          <div className="demopanel">
+            <div className="demopanel__head">
+              <h3 className="demopanel__title">Piloted product</h3>
+              <span className="meta">what raisers used</span>
+            </div>
+            <ul className="builtlist">
+              <li>Real raisers and their own dogs&rsquo; longitudinal histories</li>
+              <li>CCI-approved training resources as the grounding corpus</li>
+              <li>RAG retrieval over that approved material</li>
+              <li>OpenAI synthesis using dog history + retrieved guidance</li>
+              <li>Conversational follow-up</li>
+              <li>Trainer-prep outputs and escalation</li>
+              <li>PostHog instrumentation</li>
+              <li>Expert trainer review of AI quality</li>
+            </ul>
+          </div>
+          <div className="demopanel demopanel--quiet">
+            <div className="demopanel__head">
+              <h3 className="demopanel__title">Public demo</h3>
+              <span className="meta">what is linked from this page</span>
+            </div>
+            <ul className="builtlist builtlist--quiet">
+              <li>A synthetic dog and synthetic history</li>
+              <li>A publication-safe synthetic corpus</li>
+              <li>A local retrieval implementation</li>
+              <li>No proprietary training material</li>
+              <li>No pilot data</li>
+              <li>No account and no API key</li>
+              <li>The same product flow, reconstructed</li>
+            </ul>
+            <p className="cg-note" style={{ marginTop: 'var(--s2)' }}>
+              The demo&rsquo;s implementation is not the definition of GuideAI. It
+              preserves the product logic — history, pattern, retrieval, grounded
+              synthesis, follow-up, escalation, trainer prep — without exposing
+              anything proprietary.
+            </p>
+          </div>
+        </div>
+
+        <div className="demopanel">
+          <div className="demopanel__head">
+            <h3 className="demopanel__title">What the pilot changed</h3>
+            <a className="meta" href="#pilot">
+              Full section below
+            </a>
+          </div>
+          <ul className="shifts">
+            {[
+              ['Chat and open-ended advice', 'Longitudinal pattern synthesis + trainer preparation'],
+              ['Generic guidance', "The dog's history used inside the recommendation itself"],
+              ['Opaque AI output', 'Retrieved CCI grounding with visible sources'],
+              ['Confident AI on judgment-heavy cases', 'Explicit escalation to a trainer'],
+              ['Cumbersome capture', 'Faster structured repeat logging'],
+              ['Raw observation history', 'Trainer-prep synthesis'],
+            ].map(([from, to]) => (
+              <li key={from}>
+                <span className="shifts__from">{from}</span>
+                <Arrow />
+                <span className="shifts__to">{to}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </Section>
 
       {/* ---------------- PROBLEM ---------------- */}
       <Section
@@ -331,55 +403,63 @@ export default function GuideAIPage() {
 
         <ArtifactCard
           title="How the product works"
-          meta="Personalisation comes from the dog's history · grounding comes from approved resources"
-          caption="The two inputs do different jobs. Longitudinal history is what makes a recommendation about this dog rather than about dogs in general; the approved resource corpus is what keeps the guidance anchored to material the programme already endorses. Neither on its own is enough."
+          meta="Two inputs, two different jobs"
+          caption="GuideAI combined each dog's longitudinal behavior history with relevant CCI-approved training resources so the AI could give dog-specific, source-grounded guidance instead of generic advice. An OpenAI synthesis layer used the dog's history and the retrieved material together, while judgment-heavy cases were routed to a trainer."
         >
           <ArchitectureDiagram
             rows={[
               {
                 nodes: [
-                  { name: 'Dog profile + longitudinal observations', sub: 'Weeks of structured logs, context and notes', tone: 'accent' },
+                  { name: 'Dog profile + longitudinal history', sub: 'Weeks of logs, contexts, notes and prior patterns', tone: 'accent' },
                 ],
               },
               {
                 connector: 'line',
                 nodes: [
-                  { name: 'History / pattern synthesis', sub: 'Recurrence, direction, context spread' },
+                  { name: 'Pattern synthesis', sub: 'Recurring · improving · worsening · spreading across contexts' },
                 ],
               },
               {
                 connector: 'line',
                 nodes: [
-                  { name: 'Retrieval query', sub: 'Built from the behaviour context, not the last note' },
+                  { name: 'Retrieval query', sub: 'Built from the current pattern and the history, not the latest note' },
                 ],
               },
               {
                 connector: 'line',
                 nodes: [
-                  { name: 'Approved resource corpus', sub: 'Programme-endorsed training material', tone: 'accent' },
+                  { name: 'CCI-approved resource corpus', sub: 'Programme-approved written guidance, protocols and training resources', tone: 'accent' },
+                ],
+              },
+              {
+                connector: 'line',
+                nodes: [{ name: 'RAG retrieval', sub: 'The most relevant approved guidance for this dog and this pattern' }],
+              },
+              {
+                connector: 'line',
+                nodes: [
+                  { name: 'OpenAI synthesis', sub: 'Dog history + retrieved guidance → one tailored response', tone: 'accent' },
                 ],
               },
               {
                 connector: 'line',
                 nodes: [
-                  { name: 'AI synthesis', sub: "Dog's history + retrieved guidance, cited back to source", tone: 'accent' },
+                  { name: 'Tailored guidance + sources', sub: 'Pattern · why it matters · next step · what to monitor · evidence' },
                 ],
               },
               {
                 connector: 'fan',
                 nodes: [
-                  { name: 'Conversational follow-up', sub: 'Why this, what changed, what to ask' },
-                  { name: 'Escalation / trainer review', sub: 'Higher-risk or ambiguous cases stop here' },
-                ],
-              },
-              {
-                connector: 'line',
-                nodes: [
-                  { name: 'Trainer-prep summary', sub: 'Trends, representative observations, open questions', tone: 'accent' },
+                  { name: 'Conversational follow-up', sub: 'Answered from the same history and retrieved context' },
+                  { name: 'Trainer prep / escalation', sub: 'Human judgment where the system should not decide' },
                 ],
               },
             ]}
           />
+          <p className="archline">
+            Personalization came from the dog&rsquo;s history; grounding came from
+            programme-approved resources.
+          </p>
           <p className="reccard__value" style={{ marginTop: 'var(--s3)' }}>
             The system never closes the loop on its own. Where a situation is
             higher-risk, ambiguous or genuinely a matter of trainer judgment, the
@@ -543,16 +623,16 @@ export default function GuideAIPage() {
               evidence:
                 'Advice that was reasonable in general was still wrong for a particular dog with a particular history, and raisers noticed immediately.',
               change:
-                "Made the individual dog's longitudinal history part of generating the recommendation rather than context shown beside it.",
-              why: 'Personalisation stopped being a display concern and became an input to the output.',
+                "Made the individual dog's longitudinal history part of the actual AI context and recommendation generation, rather than history displayed beside the answer.",
+              why: 'Personalization became functional rather than cosmetic — the history had to change the recommendation, not sit next to it.',
             },
             {
               observed: 'People would not act on advice they could not trace',
               evidence:
                 'The recurring question was not “what should I do” but “why are you telling me this?”',
               change:
-                'Added retrieved-resource grounding and visible sources, so each recommendation names the guidance and the observations behind it.',
-              why: 'A recommendation that cannot be interrogated does not get used, however good it is.',
+                'Added retrieval over CCI-approved training material and visible source attribution, so guidance could be traced back to programme resources and to the observations behind it.',
+              why: 'Domain grounding became part of the trust model, not a nicety — a recommendation that cannot be interrogated does not get used, however good it is.',
             },
             {
               observed: 'Confident AI on trainer-judgment situations made people uneasy',
@@ -598,11 +678,12 @@ export default function GuideAIPage() {
         </div>
 
         <InsightCallout label="Three different signals, kept apart">
-          What raisers <strong>said</strong> was confusing, what they actually{' '}
-          <strong>did</strong> in the product, and whether the AI was{' '}
-          <strong>correct</strong> are three different questions. Satisfaction was
-          never used as a proxy for correctness — that is what the expert-agreement
-          bar in the next section is for.
+          <strong>User feedback</strong> — what people said felt useful, confusing
+          or uncomfortable. <strong>Product behavior</strong> — what they actually
+          did. <strong>AI quality</strong> — whether a recommendation agreed with
+          expert trainer judgment. None of these was used as a proxy for the
+          others, which is why the expert-agreement bar in the next section exists
+          at all.
         </InsightCallout>
 
         <ProvenanceNote>
@@ -638,23 +719,32 @@ export default function GuideAIPage() {
         </ArtifactCard>
 
         <div className="grid grid--2">
-          <ArtifactCard title="Failure taxonomy" meta="How a bad recommendation was classified">
-            <CellGrid
-              columns={2}
-              items={[
-                <strong key="1">Retrieval failure</strong>,
-                <strong key="2">Overgeneralized</strong>,
-                <strong key="3">Incorrect emphasis</strong>,
-                <strong key="4">Excessive detail</strong>,
-                <strong key="5">Missing escalation</strong>,
-                <strong key="6">Thin historical context</strong>,
-              ]}
-            />
+          <ArtifactCard
+            title="Failure taxonomy"
+            meta="Each class pointed at a different part of the system"
+          >
+            <ul className="faultmap">
+              {[
+                ['Retrieval failure', 'Corpus, query construction, ranking'],
+                ['Thin historical context', 'Personalization and context assembly'],
+                ['Overgeneralized', 'Synthesis and output structure'],
+                ['Incorrect emphasis', 'Synthesis and output structure'],
+                ['Excessive detail', 'Output structure'],
+                ['Missing escalation', 'Human-judgment policy'],
+              ].map(([cls, fix]) => (
+                <li key={cls}>
+                  <span className="faultmap__cls">{cls}</span>
+                  <Arrow />
+                  <span className="faultmap__fix">{fix}</span>
+                </li>
+              ))}
+            </ul>
             <p className="meta" style={{ marginTop: 'var(--s2)' }}>
-              Naming the failure modes is what made the fixes assignable —
-              retrieval problems went to the index, emphasis problems to the
-              output structure. The per-class shares are not shown because I
-              cannot evidence them here.
+              This is why the taxonomy mattered. &ldquo;AI quality&rdquo; as a
+              single number tells you nothing about what to change; classifying the
+              failure told me whether the problem was the corpus, the context I was
+              assembling, the way the answer was written, or the escalation policy.
+              Per-class shares are not shown because I cannot evidence them here.
             </p>
           </ArtifactCard>
           <ArtifactCard title="Trainer agreement" meta="Before → after iteration">
@@ -754,10 +844,15 @@ export default function GuideAIPage() {
         <div className="grid grid--2">
           <InfoPanel tone="white" label="What I learned">
             <p>
-              Convincing AI output is not the same as useful AI output. Building
-              the interface was the easy part; defining what “good” meant,
-              measuring it, and changing the product when trainers disagreed with
-              me was the actual work.
+              Convincing AI output is not the same as useful AI output. The
+              difficult part was not generating text; it was defining what good
+              meant, measuring it, and changing the product when expert judgment
+              disagreed with me.
+            </p>
+            <p style={{ marginTop: 'var(--s2)' }}>
+              Personalization only mattered when the longitudinal history actually
+              changed the recommendation — and grounding only mattered when a
+              raiser could see why the recommendation was supported.
             </p>
           </InfoPanel>
           <InfoPanel tone="white" label="What I would do next">

@@ -6251,3 +6251,78 @@ a.support__card:hover {
   margin: var(--s3) 0 0;
   max-width: var(--measure);
 }
+
+/* ============================================================
+   GUIDEAI — architecture line, pilot shifts, failure→fix map
+   ============================================================ */
+
+.archline {
+  font-family: var(--font-display);
+  font-size: var(--fs-h4);
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--ink);
+  border-left: 3px solid var(--accent);
+  padding-left: var(--s2);
+  margin: var(--s3) 0 0;
+  max-width: var(--measure);
+}
+
+.builtlist--quiet li::before {
+  background: var(--border-strong);
+}
+
+.shifts,
+.faultmap {
+  list-style: none;
+  margin: var(--s2) 0 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.shifts li,
+.faultmap li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 18px minmax(0, 1fr);
+  align-items: center;
+  gap: var(--s2);
+  border-top: 1px solid var(--rule);
+  padding-top: 7px;
+  font-size: var(--fs-meta);
+  color: var(--ink-muted);
+}
+
+.shifts__from,
+.faultmap__cls {
+  color: var(--ink-muted);
+}
+
+.shifts__to,
+.faultmap__fix {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.faultmap__cls {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.faultmap__fix {
+  font-weight: 400;
+  color: var(--ink-body);
+}
+
+@media (max-width: 700px) {
+  .shifts li,
+  .faultmap li {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+  .shifts li svg,
+  .faultmap li svg {
+    transform: rotate(90deg);
+  }
+}

@@ -614,7 +614,18 @@ export default function GuideAIDemo() {
                 <div className="reccard">
                   <div className="reccard__row">
                     <span className="reccard__label">What I&rsquo;m noticing</span>
-                    <span className="reccard__value">{pipeline.response.noticing}</span>
+                    {/* Named and quantified, so it reads as being about this dog
+                        rather than about dogs in general. */}
+                    <span className="reccard__value">
+                      <strong>{DOG.name}</strong> has shown{' '}
+                      <strong>{pipeline.context.behavior}</strong>{' '}
+                      {pipeline.context.observationCount} times across{' '}
+                      {pipeline.context.contextCount} setting
+                      {pipeline.context.contextCount === 1 ? '' : 's'} over{' '}
+                      {weeks.length} week{weeks.length === 1 ? '' : 's'} — most often{' '}
+                      {contextLabel(pipeline.context.dominantContext)},{' '}
+                      {pipeline.context.strongestFrequency} at its strongest.
+                    </span>
                   </div>
                   <div className="reccard__row">
                     <span className="reccard__label">Why it may matter</span>
@@ -647,7 +658,7 @@ export default function GuideAIDemo() {
                   <div className="demopanel__head">
                     <h2 className="demopanel__title">Sources used</h2>
                     <span className="meta">
-                      top {pipeline.retrieval.topK} of {pipeline.retrieval.corpusSize}
+                      the {pipeline.retrieval.results.length} that grounded this
                     </span>
                   </div>
                   <button
@@ -849,35 +860,42 @@ export default function GuideAIDemo() {
                     exercised by the evaluation set, not just described.
                   </p>
                 </div>
-                <div className="demopanel">
-                  <div className="demopanel__head">
-                    <h2 className="demopanel__title">Index</h2>
+                {/* Index internals are for a technical reader, not the default
+                    PM path — collapsed rather than removed. */}
+                <DeeperDetail
+                  summary="Inspect retrieval details"
+                  hint="how the demo's retrieval is built"
+                >
+                  <div className="demopanel">
+                    <div className="demopanel__head">
+                      <h2 className="demopanel__title">Index</h2>
+                    </div>
+                    <dl className="factorlist">
+                      <div className="factorlist__row">
+                        <dt className="factorlist__label">Embedder</dt>
+                        <dd className="factorlist__value factorlist__value--supporting">
+                          {INDEX.embedder}
+                        </dd>
+                      </div>
+                      <div className="factorlist__row">
+                        <dt className="factorlist__label">Dimension</dt>
+                        <dd className="factorlist__value factorlist__value--supporting">
+                          {INDEX.dimension}
+                        </dd>
+                      </div>
+                      <div className="factorlist__row">
+                        <dt className="factorlist__label">Corpus</dt>
+                        <dd className="factorlist__value factorlist__value--supporting">
+                          {CORPUS.length} resources
+                        </dd>
+                      </div>
+                      <div className="factorlist__row">
+                        <dt className="factorlist__label">Top-k</dt>
+                        <dd className="factorlist__value factorlist__value--supporting">{TOP_K}</dd>
+                      </div>
+                    </dl>
                   </div>
-                  <dl className="factorlist">
-                    <div className="factorlist__row">
-                      <dt className="factorlist__label">Embedder</dt>
-                      <dd className="factorlist__value factorlist__value--supporting">
-                        {INDEX.embedder}
-                      </dd>
-                    </div>
-                    <div className="factorlist__row">
-                      <dt className="factorlist__label">Dimension</dt>
-                      <dd className="factorlist__value factorlist__value--supporting">
-                        {INDEX.dimension}
-                      </dd>
-                    </div>
-                    <div className="factorlist__row">
-                      <dt className="factorlist__label">Corpus</dt>
-                      <dd className="factorlist__value factorlist__value--supporting">
-                        {CORPUS.length} resources
-                      </dd>
-                    </div>
-                    <div className="factorlist__row">
-                      <dt className="factorlist__label">Top-k</dt>
-                      <dd className="factorlist__value factorlist__value--supporting">{TOP_K}</dd>
-                    </div>
-                  </dl>
-                </div>
+                </DeeperDetail>
                 <div className="demopanel">
                   <div className="demopanel__head">
                     <h2 className="demopanel__title">Another behaviour</h2>
