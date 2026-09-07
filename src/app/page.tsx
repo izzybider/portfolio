@@ -11,6 +11,11 @@ import {
   Section,
 } from '@/components';
 import { evidence, projects, site } from '@/content/site';
+import {
+  HOME_CARD,
+  isPreview,
+  studyResultsVisible,
+} from '@/data/commonground-study-preview';
 
 export default function HomePage() {
   return (
@@ -119,22 +124,58 @@ export default function HomePage() {
           <article className="expcard">
             <p className="expcard__label">Consumer product experiment</p>
             <h3 className="expcard__title">CommonGround</h3>
-            <p className="expcard__line">
-              Can structured preference elicitation help groups reach a decision with less
-              back-and-forth?
-            </p>
-            <p className="expcard__status">Interactive prototype · study running</p>
-            <p className="expcard__ctas">
-              <Link href="/experiments/commonground" className="project__cta project__cta--primary">
-                Try the experiment <Arrow />
-              </Link>
-              <Link
-                href="/experiments/commonground#study-design"
-                className="project__cta project__cta--secondary"
-              >
-                Study design <Arrow />
-              </Link>
-            </p>
+            {/* Two states. The public one says the study has not been run.
+                The results state renders only when the study data stops
+                being preview data, or behind the preview env flag. */}
+            {studyResultsVisible() ? (
+              <>
+                <p className="expcard__line">{HOME_CARD.question}</p>
+                <ul className="expcard__proof">
+                  {HOME_CARD.bullets.map((b) => (
+                    <li key={b}>{b}</li>
+                  ))}
+                </ul>
+                <p className="expcard__status">
+                  {isPreview ? 'Preview layout · not study results' : 'Study complete'}
+                </p>
+                <p className="expcard__ctas">
+                  <Link
+                    href="/experiments/commonground"
+                    className="project__cta project__cta--primary"
+                  >
+                    Try experiment <Arrow />
+                  </Link>
+                  <Link
+                    href="/experiments/commonground#study-results"
+                    className="project__cta project__cta--secondary"
+                  >
+                    Read study <Arrow />
+                  </Link>
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="expcard__line">
+                  Can structured preference elicitation help groups reach a decision with less
+                  back-and-forth?
+                </p>
+                <p className="expcard__status">Interactive prototype · study running</p>
+                <p className="expcard__ctas">
+                  <Link
+                    href="/experiments/commonground"
+                    className="project__cta project__cta--primary"
+                  >
+                    Try the experiment <Arrow />
+                  </Link>
+                  <Link
+                    href="/experiments/commonground#study-design"
+                    className="project__cta project__cta--secondary"
+                  >
+                    Study design <Arrow />
+                  </Link>
+                </p>
+              </>
+            )}
           </article>
           <div>
             <p className="body-text">

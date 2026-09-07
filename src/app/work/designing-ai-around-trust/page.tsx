@@ -56,7 +56,7 @@ export default function DesigningAIAroundTrustPage() {
       <CaseStudyHero
         eyebrow="03 · Product strategy case study · AZcare.ai"
         title="Designing AI Around Trust"
-        statement="AZcare had an AI phone agent that could navigate phone trees, wait on hold and complete tasks. I ran the discovery on whether it solved a real problem for Deaf and hard-of-hearing users. The evidence changed the answer."
+        statement="AZcare had an AI phone agent that could navigate phone trees, wait on hold and complete tasks. I ran the discovery on whether it solved a real problem for Deaf and hard-of-hearing users. The evidence changed what I recommended building."
         roles={[
           'AI Product Strategy & Market Research Intern',
           'Customer discovery',

@@ -40,6 +40,7 @@ export {
   MockNote,
 } from './ProductMockup';
 export { default as SystemTrace } from './SystemTrace';
+export { default as RunSummary } from './RunSummary';
 export { default as CellGrid } from './CellGrid';
 export { default as DefinitionGrid } from './DefinitionGrid';
 export { default as ProjectCard } from './ProjectCard';

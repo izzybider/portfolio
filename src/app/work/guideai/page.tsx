@@ -308,84 +308,92 @@ export default function GuideAIPage() {
           Interface reconstruction of the product built and piloted with raisers.
         </ProvenanceNote>
 
-        <ArtifactCard
-          title="Current demo architecture"
-          meta="TF-IDF vector index · cosine top-k retrieval · grounded composition · deterministic escalation · PostHog events"
-          caption="This is the architecture running in the interactive demo today, not a description of the pilot. Every stage is inspectable in the demo's pipeline trace, and the retrieval numbers in the evaluation below are produced by running it."
+        {/* Implementation detail, one click away — the PM story above should
+            not be crowded out by the diagram. Fully accessible, and still in
+            the HTML for search and indexing. */}
+        <DeeperDetail
+          summary="Inspect the current demo architecture"
+          hint="retrieval, grounding and escalation, stage by stage"
         >
-          <ArchitectureDiagram
-            rows={[
-              { nodes: [{ name: 'Observation history', sub: 'Structured behaviour records', tone: 'accent' }] },
-              {
-                connector: 'line',
-                nodes: [
-                  {
-                    name: 'Structured behaviour context',
-                    sub: 'Behaviour · setting spread · frequency · trend',
-                  },
-                ],
-              },
-              {
-                connector: 'line',
-                nodes: [
-                  { name: 'Retrieval query', sub: 'Composed from the context, not the last note' },
-                ],
-              },
-              {
-                connector: 'line',
-                nodes: [
-                  {
-                    name: 'Vector index',
-                    sub: '28 synthetic resources · 154-dim TF-IDF · cosine',
-                    tone: 'blue',
-                  },
-                ],
-              },
-              {
-                connector: 'line',
-                nodes: [{ name: 'Top-4 relevant resources', sub: 'Shown as sources in the demo', tone: 'blue' }],
-              },
-              {
-                connector: 'line',
-                nodes: [
-                  {
-                    name: 'Grounded composition',
-                    sub: 'Response assembled from retrieved resources only',
-                    tone: 'accent',
-                  },
-                ],
-              },
-              {
-                connector: 'line',
-                nodes: [
-                  {
-                    name: 'Escalation policy',
-                    sub: 'Deterministic · sensitive behaviours never auto-matched',
-                    tone: 'accent',
-                  },
-                ],
-              },
-              {
-                connector: 'fan',
-                nodes: [
-                  { name: 'Recommendation', sub: 'With its sources' },
-                  { name: 'Trainer prep', sub: 'Judgment items named' },
-                  { name: 'PostHog events', sub: '9 product events', tone: 'gray' },
-                ],
-              },
-            ]}
-          />
-          <p className="meta" style={{ marginTop: 'var(--s3)' }}>
-            The current demo uses a more robust retrieval architecture than the
-            earlier pilot implementation. The pilot metrics above describe that
-            earlier build, not this one. An OpenAI embedding path is implemented
-            (<code>npm run guideai:embed --openai</code>, text-embedding-3-small)
-            but is not what ships: the portfolio is a fully static site, so a
-            neural index would need a server route and an API key at request
-            time, and a recruiter opening the demo would depend on both. Retrieval
-            over 28 documents is exact either way.
-          </p>
-        </ArtifactCard>
+          <ArtifactCard
+            title="Current demo architecture"
+            meta="TF-IDF vector index · cosine top-k retrieval · grounded composition · deterministic escalation · PostHog events"
+            caption="This is the architecture running in the interactive demo today, not a description of the pilot. Every stage is inspectable in the demo's pipeline trace, and the retrieval numbers in the evaluation below are produced by running it."
+          >
+            <ArchitectureDiagram
+              rows={[
+                { nodes: [{ name: 'Observation history', sub: 'Structured behaviour records', tone: 'accent' }] },
+                {
+                  connector: 'line',
+                  nodes: [
+                    {
+                      name: 'Structured behaviour context',
+                      sub: 'Behaviour · setting spread · frequency · trend',
+                    },
+                  ],
+                },
+                {
+                  connector: 'line',
+                  nodes: [
+                    { name: 'Retrieval query', sub: 'Composed from the context, not the last note' },
+                  ],
+                },
+                {
+                  connector: 'line',
+                  nodes: [
+                    {
+                      name: 'Vector index',
+                      sub: '28 synthetic resources · 154-dim TF-IDF · cosine',
+                      tone: 'blue',
+                    },
+                  ],
+                },
+                {
+                  connector: 'line',
+                  nodes: [{ name: 'Top-4 relevant resources', sub: 'Shown as sources in the demo', tone: 'blue' }],
+                },
+                {
+                  connector: 'line',
+                  nodes: [
+                    {
+                      name: 'Grounded composition',
+                      sub: 'Response assembled from retrieved resources only',
+                      tone: 'accent',
+                    },
+                  ],
+                },
+                {
+                  connector: 'line',
+                  nodes: [
+                    {
+                      name: 'Escalation policy',
+                      sub: 'Deterministic · sensitive behaviours never auto-matched',
+                      tone: 'accent',
+                    },
+                  ],
+                },
+                {
+                  connector: 'fan',
+                  nodes: [
+                    { name: 'Recommendation', sub: 'With its sources' },
+                    { name: 'Trainer prep', sub: 'Judgment items named' },
+                    { name: 'PostHog events', sub: '9 product events', tone: 'gray' },
+                  ],
+                },
+              ]}
+            />
+            <p className="meta" style={{ marginTop: 'var(--s3)' }}>
+              The current demo uses a more robust retrieval architecture than the
+              earlier pilot implementation. The pilot metrics above describe that
+              earlier build, not this one. An OpenAI embedding path is implemented
+              (<code>npm run guideai:embed --openai</code>, text-embedding-3-small)
+              but is not what ships: the portfolio is a fully static site, so a
+              neural index would need a server route and an API key at request
+              time, and a recruiter opening the demo would depend on both. Retrieval
+              over 28 documents is exact either way.
+            </p>
+          </ArtifactCard>
+        </DeeperDetail>
       </Section>
 
       {/* ---------------- ANALYTICS ---------------- */}

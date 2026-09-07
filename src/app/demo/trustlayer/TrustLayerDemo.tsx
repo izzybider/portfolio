@@ -4,8 +4,9 @@ import { useMemo, useState } from 'react';
 import DemoTabs from '@/components/DemoTabs';
 import DeeperDetail from '@/components/DeeperDetail';
 import AgentRun from '@/components/AgentRun';
+import RunSummary from '@/components/RunSummary';
 import Arrow from '@/components/Arrow';
-import { runSystem } from '@/lib/trustlayer/pipeline';
+import { runSystem, type Run } from '@/lib/trustlayer/pipeline';
 import { POLICY_PROFILES, type PolicyProfile } from '@/lib/trustlayer/config';
 import {
   DEMO_SCENARIOS,
@@ -33,6 +34,14 @@ const SYSTEM_LABELS: Record<SystemVariant, string> = {
   rag_agent: 'RAG agent',
   trustlayer: 'TrustLayer',
 };
+
+/* The trace has a fixed shape: request, interpret, evidence, authorization,
+   risk, decision, one row per tool call, an optional re-decision, and the
+   final behavior. Counting it here keeps the disclosure label honest when a
+   scenario calls a different number of tools. */
+function runStepCount(run: Run): number {
+  return 7 + run.tool_calls.length + (run.post_verification_decision ? 1 : 0);
+}
 
 const RECOMMENDED =
   DEMO_SCENARIOS.find((s) => s.id === RECOMMENDED_SCENARIO_ID) ?? DEMO_SCENARIOS[0];
@@ -288,8 +297,19 @@ export default function TrustLayerDemo() {
                 idPrefix="main"
               />
 
+              {/* Plain-English account first, the ten-step trace behind a
+                  disclosure — recruiter comprehension before inspectability. */}
               <div style={{ marginTop: 'var(--s4)' }}>
-                <AgentRun key={`${scenario.id}-${profile}-${runKey}`} run={run} />
+                <RunSummary key={`sum-${scenario.id}-${profile}-${runKey}`} run={run} />
+              </div>
+
+              <div style={{ marginTop: 'var(--s3)' }}>
+                <DeeperDetail
+                  summary={`Inspect the full ${runStepCount(run)}-step trace`}
+                  hint="every check, tool call and state change"
+                >
+                  <AgentRun key={`${scenario.id}-${profile}-${runKey}`} run={run} />
+                </DeeperDetail>
               </div>
 
               <div style={{ marginTop: 'var(--s3)' }}>

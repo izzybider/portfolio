@@ -102,9 +102,10 @@ export default function EnterpriseAIPage() {
         }
         decision={
           <>
-            <strong>Diagnose the layer before scheduling the fix.</strong> The
-            validation failures traced upstream, so the intervention went there
-            rather than into the screen where the complaint appeared.
+            <strong>Diagnose the failing layer before building the requested
+            feature.</strong> In one validation issue, the requested dashboard fix
+            would have treated the symptom; the root cause was an upstream schema
+            change, so the intervention went there instead.
           </>
         }
         outcome={

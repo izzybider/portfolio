@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "dev:results": "NEXT_PUBLIC_SHOW_CG_PLACEHOLDER=true next dev",
+    "dev:study": "NEXT_PUBLIC_SHOW_COMMON_GROUND_STUDY_PREVIEW=true next dev",
     "build": "next build",
-    "build:results": "NEXT_PUBLIC_SHOW_CG_PLACEHOLDER=true next build",
+    "build:study": "NEXT_PUBLIC_SHOW_COMMON_GROUND_STUDY_PREVIEW=true next build",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
