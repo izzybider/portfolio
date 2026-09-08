@@ -137,7 +137,6 @@ export default function StudyResults() {
               <li key={r}>{r}</li>
             ))}
             <li>{STUDY.ordering}</li>
-            <li>{STUDY.setting}</li>
           </ul>
         </div>
       </div>

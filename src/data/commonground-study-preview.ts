@@ -1,9 +1,9 @@
 /* ============================================================
    COMMONGROUND — STUDY RESULTS
 
-   Observed values from the in-person sessions: 32 participants
-   across 9 friend groups, each group completing one unstructured
-   baseline round and one CommonGround round.
+   Observed values from the sessions: 32 participants across 9 friend
+   groups, each group completing one unstructured baseline round and
+   one CommonGround round.
 
    Every component in the study section reads this file and nothing
    else, so the numbers on the page can never drift from the numbers
@@ -38,7 +38,6 @@ export const STUDY = {
     'One CommonGround round',
   ],
   ordering: 'Condition order randomised where feasible',
-  setting: 'Run in person, on one shared phone',
   hypothesis:
     'Structured preference elicitation will reduce coordination friction and improve how fair the outcome feels, compared with unstructured group discussion.',
 };
@@ -274,7 +273,6 @@ export const LIMITATIONS = [
   'No longitudinal reuse.',
   'The group, not the individual, is the unit of decision.',
   'Directional evidence, not population-level causal proof.',
-  'In-person shared-phone context only.',
 ];
 
 /* ---------------- 11 · homepage card ---------------- */

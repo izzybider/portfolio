@@ -89,7 +89,7 @@ export default function CommonGroundPage() {
         id="study-design"
         label="Study design"
         title="How the study was run."
-        intro="A small within-group comparison, run in person with 9 friend groups. The method is here; the results are in the section below it."
+        intro="A small within-group comparison across 9 friend groups. The method is here; the results are in the section below it."
         width="wide"
       >
         <div className="grid grid--2">
