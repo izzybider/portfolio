@@ -8,7 +8,7 @@ import { studyResultsVisible } from '@/data/commonground-study-preview';
 export const metadata: Metadata = {
   title: 'CommonGround — Isabella Bider',
   description:
-    'A consumer product experiment: can structured preference elicitation help a group reach a decision with less back-and-forth? Interactive prototype with a running study.',
+    'A consumer product experiment: can structured preference elicitation help a group reach a decision with less back-and-forth? Interactive prototype, and a 32-participant study that changed what I built.',
   openGraph: {
     title: 'CommonGround — Isabella Bider',
     description:
@@ -88,8 +88,8 @@ export default function CommonGroundPage() {
       <Section
         id="study-design"
         label="Study design"
-        title="What I am actually testing."
-        intro="A small within-group comparison, run in person. It is not running yet, and no results are claimed anywhere on this site."
+        title="How the study was run."
+        intro="A small within-group comparison, run in person with 9 friend groups. The method is here; the results are in the section below it."
         width="wide"
       >
         <div className="grid grid--2">
@@ -102,8 +102,9 @@ export default function CommonGroundPage() {
               confidence in the final group decision, compared with unstructured group discussion.
             </p>
             <p className="meta" style={{ marginTop: 'var(--s2)' }}>
-              Stated as a hypothesis, not a finding. A handful of in-person sessions cannot
-              establish it, and the summary the app produces says so.
+              It held, but not the way it was written. The benefit turned out to depend entirely on
+              whether the group had a real conflict to resolve — which is the finding, and the
+              reason the product changed.
             </p>
           </div>
           <div className="demopanel">
@@ -141,40 +142,110 @@ export default function CommonGroundPage() {
                 <tr>
                   <th scope="col">Measure</th>
                   <th scope="col">How</th>
+                  <th scope="col">The question it answers</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td>Time to decision</td>
                   <td>Milliseconds from the round opening to a final choice</td>
+                  <td>Is coordination actually faster?</td>
+                </tr>
+                <tr>
+                  <td>Preference-entry time</td>
+                  <td>CommonGround only, timed separately from the discussion after it</td>
+                  <td>Or is the app just moving the friction into a form?</td>
                 </tr>
                 <tr>
                   <td>Decision reached</td>
                   <td>Whether the group chose anything at all</td>
+                  <td>Do groups converge, or run out the clock?</td>
                 </tr>
                 <tr>
                   <td>Options considered</td>
                   <td>Baseline: options ticked. CommonGround: distinct options surfaced</td>
+                  <td>Does structure reduce thrashing?</td>
                 </tr>
                 <tr>
                   <td>Vetoes / removals</td>
                   <td>Baseline: options ruled out. CommonGround: vetoes with a reason</td>
+                  <td>How much conflict is being resolved at all?</td>
                 </tr>
                 <tr>
-                  <td>Confidence · fairness · frustration · satisfaction</td>
-                  <td>Four 1–5 questions, answered by the group at the end of a round</td>
+                  <td>Satisfaction, per person</td>
+                  <td>
+                    One 1–5 answer each, kept separate so the group minimum and the group average
+                    can be read apart
+                  </td>
+                  <td>
+                    Is the least-happy person better off — and does helping them cost everyone else?
+                  </td>
+                </tr>
+                <tr>
+                  <td>Fairness · frustration · confidence</td>
+                  <td>Three 1–5 questions at the end of a round</td>
+                  <td>Does the outcome feel balanced, and the process less annoying?</td>
                 </tr>
                 <tr>
                   <td>Reuse intent</td>
                   <td>Yes / maybe / no</td>
+                  <td>Would anyone actually open it again?</td>
                 </tr>
                 <tr>
                   <td>Free-text comment</td>
                   <td>Optional, what was annoying or useful</td>
+                  <td>What the numbers cannot say on their own</td>
+                </tr>
+                <tr>
+                  <td>Conflict level</td>
+                  <td>
+                    Labelled low, medium or high after the round, by how many hard constraints and
+                    vetoes actually collided
+                  </td>
+                  <td>Was this a group that needed help, or one that already agreed?</td>
                 </tr>
               </tbody>
             </table>
           </div>
+        </div>
+
+        <div className="demopanel">
+          <div className="demopanel__head">
+            <h3 className="demopanel__title">How I read the data</h3>
+            <span className="meta">decided before the sessions</span>
+          </div>
+          <p className="reccard__value">
+            Nine groups is a sample for finding out how a product behaves, not for proving an
+            effect in a population. So the cuts were written down first, and the reporting rules
+            with them.
+          </p>
+          <ul className="cgs-list" style={{ marginTop: 'var(--s3)' }}>
+            <li>
+              Medians, not means. One twenty-minute argument would move an average of nine groups
+              on its own.
+            </li>
+            <li>
+              The group, not the person, is the unit of decision — the effective sample is the
+              number of groups.
+            </li>
+            <li>
+              Time decomposed: preference entry counted separately from the discussion after it,
+              so a saving could not hide the cost that bought it.
+            </li>
+            <li>
+              Satisfaction read twice: the group average, and the least-satisfied person. The
+              ranking is built to move the second one.
+            </li>
+            <li>
+              Rounds split by conflict level. That label can only be applied after a round has
+              happened, so the split it produced is a reading of the data rather than a
+              pre-registered hypothesis, and is reported as one.
+            </li>
+            <li>
+              Rounds where CommonGround was slower, or ended with no choice, written up rather
+              than averaged away.
+            </li>
+          </ul>
         </div>
 
         <div className="demopanel">

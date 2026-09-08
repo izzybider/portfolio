@@ -54,7 +54,7 @@ export default function DesigningAIAroundTrustPage() {
       nav={<CaseStudyNav title="Designing AI Around Trust" items={NAV} />}
     >
       <CaseStudyHero
-        eyebrow="03 · Product strategy case study · AZcare.ai · research synthesis, ongoing"
+        eyebrow="03 · Product strategy case study · AZcare.ai · current internship, work in progress"
         title="Designing AI Around Trust"
         statement="AZcare assumed that being Deaf or hard of hearing was itself what predicted demand for AI phone delegation. I ran the discovery that tested it. What actually predicted value was current workflow × task × desired autonomy — which changed both the target segment and what I recommended building."
         roles={[
@@ -439,7 +439,7 @@ export default function DesigningAIAroundTrustPage() {
       {/* ---------------- RECOMMENDATION ---------------- */}
       <Section
         id="recommendation"
-        label="08 · Final recommendation"
+        label="08 · Current recommendation"
         title="Build adjustable-autonomy AI calling for bounded, high-friction tasks."
       >
         <DecisionCallout
@@ -552,6 +552,33 @@ export default function DesigningAIAroundTrustPage() {
             </p>
           </InfoPanel>
         </DeeperDetail>
+
+        <div className="grid grid--2">
+          <ArtifactCard title="Supported by the research to date" tone="plain">
+            <ul className="builtlist">
+              <li>Workflow segmentation is more useful than diagnosis alone</li>
+              <li>Autonomy should be adjustable rather than fixed</li>
+              <li>
+                Bounded, high-friction, recoverable tasks are the strongest initial
+                wedge
+              </li>
+            </ul>
+          </ArtifactCard>
+          <ArtifactCard title="Still needs validation" tone="plain">
+            <ul className="builtlist builtlist--quiet">
+              <li>Real task completion</li>
+              <li>Intervention and takeover burden</li>
+              <li>Repeat usage</li>
+              <li>Confidence and trust over repeated use</li>
+              <li>Willingness to pay and buyer behaviour</li>
+              <li>Reimbursement and regulatory pathway where relevant</li>
+            </ul>
+            <p className="cg-note" style={{ marginTop: 'var(--s2)' }}>
+              None of these has been measured. The list is the honest boundary of
+              what the interviews can support.
+            </p>
+          </ArtifactCard>
+        </div>
 
         <InsightCallout label="What I took from this">
           Discovery is useful when it changes the decision, not when it simply

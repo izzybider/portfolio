@@ -124,9 +124,9 @@ export default function HomePage() {
           <article className="expcard">
             <p className="expcard__label">Consumer product experiment</p>
             <h3 className="expcard__title">CommonGround</h3>
-            {/* Two states. The public one says the study has not been run.
-                The results state renders only when the study data stops
-                being preview data, or behind the preview env flag. */}
+            {/* Two states, chosen by the study data itself. The study has
+                been run, so the results state renders; the pre-study state
+                below is kept for the next experiment that uses this card. */}
             {studyResultsVisible() ? (
               <>
                 <p className="expcard__line">{HOME_CARD.question}</p>

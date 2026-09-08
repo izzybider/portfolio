@@ -11,6 +11,7 @@ import { Section, Arrow, withArrows } from '@/components';
 import {
   isPreview,
   STUDY,
+  STORY,
   OVERALL,
   SUPPORTING,
   REUSE,
@@ -18,12 +19,16 @@ import {
   SEGMENTS,
   SATISFACTION,
   RESOLUTION,
+  RESOLVER_CHANGE,
   NEGATIVE,
+  ASSUMPTION_CHANGE,
   THEMES,
   HEADLINES,
   DECISION,
   ITERATION,
+  ANALYSIS,
   NEXT_TESTS,
+  READING,
   LIMITATIONS,
   delta,
   formatValue,
@@ -91,6 +96,22 @@ export default function StudyResults() {
           comes from a single data file that gets replaced wholesale.
         </p>
       )}
+
+      {/* ---------- 0 · the whole arc, for a reader who skims ---------- */}
+      <div className="cgs-story">
+        <div className="demopanel__head">
+          <h3 className="demopanel__title">The case in six lines</h3>
+          <Stamp />
+        </div>
+        <ol className="cgs-story__list">
+          {STORY.map((s) => (
+            <li key={s.id}>
+              <p className="caps cgs-story__label">{s.label}</p>
+              <p className="cgs-story__line">{s.line}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
 
       {/* ---------- 1–2 · hypothesis + design ---------- */}
       <div className="grid grid--2">
@@ -324,6 +345,18 @@ export default function StudyResults() {
       </div>
 
       {/* ---------- 9 · what did not work ---------- */}
+      <div className="cgs-assumption">
+        <div>
+          <p className="caps cgs-turn__label">Before</p>
+          <p className="cgs-assumption__before">{ASSUMPTION_CHANGE.before}</p>
+        </div>
+        <Arrow />
+        <div>
+          <p className="caps cgs-turn__label">After</p>
+          <p className="cgs-assumption__after">{ASSUMPTION_CHANGE.after}</p>
+        </div>
+      </div>
+
       <div className="cgr-mixed">
         <div className="demopanel__head">
           <h3 className="demopanel__title">What did not work</h3>
@@ -339,13 +372,13 @@ export default function StudyResults() {
       <div className="demopanel">
         <div className="demopanel__head">
           <h3 className="demopanel__title">What people said</h3>
-          <Stamp label="Preview copy · not real quotes" />
+          <span className="meta">free-text comments, four recurring themes</span>
         </div>
         <ul className="cgs-themes">
           {THEMES.map((t) => (
             <li key={t.id}>
               <p className="cgs-themes__theme">{t.theme}</p>
-              <p className="cgs-themes__quote">&ldquo;{t.quote}&rdquo;</p>
+              {t.quote ? <p className="cgs-themes__quote">&ldquo;{t.quote}&rdquo;</p> : null}
               <p className="cgs-themes__so">{t.soWhat}</p>
             </li>
           ))}
@@ -368,6 +401,7 @@ export default function StudyResults() {
           <h3 className="demopanel__title">What I changed as a result</h3>
           <Stamp />
         </div>
+        <p className="caps cgs-change__num">Change 1 · progressive structure</p>
         <p className="cg-body">
           One flow became two, chosen by whether the group actually has a conflict to resolve.
         </p>
@@ -385,9 +419,59 @@ export default function StudyResults() {
             </div>
           ))}
         </div>
+
+        <p className="caps cgs-change__num">Change 2 · compromise load in the resolver</p>
+        <div className="cgs-change">
+          <div>
+            <p className="caps cgs-turn__label">What people did</p>
+            <p className="cg-body">{RESOLVER_CHANGE.observation}</p>
+          </div>
+          <div>
+            <p className="caps cgs-turn__label">Why it mattered</p>
+            <p className="cg-body">{RESOLVER_CHANGE.why}</p>
+          </div>
+          <div>
+            <p className="caps cgs-turn__label">What changed</p>
+            <p className="cg-body">{RESOLVER_CHANGE.change}</p>
+          </div>
+        </div>
       </div>
 
-      {/* ---------- 13–14 · next and limits ---------- */}
+      {/* ---------- 12b · how the data was cut ---------- */}
+      <div className="demopanel">
+        <div className="demopanel__head">
+          <h3 className="demopanel__title">How I cut the data</h3>
+          <Stamp />
+        </div>
+        <p className="cg-note">
+          Eight passes over the same {STUDY.groups * 2} rounds. The third one is the case study.
+        </p>
+        <ol className="cgs-cuts">
+          {ANALYSIS.map((c) => (
+            <li key={c.id}>
+              <p className="cgs-cuts__cut">{c.cut}</p>
+              <p className="cgs-cuts__why">{c.why}</p>
+              <p className="cgs-cuts__found">{c.found}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      {/* ---------- 13 · how to read the numbers ---------- */}
+      <div className="cgs-reading">
+        <div className="demopanel__head">
+          <h3 className="demopanel__title">How to read these numbers</h3>
+          <Stamp />
+        </div>
+        <p className="cgr-insight__claim">{READING.claim}</p>
+        <ul className="cgs-list">
+          {READING.points.map((pt) => (
+            <li key={pt}>{pt}</li>
+          ))}
+        </ul>
+      </div>
+
+      {/* ---------- 14–15 · next and limits ---------- */}
       <div className="grid grid--2">
         <div className="demopanel">
           <div className="demopanel__head">

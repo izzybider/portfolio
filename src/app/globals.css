@@ -6326,3 +6326,206 @@ a.support__card:hover {
     transform: rotate(90deg);
   }
 }
+
+/* CommonGround study preview — the assumption the segmentation overturned. */
+.cgs-assumption {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 20px minmax(0, 1fr);
+  align-items: center;
+  gap: var(--s3);
+  border-top: 1px solid var(--border-strong);
+  border-bottom: 1px solid var(--border-strong);
+  padding: var(--s3) 0;
+}
+
+.cgs-assumption__before,
+.cgs-assumption__after {
+  font-family: var(--font-display);
+  font-size: var(--fs-h4);
+  font-weight: 700;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.cgs-assumption__before {
+  color: var(--ink-muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.cgs-assumption__after {
+  color: var(--ink);
+}
+
+@media (max-width: 700px) {
+  .cgs-assumption {
+    grid-template-columns: 1fr;
+    gap: var(--s2);
+  }
+  .cgs-assumption svg {
+    transform: rotate(90deg);
+  }
+}
+
+/* ============================================================
+   COMMONGROUND STUDY PREVIEW — narrative, analysis and framing
+   ============================================================ */
+
+/* ---------- the case in six lines ---------- */
+
+.cgs-story {
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  padding: var(--s3);
+}
+
+.cgs-story__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+}
+
+.cgs-story__list > li {
+  display: grid;
+  grid-template-columns: 108px minmax(0, 1fr);
+  gap: var(--s2);
+  align-items: baseline;
+  border-top: 1px solid var(--rule);
+  padding: 9px 0;
+}
+
+.cgs-story__list > li:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.cgs-story__label {
+  margin: 0;
+}
+
+.cgs-story__line {
+  font-size: var(--fs-meta);
+  line-height: 1.5;
+  color: var(--ink-body);
+  margin: 0;
+  max-width: var(--measure);
+}
+
+/* the turn and the decision carry the case */
+.cgs-story__list > li:nth-child(3) .cgs-story__line,
+.cgs-story__list > li:nth-child(4) .cgs-story__line {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ---------- the two product changes ---------- */
+
+.cgs-change__num {
+  color: var(--accent);
+  margin: var(--s3) 0 6px;
+}
+
+.cgs-change__num:first-of-type {
+  margin-top: 0;
+}
+
+.cgs-change {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s3);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r-md);
+  padding: var(--s2) var(--s3);
+}
+
+.cgs-change .cgs-turn__label {
+  margin: 0 0 5px;
+}
+
+.cgs-change .cg-body {
+  font-size: var(--fs-meta);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ---------- how the data was cut ---------- */
+
+.cgs-cuts {
+  list-style: none;
+  margin: var(--s3) 0 0;
+  padding: 0;
+  counter-reset: cut;
+}
+
+.cgs-cuts > li {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr) minmax(0, 1.2fr);
+  gap: var(--s3);
+  align-items: baseline;
+  border-top: 1px solid var(--rule);
+  padding: 9px 0;
+}
+
+.cgs-cuts__cut {
+  font-family: var(--font-display);
+  font-size: var(--fs-meta);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.35;
+  margin: 0;
+  counter-increment: cut;
+}
+
+.cgs-cuts__cut::before {
+  content: counter(cut) ' ';
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--ink-muted);
+}
+
+.cgs-cuts__why {
+  font-size: var(--fs-micro);
+  line-height: 1.45;
+  color: var(--ink-muted);
+  margin: 0;
+}
+
+.cgs-cuts__found {
+  font-size: var(--fs-meta);
+  line-height: 1.5;
+  color: var(--ink-body);
+  margin: 0;
+}
+
+/* ---------- how to read the numbers ---------- */
+
+.cgs-reading {
+  background: var(--gray-panel-soft);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  padding: var(--s3);
+}
+
+.cgs-reading .cgr-insight__claim {
+  margin-bottom: var(--s3);
+}
+
+@media (max-width: 860px) {
+  .cgs-change,
+  .cgs-cuts > li {
+    grid-template-columns: 1fr;
+    gap: var(--s2);
+  }
+}
+
+@media (max-width: 700px) {
+  .cgs-story__list > li {
+    grid-template-columns: 1fr;
+    gap: 3px;
+  }
+}
